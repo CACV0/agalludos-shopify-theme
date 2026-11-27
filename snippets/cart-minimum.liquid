@@ -1,0 +1,46 @@
+<style>
+.cart-minimum-notice {
+  margin: 6px 0;
+  padding: 6px 10px;
+  border-left: 2px solid #69C5D4;
+  border-radius: 4px;
+  background: #f0f9fb;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #777;
+}
+.cart-minimum-notice--success {
+  border-left: none;
+  background: #1a3a4a;
+  border-radius: 4px;
+  padding: 10px 14px;
+}
+.cart-minimum-notice--success .cart-minimum-notice__text {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+.cart-minimum-notice__text { margin: 0 0 5px; }
+.cart-minimum-bar { background: #e0e0e0; border-radius: 4px; height: 3px; }
+.cart-minimum-bar__fill { background: #69C5D4; height: 3px; border-radius: 4px; transition: width 0.3s ease; }
+</style>
+
+{% assign minimum = 15000000 %}
+{% assign current = cart.total_price %}
+{% assign remaining = minimum | minus: current %}
+
+{% if current < minimum %}
+  {% assign progress = current | times: 100 | divided_by: minimum %}
+  <div class="cart-minimum-notice">
+    <p class="cart-minimum-notice__text">Estás a <strong>{{ remaining | money }}</strong> de desbloquear el domicilio gratis.</p>
+    <div class="cart-minimum-bar">
+      <div class="cart-minimum-bar__fill" style="width:{{ progress }}%;"></div>
+    </div>
+  </div>
+{% else %}
+  <div class="cart-minimum-notice cart-minimum-notice--success">
+    <p class="cart-minimum-notice__text">¡Domicilio gratis desbloqueado!</p>
+  </div>
+{% endif %}

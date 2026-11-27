@@ -1,0 +1,114 @@
+{% comment %} Countdown Timer {% endcomment %}
+{% liquid
+  if block.settings.custom_time != blank
+    assign date_time = block.settings.custom_time
+    assign date_part = date_time | split: ' '
+
+    # Check if date_part has at least 2 elements (date and time)
+    if date_part.size >= 2
+      # extract date
+      assign date = date_part[0] | split: '/'
+
+      # Check if date has at least 3 elements (year, month, day)
+      if date.size >= 3
+        assign year = date[0]
+        assign month = date[1]
+        assign day = date[2]
+      endif
+
+      # extract time
+      assign time = date_part[1] | split: ':'
+
+      # Check if time has at least 2 elements (hour, minute)
+      if time.size >= 2
+        assign hour = time[0]
+        assign min = time[1]
+      endif
+
+      # extract ampm (if present)
+      if date_part.size >= 3
+        assign ampm = date_part[2]
+      endif
+
+      # convert to 24h format - validate hour is a number first
+      if hour != blank and hour != ''
+        assign hour_num = hour | plus: 0
+        if hour_num > 0
+          if ampm == 'PM' and hour_num < 12
+            assign hour = hour_num | plus: 12
+          elsif ampm == 'AM' and hour_num == 12
+            assign hour = 0
+          else
+            assign hour = hour_num
+          endif
+        endif
+      endif
+    endif
+  endif
+%}
+
+<countdown-timer
+  class="timer_container countdown_gap"
+  data-year="{{ year |  default:  block.settings.start_year }}"
+  data-month="{{ month |  default: block.settings.start_month }}"
+  data-day="{{ day |  default: block.settings.start_day }}"
+  data-hours="{{  hour |  default: block.settings.start_hours }}"
+  data-minute="{{ min | default: block.settings.start_minute }}"
+  data-time-zone="{{ block.settings.time_zone }}"
+  data-hide-on-completion="{{ block.settings.hide_timer_on_ending }}"
+  data-section-id="shopify-section-{{ section.id }}"
+  {% if block.settings.time_zone == 'shop_time_zone' -%}
+    data-shop-time-zone="{{ "now" | date: "%Y-%m-%d %H:%M%:z" }}" data-timezone="{{ 'now' | date: '%:z' }}"
+  {%- endif -%}
+  style="--count-color: {{ block.settings.text }}; --count-bg: {{ block.settings.background }} "
+  {{ block.shopify_attributes }}
+  {% if notIntersected %}
+    not-on-intersection
+  {% endif %}
+>
+  <div class="timer-box__container">
+    <span class="timer-box__timer {{ block.settings.timer_style }}" animate-timer-text data-counter-days>
+      <span class="animation-first d-flex">
+        <span animate-top-center class="d-inline-block">0</span>
+        <span animate-bottom-center class="d-inline-block">0</span>
+      </span>
+    </span>
+    <span class="timer-box fnt-14" data-set-days>{{ 'section.sales_banner.days' | t }}</span>
+  </div>
+
+  <div class="timer-box__divider">:</div>
+
+  <div class="timer-box__container">
+    <span class="timer-box__timer {{ block.settings.timer_style }}" animate-timer-text data-counter-hours>
+      <span class="animation-first d-flex">
+        <span animate-top-center class="d-inline-block">0</span>
+        <span animate-bottom-center class="d-inline-block">0</span>
+      </span>
+    </span>
+    <span class="timer-box fnt-14" data-set-hours>{{ 'section.sales_banner.hrs' | t }}</span>
+  </div>
+
+  <div class="timer-box__divider">:</div>
+
+  <div class="timer-box__container">
+    <span class="timer-box__timer {{ block.settings.timer_style }}" animate-timer-text data-counter-mins>
+      <span class="animation-first d-flex">
+        <span animate-top-center class="d-inline-block">0</span>
+        <span animate-bottom-center class="d-inline-block">0</span>
+      </span>
+    </span>
+    <span class="timer-box fnt-14" data-set-mins>{{ 'section.sales_banner.min' | t }}</span>
+  </div>
+
+  <div class="timer-box__divider">:</div>
+
+  <div class="timer-box__container seconds__timer">
+    <span class="timer-box__timer {{ block.settings.timer_style }}" animate-timer-text data-counter-seconds>
+      <span class="animation-first d-flex">
+        <span animate-top-center class="d-inline-block">0</span>
+        <span animate-bottom-center class="d-inline-block">0</span>
+      </span>
+    </span>
+    <span class="timer-box fnt-14" data-set-secs>{{ 'section.sales_banner.sec' | t }}</span>
+  </div>
+</countdown-timer>

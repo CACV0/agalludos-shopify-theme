@@ -1,0 +1,41 @@
+{% comment %} Product Quantity Selector {% endcomment %}
+{% assign product = closest.product %}
+<div style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}">
+  {%- liquid
+    assign product_form_id = 'product-form-' | append: section.id
+  -%}
+  {% render 'product-quantity-selector',
+    form_id: product_form_id,
+    block: block,
+    product: product.selected_or_first_available_variant,
+    product_title: product.title
+  %}
+</div>
+{% schema %}
+{
+  "name": "Quantity selector",
+
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The selector is automatically hidden if all variants are sold out. When at least one variant is available, the selector is always visible to prevent the page from moving when switching variants."
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quantity selector",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,60 @@
+{% comment %}
+  Gallery Lookbook popup shell — rendered once per section.
+
+  Every media block used to render its own <lookbook-popup>, so a gallery of N cards shipped N
+  popups (and 4N when desktop and mobile layouts differ, since the block list is printed once per
+  layout tree). Only one can ever be open, so the section now renders this single shell and each
+  trigger carries its card's body in a <template>; gallery-lookbook.js copies that template into
+  [lookbook-popup-content] just before the popup opens. Same pattern as the quiz support guide
+  drawer (snippets/quiz-support-guide-drawer.liquid).
+
+  Everything here is section-level and never changes between cards — heading, close button, the
+  Full width class. Only the media column and the product list are per-block, and those are what
+  the template replaces.
+
+  Accepts:
+  - section: {Object} the Gallery Lookbook section
+{% endcomment %}
+
+<lookbook-popup
+  drawer-type="lookbook-popup-{{ section.id }}"
+  {%- comment -%}
+    data-section-id traces this popup back to its section once JS has moved it to <body>: the
+    editor re-renders the section, not the portal, so that is the only way to find the copy left
+    behind when the section stops rendering a popup.
+  {%- endcomment -%}
+  data-section-id="{{ section.id }}"
+  {%- comment -%}
+    The popup is portaled to <body>, so it cannot inherit the section's .container — carry the
+    Full width setting across as a class instead, for the inset media on mobile.
+  {%- endcomment -%}
+  class="lookbook-popup{% unless section.settings.full_width %} lookbook-popup--contained{% endunless %}"
+  aria-hidden="true"
+>
+  <div class="lookbook-popup__overlay position-absolute" drawer-overlay></div>
+  <div class="lookbook-popup__dialog color-{{ settings.drawer_color_scheme }}">
+    <div class="lookbook-popup__header d-flex align-item-center justify-content-space-btw flex-shrink-0">
+      {%- if section.settings.popup_heading != blank -%}
+        <{{ section.settings.popup_heading_tag }}
+          class="{{ section.settings.popup_heading_size }} fnt-heading lookbook-popup__heading m-0"
+          style="color: {{ section.settings.popup_text_color }}"
+        >
+          {{ section.settings.popup_heading }}
+        </{{ section.settings.popup_heading_tag }}>
+      {%- endif -%}
+      <button
+        class="lookbook-popup__close cursor-pointer"
+        type="button"
+        close-drawer
+        aria-label="{{ 'accessibility.close_drawer' | t }}"
+      >
+        {%- render 'icon' with 'drawerclose-icon' -%}
+      </button>
+    </div>
+    {%- comment -%}
+      Filled from the trigger's <template> on open — image column + product column. Empty until
+      then, which is why the popup is only ever reachable through a trigger that carries one.
+    {%- endcomment -%}
+    <div class="lookbook-popup__layout" lookbook-popup-content></div>
+  </div>
+</lookbook-popup>

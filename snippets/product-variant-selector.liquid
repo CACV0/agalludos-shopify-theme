@@ -1,0 +1,383 @@
+{% comment %}
+  List of variables used:
+  product : {{ object }} Product Data
+  form_id : {{ string   }} Reference form id
+  block: {{ object }} block related object data
+{% endcomment %}
+
+{% liquid
+  assign quick_view_drawer = false
+  if template.suffix == 'product-quick-view' or is_quick_view_drawer
+    assign quick_view_drawer = true
+  endif
+  assign show_guide = false
+  assign guide_option = block.settings.guide_option | capitalize
+%}
+
+<div class="product-variant__select__options" variant-block {{ block.shopify_attributes }}>
+  {%- unless product.has_only_default_variant -%}
+    <variant-picker
+      class="d-block js-element"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      data-block-id="{{ block.id }}"
+    >
+      {%- case block.settings.varaint_selector_type -%}
+        {%- when 'dropdown' -%}
+          <div class="js-element">
+            {%- for option in product.options_with_values -%}
+              {%- liquid
+                assign swatch_count = option.values | map: 'swatch' | compact | size
+                assign variant_selector_type = block.settings.varaint_selector_type
+
+                if swatch_count > 0 and block.settings.show_swatches and block.settings.variant_swatches_style == 'pills'
+                  assign variant_selector_type = 'swatch'
+                elsif swatch_count > 0 and block.settings.show_swatches
+                  assign variant_selector_type = 'swatch_dropdown'
+                endif
+                assign option_name = option.name | capitalize
+                assign show_guide = false
+                if guide_option == option_name
+                  assign show_guide = true
+                endif
+              -%}
+              <div class="product-variant__option__item mb-16" product-variant-option>
+                  <div class="product-variant__head d-flex align-item-center justify-content-space-btw mb-2">
+                    <div class="product-variant__label-container">
+                      <label class="select__label" for="option-{{ section.id }}-{{ forloop.index0 }}">
+                        {{- option.name }}:</label
+                      >
+                      <span product-variant-option-value class="fnt-14"> {{ option.selected_value | capitalize }}</span>
+                    </div>
+                    <div>
+                      {% if show_guide and quick_view_drawer %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: '',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-popup'
+                        %}
+                      {% elsif show_guide and quick_view_drawer == false %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: 'mobile-only',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-drawer-button'
+                        %}
+                      {% endif %}
+                    </div>
+
+                    {% if show_guide and quick_view_drawer == false %}
+                      {% render 'snippet-product-guide',
+                        block: block,
+                        className: 'desktop-only',
+                        quick_view_drawer: quick_view_drawer,
+                        triger_guide_drawer_button: 'triger-guide-drawer-button'
+                      %}
+                    {% endif %}
+                  </div>
+                {% if variant_selector_type == 'swatch' %}
+                  <fieldset class="product-variant__pill__item position-relative">
+                    <div class="variant-pills-wrapper-swatch">
+                      {% render 'product-variant-options',
+                        product: product,
+                        option: option,
+                        block: block,
+                        section: section,
+                        variant_selector_type: variant_selector_type,
+                        product_form_id: form_id
+                      %}
+                    </div>
+                  </fieldset>
+                {% else %}
+                  <div class="select-wrapper  {% if variant_selector_type == 'swatch_dropdown' %} swatch-dropdown {%- endif -%}">
+                    {%- if variant_selector_type == 'swatch_dropdown' -%}
+                      <span
+                        data-selected-dropdown-swatch="options[{{ option.name | escape }}]"
+                        class="dropdown-swatch"
+                      >
+                        {% render 'swatch', swatch: option.selected_value.swatch, shape: settings.swatch_style %}
+                      </span>
+                    {%- endif -%}
+                    <select
+                      class="select "
+                      form="{{ form_id }}"
+                      id="option-{{ section.id }}-{{ forloop.index0 }}"
+                      name="options[{{ option.name | escape }}]"
+                      aria-label="Select {{ option.name }}"
+                      tabindex="0"
+                    >
+                      {% render 'product-variant-options',
+                        product: product,
+                        option: option,
+                        block: block,
+                        section: section,
+                        variant_selector_type: variant_selector_type
+                      %}
+                    </select>
+
+                    {% render 'icon' with 'arrow-icon', class: '', color: 'rgba(var(--color-input-variant-color))' %}
+                  </div>
+                {% endif %}
+              </div>
+            {%- endfor -%}
+            <script type="application/json">
+              {{ product.selected_or_first_available_variant | json }}
+            </script>
+          </div>
+
+        {%- when 'pills' -%}
+          <div
+            class="d-block js-element"
+          >
+            {% for option in product.options_with_values %}
+              {%- liquid
+                assign swatch_count = option.values | map: 'swatch' | compact | size
+                assign variant_selector_type = block.settings.varaint_selector_type
+
+                if swatch_count > 0 and block.settings.show_swatches and block.settings.variant_swatches_style == 'dropdown'
+                  assign variant_selector_type = 'swatch_dropdown'
+                elsif swatch_count > 0 and block.settings.show_swatches
+                  assign variant_selector_type = 'swatch'
+                endif
+              -%}
+
+              {%- if variant_selector_type == 'swatch_dropdown' -%}
+                <div class="product-variant__option__item mb-16" product-variant-option>
+                  <div class="product-variant__head d-flex align-item-center justify-content-space-btw mb-2">
+                    <div class="product-variant__label-container">
+                      <legend class="select__label  text-color">{{ option.name }}:</legend>
+                      <span product-variant-option-value> {{ option.selected_value | capitalize }}</span>
+                    </div>
+                    {% liquid
+                      assign option_name = option.name | capitalize
+
+                      if guide_option == option_name
+                        assign show_guide = true
+                      else
+                        assign show_guide = false
+                      endif
+                    %}
+                    <div>
+                      {% if show_guide and quick_view_drawer %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: '',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-popup'
+                        %}
+                      {% elsif show_guide and quick_view_drawer == false %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: '',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-drawer-button'
+                        %}
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="select-wrapper  {% if variant_selector_type == 'swatch_dropdown' %} swatch-dropdown {%- endif -%}">
+                      {%- if variant_selector_type == 'swatch_dropdown' -%}
+                        <span
+                          data-selected-dropdown-swatch="options[{{ option.name | escape }}]"
+                          class="dropdown-swatch"
+                        >
+                          {% render 'swatch', swatch: option.selected_value.swatch, shape: settings.swatch_style %}
+                        </span>
+                      {%- endif -%}
+                      <select
+                        class="select "
+                        form="{{ form_id }}"
+                        id="option-{{ section.id }}-{{ forloop.index0 }}"
+                        name="options[{{ option.name | escape }}]"
+                        aria-label="Select {{ option.name }}"
+                        tabindex="0"
+                      >
+                        {% render 'product-variant-options',
+                          product: product,
+                          option: option,
+                          block: block,
+                          section: section,
+                          variant_selector_type: variant_selector_type
+                        %}
+                      </select>
+
+                      {% render 'icon' with 'arrow-icon', class: '', color: 'rgba(var(--color-input-variant-color))' %}
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                {%- if variant_selector_type == 'swatch' -%}
+                  <fieldset class="product-variant__pill__item position-relative" product-variant-option>
+                    <div class="product-variant__head d-flex align-item-center justify-content-space-btw mb-2">
+                      <div class="product-variant__label-container">
+                        <legend class="select__label  text-color">{{ option.name }}:</legend>
+                        <span product-variant-option-value> {{ option.selected_value | capitalize }}</span>
+                      </div>
+                      {% liquid
+                        assign option_name = option.name | capitalize
+
+                        if guide_option == option_name
+                          assign show_guide = true
+                        else
+                          assign show_guide = false
+                        endif
+                      %}
+                      {% if show_guide and quick_view_drawer %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: '',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-popup'
+                        %}
+                      {% elsif show_guide and quick_view_drawer == false %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: '',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-drawer-button'
+                        %}
+                      {% endif %}
+                    </div>
+                    <div class="variant-pills-wrapper-swatch">
+                      {% render 'product-variant-options',
+                        product: product,
+                        option: option,
+                        block: block,
+                        section: section,
+                        variant_selector_type: variant_selector_type,
+                        product_form_id: form_id
+                      %}
+                    </div>
+                  </fieldset>
+                {%- else -%}
+                  <fieldset class="product-variant__pill__item position-relative" product-variant-option>
+                    <div>
+                      <div class="product-variant__head d-flex align-item-center justify-content-space-btw mb-2">
+                        <div class="product-variant__label-container">
+                          <legend class="select__label  text-color">{{ option.name }}:</legend>
+                          <span product-variant-option-value> {{ option.selected_value | capitalize }}</span>
+                        </div>
+                        {% liquid
+                          assign option_name = option.name | capitalize
+                          if guide_option == option_name
+                            assign show_guide = true
+                          else
+                            assign show_guide = false
+                          endif
+                        %}
+                        <div>
+                          {% if show_guide and quick_view_drawer %}
+                            {% render 'snippet-product-guide',
+                              block: block,
+                              className: '',
+                              quick_view_drawer: quick_view_drawer,
+                              triger_guide_drawer_button: 'triger-guide-popup'
+                            %}
+                          {% elsif show_guide and quick_view_drawer == false %}
+                            {% render 'snippet-product-guide',
+                              block: block,
+                              className: 'mobile-only',
+                              quick_view_drawer: quick_view_drawer,
+                              triger_guide_drawer_button: 'triger-guide-drawer-button'
+                            %}
+                          {% endif %}
+                        </div>
+                        {% if show_guide and quick_view_drawer == false %}
+                          {% render 'snippet-product-guide',
+                            block: block,
+                            className: 'desktop-only',
+                            quick_view_drawer: quick_view_drawer,
+                            triger_guide_drawer_button: 'triger-guide-drawer-button'
+                          %}
+                        {% endif %}
+                      </div>
+                      <div class="variant-pills-wrapper">
+                        {% render 'product-variant-options',
+                          product: product,
+                          option: option,
+                          block: block,
+                          section: section,
+                          variant_selector_type: variant_selector_type,
+                          product_form_id: form_id
+                        %}
+                      </div>
+                      {% comment %} {% if show_guide and quick_view_drawer == false %}
+                        {% render 'snippet-product-guide',
+                          block: block,
+                          className: 'mobile-only',
+                          quick_view_drawer: quick_view_drawer,
+                          triger_guide_drawer_button: 'triger-guide-drawer-button'
+                        %}
+                      {% endif %} {% endcomment %}
+                    </div>
+                  </fieldset>
+                {%- endif -%}
+              {%- endif -%}
+            {% endfor %}
+            <script type="application/json">
+              {{ product.selected_or_first_available_variant | json }}
+            </script>
+          </div>
+      {%- endcase -%}
+    </variant-picker>
+  {%- endunless -%}
+  <noscript>
+    <div
+      {% if product.has_only_default_variant %}
+        hidden
+      {% endif %}
+      style="margin-bottom: 16px;"
+    >
+      <label class="select__label mb-2" for="Variants-{{ section.id }}">
+        {{- 'products.product.product_variants' | t -}}
+      </label>
+      <div class="select-wrapper ">
+        <select
+          name="id"
+          id="Variants-{{ section.id }}"
+          class="select"
+          form="{{ form_id }}"
+        >
+          {%- for variant in product.variants -%}
+            <option
+              {% if variant == product.selected_or_first_available_variant %}
+                selected="selected"
+              {% endif %}
+              {% if variant.available == false %}
+                disabled
+              {% endif %}
+              value="{{ variant.id }}"
+            >
+              {%- liquid
+                echo variant.title
+                echo variant.price | money | strip_html | prepend: ' - '
+                if variant.available == false
+                  echo 'products.product.sold_out' | t | prepend: ' - '
+                endif
+                if variant.quantity_rule.increment > 1
+                  echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+                endif
+                if variant.quantity_rule.min > 1
+                  echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+                endif
+                if variant.quantity_rule.max != null
+                  echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+                endif
+                # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+                # theme-check-disable
+                assign cart_quantity = cart | item_count_for_variant: variant.id
+                # theme-check-enable
+                if cart_quantity > 0
+                  echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+                endif
+              -%}
+            </option>
+          {%- endfor -%}
+        </select>
+        {% render 'icon' with 'arrow-icon', class: '', color: 'rgba(var(--color-input-variant-color))' %}
+      </div>
+    </div>
+  </noscript>
+</div>

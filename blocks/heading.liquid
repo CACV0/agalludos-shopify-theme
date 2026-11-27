@@ -1,0 +1,109 @@
+<style>
+  .heading-text--{{ block.id }} {
+    margin-bottom: {{ block.settings.bottom_mobile | append: 'px' }};
+  }
+
+@media (min-width: 750px) {
+    .heading-text--{{ block.id }} {
+      margin-bottom: {{ block.settings.bottom_desktop | append: 'px' }};
+    }
+  }
+
+  .heading-text--{{ block.id }} .heading-highlight {
+    color: {{ block.settings.highlight_color | default: 'var(--color-text)' }};
+  }
+</style>
+
+{%- assign parsed_heading = block.settings.slide_header
+  | replace: '{', '<span class="heading-highlight">'
+  | replace: '}', '</span>'
+-%}
+
+{% if block.settings.slide_header != blank %}
+  {% assign delay = 0.01 %}
+  <animation-reveal
+    class="heading-block__animation"
+    aoi-type="fade-up"
+    aoi-fade-delay="{{ delay }}"
+    aoi-duration="0.6"
+  >
+    <div class="{{ block.settings.style }} heading-text heading-text--{{ block.id }} fnt-heading RTE-content">
+      {{ parsed_heading }}
+    </div>
+  </animation-reveal>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "slide_header",
+      "label": "Heading",
+      "default": "Slide Heading",
+      "info": "To highlight in a different color to the specific text, add {} to the text in the input field."
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight text color",
+      "default": "#F52222"
+    },
+     {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "label": "H1", "value": "h1" },
+        { "label": "H2", "value": "h2" },
+        { "label": "H3", "value": "h3" },
+        { "label": "H4", "value": "h4" },
+        { "label": "H5", "value": "h5" },
+        { "label": "H6", "value": "h6" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "options": [
+        { "label": "H1", "value": "h1" },
+        { "label": "H2", "value": "h2" },
+        { "label": "H3", "value": "h3" },
+        { "label": "H4", "value": "h4" },
+        { "label": "H5", "value": "h5" },
+        { "label": "H6", "value": "h6" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "bottom_desktop",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "bottom_mobile",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading"
+    }
+  ]
+}
+{% endschema %}

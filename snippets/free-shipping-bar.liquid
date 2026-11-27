@@ -1,0 +1,173 @@
+{%- liquid
+  assign has_free_gift = false
+  if settings.enable_free_gift and settings.free_gift_product != blank
+    if settings.free_gift_product.available
+      assign has_free_gift = true
+    endif
+  endif
+
+  assign calculated_total_price = 0
+
+  for line_item in cart.items
+    if line_item.requires_shipping
+      if has_free_gift and line_item.product.id == settings.free_gift_product.id
+        continue
+      endif
+      assign calculated_total_price = calculated_total_price | plus: line_item.final_line_price
+    endif
+  endfor
+
+  assign total_cart_discount = 0
+
+  for discount_application in cart.cart_level_discount_applications
+    assign total_cart_discount = total_cart_discount | plus: discount_application.total_allocated_amount
+  endfor
+
+  assign calculated_total_price = calculated_total_price | minus: total_cart_discount
+  assign threshold_price = settings.free_shipping_amount | times: 100
+-%}
+
+{%- if has_free_gift and settings.show_free_shipping_bar -%}
+  {%- liquid
+    assign gift_threshold_price = settings.free_gifting_amount | times: 100
+
+    comment
+      Order milestones by threshold: lower threshold at 50%, higher at 100%.
+    endcomment
+    if gift_threshold_price <= threshold_price
+      assign first_threshold = gift_threshold_price
+      assign second_threshold = threshold_price
+      assign first_default_message = 'cart.cart_default_gift_message' | t
+      assign second_default_message = 'cart.cart_default_shipping_message' | t
+      assign first_icon = 'milestone-gift'
+      assign second_icon = 'milestone-shipping'
+      assign first_label = 'cart.free_gift_label' | t
+      assign second_label = 'cart.free_shipping_label' | t
+    else
+      assign first_threshold = threshold_price
+      assign second_threshold = gift_threshold_price
+      assign first_default_message = 'cart.cart_default_shipping_message' | t
+      assign second_default_message = 'cart.cart_default_gift_message' | t
+      assign first_icon = 'milestone-shipping'
+      assign second_icon = 'milestone-gift'
+      assign first_label = 'cart.free_shipping_label' | t
+      assign second_label = 'cart.free_gift_label' | t
+    endif
+
+    if calculated_total_price >= second_threshold
+      assign initial_bar_width = 100
+    elsif calculated_total_price <= first_threshold
+      if first_threshold > 0
+        assign initial_bar_width = calculated_total_price | times: 50 | divided_by: first_threshold
+      else
+        assign initial_bar_width = 50
+      endif
+    else
+      assign remaining = calculated_total_price | minus: first_threshold
+      assign range = second_threshold | minus: first_threshold
+      if range > 0
+        assign initial_bar_width = remaining | times: 50 | divided_by: range | plus: 50
+      else
+        assign initial_bar_width = 100
+      endif
+    endif
+  -%}
+
+  <free-shipping
+    class="free__shipping-progress__bar milestone-bar d-block"
+    style="--milestone-icon-color: {{ settings.icon_color }}; --milestone-icon-bg: {{ settings.icon_background_color.rgba }}; --milestone-icon-color-active: {{ settings.icon_color_active }}; --milestone-icon-bg-active: {{ settings.icon_background_color_active.rgba }};"
+    total-price="{{ calculated_total_price }}"
+    threshold="{{ first_threshold }}"
+    gift-threshold="{{ second_threshold }}"
+    has-milestones
+    free-shipping-activated-message="{{ 'cart.cart_free_shipping_message' | t }}"
+    default-shipping-message="{{ first_default_message }}"
+    default-gift-message="{{ second_default_message }}"
+    all-milestones-message="{{ 'cart.cart_all_milestones_message' | t }}"
+    {%- if gift_threshold_price <= threshold_price %}
+      gift-is-first
+    {%- endif %}
+  >
+    <p class="milestone-bar__message fnt-14 text-center" shipping-message></p>
+    <div class="milestone-bar__content">
+      <div class="milestone-bar__track-area">
+        <div class="milestone-bar__track">
+          <span class="milestone-bar__fill" progress-bar style="--bar-width: {{ initial_bar_width }}%"></span>
+        </div>
+        <div
+          class="milestone-bar__marker {% if calculated_total_price >= first_threshold %}reached{% endif %}"
+          style="left: 50%"
+          milestone-shipping
+        >
+          <span class="milestone-bar__icon milestone-bar__icon--default">
+            {%- render 'icon' with first_icon -%}
+          </span>
+          <span class="milestone-bar__icon milestone-bar__icon--check">
+            {%- render 'icon' with 'milestone-check' -%}
+          </span>
+          <span class="milestone-bar__label">{{ first_label }}</span>
+        </div>
+        <div
+          class="milestone-bar__marker {% if calculated_total_price >= second_threshold %}reached{% endif %}"
+          style="left: 100%"
+          milestone-gift
+        >
+          <span class="milestone-bar__icon milestone-bar__icon--default">
+            {%- render 'icon' with second_icon -%}
+          </span>
+          <span class="milestone-bar__icon milestone-bar__icon--check">
+            {%- render 'icon' with 'milestone-check' -%}
+          </span>
+          <span class="milestone-bar__label">{{ second_label }}</span>
+        </div>
+      </div>
+    </div>
+  </free-shipping>
+
+{%- elsif has_free_gift -%}
+  {%- liquid
+    assign gift_threshold_price = settings.free_gifting_amount | times: 100
+    if gift_threshold_price > 0
+      assign initial_bar_width = calculated_total_price | times: 100 | divided_by: gift_threshold_price
+    else
+      assign initial_bar_width = 100
+    endif
+    if initial_bar_width > 100
+      assign initial_bar_width = 100
+    endif
+  -%}
+
+  <free-shipping
+    class="free__shipping-progress__bar d-block"
+    total-price="{{ calculated_total_price }}"
+    threshold="{{ gift_threshold_price }}"
+    free-shipping-activated-message="{{ 'cart.cart_all_milestones_message' | t }}"
+    default-shipping-message="{{ 'cart.cart_default_gift_message' | t }}"
+  >
+    <p class="fnt-14 text-center" shipping-message></p>
+    <div class="progressBar">
+      <span class="progressBar__handle" progress-bar style="--bar-width: {{ initial_bar_width }}%"></span>
+    </div>
+  </free-shipping>
+
+{%- elsif settings.show_free_shipping_bar -%}
+  {%- liquid
+    assign initial_bar_width = calculated_total_price | times: 100 | divided_by: threshold_price
+    if initial_bar_width > 100
+      assign initial_bar_width = 100
+    endif
+  -%}
+
+  <free-shipping
+    class="free__shipping-progress__bar d-block"
+    total-price="{{ calculated_total_price }}"
+    threshold="{{ threshold_price }}"
+    free-shipping-activated-message="{{ 'cart.cart_free_shipping_message' | t }}"
+    default-shipping-message="{{ 'cart.cart_default_shipping_message' | t }}"
+  >
+    <p class="fnt-14 text-center" shipping-message></p>
+    <div class="progressBar">
+      <span class="progressBar__handle" progress-bar style="--bar-width: {{ initial_bar_width }}%"></span>
+    </div>
+  </free-shipping>
+{%- endif -%}

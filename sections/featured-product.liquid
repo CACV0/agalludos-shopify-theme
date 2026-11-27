@@ -1,0 +1,1200 @@
+{% comment %}
+  List of Varaibles:
+  product: {{ object }} to render product related data
+{% endcomment %}
+
+{{ 'section-product-highlights.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 | append: 'px' }}
+    ;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 | append: 'px' }}
+    ;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | append: 'px' }}
+      ;
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }}
+      ;
+    }
+  }
+</style>
+{% liquid
+  assign product = section.settings.product
+  assign product_media = product.media
+  assign product_feature_media_id = product.selected_or_first_available_variant.featured_media.id | default: product.featured_media.id
+
+  assign onboarding = false
+  unless product != blank
+    assign onboarding = true
+  endunless
+
+  assign medias = product_media | where: 'media_type', 'image'
+
+  assign enable_media_zoom = section.settings.enable_media_zoom
+
+  assign intersection = ''
+  if section.index > 2
+    assign intersection = 'intersection-element'
+  endif
+  assign product_first_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+
+  assign layout_type = section.settings.display_options_layout | strip
+%}
+
+{% comment %} Liquid code for rendering variant images  {% endcomment %}
+{% liquid
+  assign selected_variant_option = product.selected_or_first_available_variant.options
+  assign render_variant_images = false
+  assign select_variant_to_show = null
+
+  comment
+    Create a normalized string of option values separated by | for exact matching
+    Using | as delimiter to avoid conflicts with commas in option values
+  endcomment
+  assign selected_variant_options_normalized = ''
+  for option in selected_variant_option
+    assign option_normalized = option | downcase | strip
+    if selected_variant_options_normalized == blank
+      assign selected_variant_options_normalized = option_normalized
+    else
+      assign selected_variant_options_normalized = selected_variant_options_normalized | append: '|' | append: option_normalized
+    endif
+  endfor
+
+  if product.metafields.flawless.variant_images != blank
+    for variant_image_metaobject in product.metafields.flawless.variant_images.value
+      assign variant_option_value = variant_image_metaobject.option_value
+
+      if variant_option_value contains ','
+        assign values = variant_option_value | split: ','
+
+        assign all_match = true
+        for v in values
+          assign v_down = v | downcase | strip
+          assign check_string = '|' | append: selected_variant_options_normalized | append: '|'
+          assign v_check = '|' | append: v_down | append: '|'
+
+          comment
+            Check if v_down exactly matches any option value by using delimiter matching
+          endcomment
+          unless check_string contains v_check
+            assign all_match = false
+          endunless
+        endfor
+        if all_match and variant_image_metaobject.images.value.size > 0
+          assign render_variant_images = true
+          assign select_variant_to_show = variant_image_metaobject
+          break
+        endif
+      else
+        assign v_down = variant_option_value | downcase | strip
+        assign check_string = '|' | append: selected_variant_options_normalized | append: '|'
+        assign v_check = '|' | append: v_down | append: '|'
+
+        comment
+          Check if v_down exactly matches any option value by using delimiter matching
+        endcomment
+        if check_string contains v_check and variant_image_metaobject.images.value.size > 0
+          assign render_variant_images = true
+          assign select_variant_to_show = variant_image_metaobject
+        endif
+      endif
+    endfor
+  endif
+%}
+
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'top' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-top"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+<div
+  class="main-product feature-product section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}"
+  product-info
+  product-details
+  {% if layout_type == 'grid' or layout_type == 'grid-with-main-media' or layout_type == 'grid-1x1' or layout_type == 'grid-1x2' %}
+    grid-layout
+  {% endif %}
+  data-update-url="false"
+  data-section-id="{{ section.id }}"
+  {% if enable_media_zoom %}
+    style="--cursor-zoom-url:url({{ 'zoom-cursor.svg' | asset_url }})"
+  {% endif %}
+>
+  <div class="container">
+    {% render 'section-heading', section: section %}
+
+    <div
+      class="{% if section.settings.desktop_media_position == 'right' %} flex-reverse {% else %} res-flex {% endif %} {% if layout_type == 'grid' or layout_type == 'grid-with-main-media' or layout_type == 'grid-1x1' or layout_type == 'grid-1x2' %} sticky-content {% endif %}"
+      style="--object-fit-desktop: {{ section.settings.image_fit_desktop }}; --object-fit-mobile: {{ section.settings.image_fit_mobile }}; --grid-gap: {{ section.settings.desktop_media_gap }}px;"
+    >
+      {%- unless onboarding -%}
+        {%- if product.media.size > 0 or render_variant_images -%}
+          {% liquid
+            if section.settings.image_aspect_ratio_desktop == 'adapt'
+              assign add_media_aspect_ratio = true
+            else
+              assign add_media_aspect_ratio = false
+            endif
+
+            if section.settings.image_aspect_ratio_mobile == 'adapt'
+              assign add_media_aspect_ratio_mobile = true
+            else
+              assign add_media_aspect_ratio_mobile = false
+            endif
+          %}
+          <div
+            class="product-media-container product-media-container--{{ section.settings.desktop_media_size }} {% if section.settings.desktop_media_full_width %} media-full-width {% endif %} {% if section.settings.mobile_media_full_width %} mobile-media-full-width {% endif %}"
+            id="product-media-container-{{ section.id }}"
+          >
+            <product-carousel
+              {{ intersection }}
+              class="js-element product-slider--{{ section.settings.display_options_layout }} {% if layout_type == 'grid' or layout_type == 'grid-with-main-media' or layout_type == 'grid-1x1' or layout_type == 'grid-1x2' %} mobile-only {% endif %}"
+              slide-layout-type="carousel"
+              slide-pagination-type="bullets"
+              slide-per-view="1"
+              slide-responsive-breakpoints='{"320":{"slidesPerView": "{% if section.settings.mobile_media_layout == 'peek' %}1.1{% else %}1{% endif %}","autoHeight":{{ add_media_aspect_ratio_mobile }},"spaceBetween":{{ section.settings.mobile_media_gap }} },"768":{"slidesPerView":{% if section.settings.mobile_media_layout == 'peek' %}1.1{% else %}1{% endif %},"autoHeight": {{ add_media_aspect_ratio_mobile }}, "spaceBetween":{{ section.settings.mobile_media_gap }}}, "992":{"slidesPerView":"1", "autoHeight": {{ add_media_aspect_ratio }}, "spaceBetween": {{ section.settings.desktop_media_gap }}}}'
+              slide-speed="500"
+              verticle-thumbnail="{% if section.settings.display_options_layout == 'thumbnail-left' %}true{% else %}false{% endif %}"
+              mobile-verticle-thumbnail="{% if section.settings.mobile_pagination_style == 'thumbnails_overlapping' and section.settings.image_aspect_ratio_mobile == 'portrait' %}true{% else %}false{% endif %}"
+              {%- if product_feature_media_id and render_variant_images == false -%}
+                slide-to-media="{{ product_feature_media_id | escape }}"
+              {%- endif -%}
+              {% if section.settings.enable_swipe_on_mobile -%}
+                slide-enable-mobile-swipe="991"
+              {%- endif %}
+              {% if section.settings.mobile_pagination_style == 'dots_stack' or section.settings.mobile_pagination_style == 'dots_overlapping' %}
+                dynamic-pagination
+              {% endif %}
+              {% if section.settings.desktop_enable_parallax %}
+                {% if section.settings.display_options_layout == 'thumbnail-left' or section.settings.display_options_layout == 'thumbnail-bottom' %}
+                  desktop-parallax
+                {% endif %}
+              {% endif %}
+              {% if section.settings.mobile_enable_parallax %}
+                mobile-parallax
+              {% endif %}
+              space-between="16"
+            >
+              <div class="swiper">
+                {% if section.settings.show_info %}
+                  <div class="product-media-info position--{{ section.settings.desktop_position }}  mobile--{{ section.settings.mobile_position }}">
+                    <div class="product-media-info__inner" style="--media-background-color: {{ section.settings.background_color }}; --media-text-color: {{ section.settings.text_color }}">
+                      {{ section.settings.media_text }}
+                    </div>
+                  </div>
+                {% endif %}
+                <div
+                  class="swiper-container product-main-slide-container {% unless add_media_aspect_ratio %} aspect-ratio-md-{{ section.settings.image_aspect_ratio_desktop }} {% endunless %} {% unless add_media_aspect_ratio_mobile %} aspect-ratio-tab-{{ section.settings.image_aspect_ratio_mobile }} {% endunless %}"
+                  main-slider
+                >
+                  <div class="swiper-wrapper">
+                    {% if select_variant_to_show != null and render_variant_images %}
+                      {% for image in select_variant_to_show.images.value %}
+                        <div class="swiper-slide" data-media-id="{{ image.id }}">
+                          {%- if enable_media_zoom -%}
+                            <product-zoom class="icon-product-zoom" data-index="{% increment i %}">
+                              {%- render 'icon', icon: 'product-zoom' -%}
+                            </product-zoom>
+                          {%- endif -%}
+                          {% render 'media',
+                            media: image,
+                            show_preview_image: false,
+                            media_custom_identifier: 'carousel',
+                            add_media_aspect_ratio: add_media_aspect_ratio,
+                            add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile,
+                            section: section
+                          %}
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      {%- if product_first_media.media_type == 'image' -%}
+                        <div class="swiper-slide" data-media-id="{{ product_first_media.id }}">
+                          {%- if enable_media_zoom and product_first_media.media_type == 'image' -%}
+                            <product-zoom class="icon-product-zoom" data-index="{% increment i %}">
+                              {%- render 'icon', icon: 'product-zoom' -%}
+                            </product-zoom>
+                          {%- endif -%}
+                          {% render 'media',
+                            media: product_first_media,
+                            show_preview_image: false,
+                            media_custom_identifier: 'carousel',
+                            add_media_aspect_ratio: add_media_aspect_ratio,
+                            add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile,
+                            section: section
+                          %}
+                        </div>
+                      {% endif %}
+                      {% for media in medias %}
+                        {% if media.id != product_feature_media_id %}
+                          <div class="swiper-slide" data-media-id="{{ media.id }}">
+                            {%- if enable_media_zoom and media.media_type == 'image' -%}
+                              <product-zoom class="icon-product-zoom" data-index="{% increment i %}">
+                                {%- render 'icon', icon: 'product-zoom' -%}
+                              </product-zoom>
+                            {%- endif -%}
+                            {% render 'media',
+                              media: media,
+                              forloop: forloop,
+                              media_custom_identifier: 'carousel',
+                              add_media_aspect_ratio: add_media_aspect_ratio,
+                              add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile,
+                              section: section
+                            %}
+                          </div>
+                        {% endif %}
+                      {% endfor -%}
+                    {% endif %}
+                  </div>
+                {%- liquid
+                  assign show_carousel_arrows = true
+                  if section.settings.slider_hide_arrows or section.settings.desktop_media_full_width and section.settings.display_options_layout == 'thumbnail-left'
+                    assign show_carousel_arrows = false
+                  endif
+                -%}
+                {% if show_carousel_arrows %}
+                  <div class="sliderControl d-flex desktop-only">
+                    <div class="slider-arrow" slide-prev>
+                      <div class="sliderPagination__prev">
+                        {% render 'icon', icon: 'left' %}
+                      </div>
+                    </div>
+                    <div class="slider-arrow" slide-next>
+                      <div class="sliderPagination__next">
+                        {% render 'icon', icon: 'right' %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                </div>
+              {%- liquid
+                assign skeleton_first_image = medias | first
+                assign skeleton_first_ratio = skeleton_first_image.aspect_ratio | default: ''
+
+                assign skeleton_second_ratio = ''
+                if section.settings.mobile_media_layout == 'peek' and medias.size > 1
+                  assign skeleton_second_image = medias[1]
+                  assign skeleton_second_ratio = skeleton_second_image.aspect_ratio | default: ''
+                endif
+              -%}
+              <div
+                class="product-skeleton{% if section.settings.mobile_media_layout == 'peek' %} product-skeleton--peek{% endif %} {% unless add_media_aspect_ratio %} aspect-ratio-md-{{ section.settings.image_aspect_ratio_desktop }} {% endunless %} {% unless add_media_aspect_ratio_mobile %} aspect-ratio-tab-{{ section.settings.image_aspect_ratio_mobile }} {% endunless %}"
+                style="{% if section.settings.mobile_media_layout == 'peek' %}--mobile-media-gap: {{ section.settings.mobile_media_gap }}px;{% endif %}{% if add_media_aspect_ratio and skeleton_first_ratio != blank %} --skeleton-aspect-ratio-desktop: {{ skeleton_first_ratio }};{% endif %}{% if add_media_aspect_ratio_mobile and skeleton_first_ratio != blank %} --skeleton-aspect-ratio-mobile: {{ skeleton_first_ratio }};{% endif %}{% if add_media_aspect_ratio_mobile and skeleton_second_ratio != blank %} --skeleton-aspect-ratio-mobile-second: {{ skeleton_second_ratio }};{% endif %}"
+              >
+                <div class="product-skeleton__shimmer {% if add_media_aspect_ratio_mobile %} aspect-ratio-tab-{{ section.settings.image_aspect_ratio_mobile }} {% endif %}"></div>
+                {%- if section.settings.mobile_media_layout == 'peek' -%}
+                  <div class="product-skeleton__shimmer product-skeleton__peek-slide {% if add_media_aspect_ratio_mobile %} aspect-ratio-tab-{{ section.settings.image_aspect_ratio_mobile }} {% endif %}"></div>
+                {%- endif -%}
+              </div>
+              </div>
+            {%- liquid
+              assign has_multiple_media = false
+              if product_media.size > 1 or render_variant_images
+                assign has_multiple_media = true
+              endif
+            -%}
+            {% if has_multiple_media %}
+              {%- liquid
+                assign mobile_pagination = section.settings.mobile_pagination_style
+                assign is_dots = false
+                if mobile_pagination == 'dots_stack' or mobile_pagination == 'dots_overlapping'
+                  assign is_dots = true
+                endif
+
+                assign is_thumbnail_overlapping = false
+                if mobile_pagination == 'thumbnails_overlapping' and section.settings.image_aspect_ratio_mobile == 'portrait'
+                  assign is_thumbnail_overlapping = true
+                endif
+
+                assign is_thumbnail_left = false
+                if section.settings.display_options_layout == 'thumbnail-left'
+                  assign is_thumbnail_left = true
+                endif
+
+                assign is_thumbnail_left_full = false
+                if is_thumbnail_left and section.settings.desktop_media_full_width
+                  assign is_thumbnail_left_full = true
+                endif
+
+                assign thumbnail_ratio = section.settings.thumbnail_ratio
+                assign is_adapt_ratio = false
+                if thumbnail_ratio == 'adapt'
+                  assign is_adapt_ratio = true
+                endif
+              -%}
+              <div class="sliderControl has-thumbnail-slider{% if mobile_pagination == 'dots_overlapping' %} dots-overlapping{% endif %}{% if is_thumbnail_overlapping %} thumbnail-overlapping{% endif %}{% if is_thumbnail_overlapping and section.settings.mobile_media_full_width %} thumbnail-overlapping--mobile-full-width{% endif %}{% if is_thumbnail_left_full %} thumbnail-left--full-width{% endif %}">
+                {% if is_dots %}
+                  <div class="sliderProgressBar--container">
+                    <div class="sliderProgressBar mobile-only" slide-progress></div>
+                  </div>
+                {% endif %}
+                <div class="swiper-thumbnails{% if section.settings.slider_hide_arrows %} no-arrows{% endif %} thumbnail--height--{{ thumbnail_ratio }}{% if is_dots %} desktop-only{% endif %}">
+                  <div class="swiper">
+                    <div class="swiper-container" thumbnail-slider>
+                      <div class="swiper-wrapper">
+                        {% render 'product-media',
+                          product_media: product_media,
+                          render_preview_image: true,
+                          product_first_media: product_first_media,
+                          product_feature_media_id: product_feature_media_id,
+                          select_variant_to_show: select_variant_to_show,
+                          render_variant_images: render_variant_images,
+                          show_only_images: true
+                        %}
+                      </div>
+                    </div>
+                    <div class="product-skeleton product-skeleton--thumbnail{% if is_thumbnail_left_full %} product-skeleton--thumbnail--left--full-width{% endif %}{% if is_thumbnail_left %} product-skeleton--thumbnail--left{% endif %}
+                   {% if is_thumbnail_overlapping %} product-skeleton--thumbnail--overlapping{% endif %}">
+                      {%- comment -%}Skeleton thumbnails match the actual thumbnail count — images only{%- endcomment -%}
+                      {%- for media in medias -%}
+                        {%- if forloop.index > 5 -%}
+                          {%- break -%}
+                        {%- endif -%}
+                        {%- assign skeleton_thumb_ratio = media.aspect_ratio | default: '' -%}
+                        <div
+                          class="product-skeleton__thumb"
+                          {% if is_adapt_ratio %}
+                            style="--aspect-ratio-thumbnail: {{ skeleton_thumb_ratio }};"
+                          {% endif %}
+                        >
+                          <div class="product-skeleton__shimmer thumbnail--aspectSize--{{ thumbnail_ratio }}"></div>
+                        </div>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                </div>
+                {%- liquid
+                  assign show_thumbnail_arrows = true
+                  if section.settings.slider_hide_arrows
+                    assign show_thumbnail_arrows = false
+                  elsif is_thumbnail_left == false or section.settings.desktop_media_full_width == false
+                    assign show_thumbnail_arrows = false
+                  endif
+                -%}
+                {% if show_thumbnail_arrows %}
+                  <div class="sliderControl d-flex desktop-only m-0">
+                    <div class="slider-arrow" slide-prev>
+                      <div class="sliderPagination__prev">
+                        {% render 'icon', icon: 'left' %}
+                      </div>
+                    </div>
+                    <div class="slider-arrow" slide-next>
+                      <div class="sliderPagination__next">
+                        {% render 'icon', icon: 'right' %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+              {% comment %}
+                <div class="sliderControl">
+                  <div class="sliderProgressBar mt-0" slide-progress></div>
+                </div>
+              {% endcomment %}
+            </product-carousel>
+            <noscript>
+              {% if render_variant_images == false and product_feature_media_id %}
+                {%- assign firstMedia = product.selected_or_first_available_variant.feature_image -%}
+                {%- if firstMedia == blank -%}
+                  {%- assign firstMedia = medias | first -%}
+                {%- endif -%}
+              {% else %}
+                {% assign firstMedia = select_variant_to_show.images.value | first %}
+              {% endif %}
+              <product-carousel class="carousel-active product-slider--{{ section.settings.display_options_layout }} {% if layout_type == 'grid' or layout_type == 'grid-with-main-media' %} mobile-only {% endif %}">
+                <div class="product-main-slide-container">
+                  {% render 'media', media: firstMedia, media_custom_identifier: 'carousel', section: section %}
+                </div>
+              </product-carousel>
+            </noscript>
+            {%- case layout_type -%}
+              {%- when 'grid', 'grid-with-main-media', 'grid-1x1', 'grid-1x2' %}
+                <div class="grid__layout {{ section.settings.display_options_layout }}{% if section.settings.desktop_media_gap == 0 %} grid--no-gap{% endif %} desktop-only" product-grid-layout>
+                  {% if select_variant_to_show == null %}
+                    {%- if product_first_media.media_type == 'image' -%}
+                      <div
+                        class="grid__layout__item position-relative"
+                        data-media-target-id="media-{{ product_feature_media_id }}"
+                      >
+                        <div class="{% unless add_media_aspect_ratio %} aspect-ratio-{{ section.settings.image_aspect_ratio_desktop }} {% endunless %} {% unless add_media_aspect_ratio_mobile %} aspect-ratio-mobile-{{ section.settings.image_aspect_ratio_mobile }} {% endunless %}">
+                          {%- if enable_media_zoom -%}
+                            <product-zoom class="icon-product-zoom" data-index="{% increment j %}">
+                              {%- render 'icon', icon: 'product-zoom' -%}
+                            </product-zoom>
+                          {%- endif -%}
+                          {% render 'media',
+                            media: product_first_media,
+                            show_preview_image: false,
+                            layout_type: layout_type,
+                            section: section,
+                            media_custom_identifier: 'grid',
+                            add_media_aspect_ratio: add_media_aspect_ratio,
+                            add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile
+                          %}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                    {% for media in medias %}
+                      {% if media.id != product_feature_media_id and media.media_type == 'image' %}
+                        <div
+                          class="grid__layout__item position-relative"
+                          data-media-target-id="media-{{ media.id }}"
+                        >
+                          <div class="{% unless add_media_aspect_ratio %} aspect-ratio-{{ section.settings.image_aspect_ratio_desktop }} {% endunless %} {% unless add_media_aspect_ratio_mobile %} aspect-ratio-mobile-{{ section.settings.image_aspect_ratio_mobile }} {% endunless %}">
+                            {%- if enable_media_zoom -%}
+                              <product-zoom class="icon-product-zoom" data-index="{% increment j %}">
+                                {%- render 'icon', icon: 'product-zoom' -%}
+                              </product-zoom>
+                            {%- endif -%}
+                            {% render 'media',
+                              media: media,
+                              show_preview_image: false,
+                              layout_type: layout_type,
+                              section: section,
+                              media_custom_identifier: 'grid',
+                              add_media_aspect_ratio: add_media_aspect_ratio,
+                              add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile
+                            %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    {% if render_variant_images %}
+                      {% for image in select_variant_to_show.images.value %}
+                        <div
+                          class="grid__layout__item position-relative"
+                          data-media-target-id="media-{{ image.id }}"
+                        >
+                          <div class="{% unless add_media_aspect_ratio %} aspect-ratio-{{ section.settings.image_aspect_ratio_desktop }} {% endunless %} {% unless add_media_aspect_ratio_mobile %} aspect-ratio-mobile-{{ section.settings.image_aspect_ratio_mobile }} {% endunless %}">
+                            {%- if enable_media_zoom -%}
+                              <product-zoom
+                                class="icon-product-zoom"
+                                data-index="{{ forloop.index0 }}"
+                              >
+                                {%- render 'icon', icon: 'product-zoom' -%}
+                              </product-zoom>
+                            {%- endif -%}
+                            {% render 'media',
+                              media: image,
+                              show_preview_image: false,
+                              layout_type: layout_type,
+                              section: section,
+                              media_custom_identifier: 'grid',
+                              add_media_aspect_ratio: add_media_aspect_ratio,
+                              add_media_aspect_ratio_mobile: add_media_aspect_ratio_mobile
+                            %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endif %}
+                </div>
+            {%- endcase -%}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="w-50">
+          {% render 'media', onboarding: true %}
+        </div>
+      {%- endunless -%}
+
+      <div class="main-product__info w-50 fnt-16">
+        <div class="main-product__details">
+          {%- assign product_form_id = 'product-form-' | append: section.id -%}
+          {% content_for 'blocks', closest.product: section.settings.product %}
+          {%- if section.settings.view_product_more_info -%}
+            <a class="link link--green" href="{{ product.url }}">
+              {{- 'general.featured_product.view_detail_label' | t -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'bottom' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-bottom"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+{%- if enable_media_zoom -%}
+  <div id="product-zoom-drawer-{{ section.id }}">
+    {%- render 'product-image-zoom-drawer',
+      medias: medias,
+      product_first_media: product_first_media,
+      section: section,
+      product_feature_media_id: product_feature_media_id,
+      render_variant_images: render_variant_images,
+      select_variant_to_show: select_variant_to_show
+    -%}
+  </div>
+{%- endif -%}
+
+{%- liquid
+  if product.selected_or_first_available_variant.featured_media
+    assign seo_media = product.selected_or_first_available_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+-%}
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured product"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "view_product_more_info",
+      "label": "Show link to product page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_badges",
+      "label": "Hide badges",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_media_zoom",
+      "label": "Enable image zoom",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_fit_zoom",
+      "label": "t:settings_schema.global.collection_card.image_fit.label",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.contain",
+          "value": "contain"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.cover",
+          "value": "cover"
+        }
+      ],
+      "default": "contain",
+      "visible_if": "{{ section.settings.enable_media_zoom }}"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_media_full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "label": "Layout",
+      "id": "display_options_layout",
+      "type": "select",
+      "options": [
+        {
+          "value": "thumbnail-left",
+          "label": "Thumbnails left (carousel)"
+        },
+        {
+          "value": "thumbnail-bottom",
+          "label": "Thumbnails bottom (carousel)"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "grid-with-main-media",
+          "label": "Grid with main media"
+        },
+        {
+          "value": "grid-1x1",
+          "label": "Grid 1x1"
+        },
+        {
+          "value": "grid-1x2",
+          "label": "Featured 2x2 grid (1x2)"
+        }
+      ],
+      "default": "thumbnail-left"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_enable_parallax",
+      "label": "Enable parallax effect",
+      "default": false,
+      "visible_if": "{{ section.settings.display_options_layout == 'thumbnail-left' or section.settings.display_options_layout == 'thumbnail-bottom' }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_media_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "label": "Position",
+      "id": "desktop_media_position",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ],
+      "info": "Position is automatically optimized for mobile.",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "label": "Width",
+      "id": "desktop_media_size",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ],
+      "info": "Media is automatically optimized for mobile.",
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio_desktop",
+      "label": "Image ratio",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_1",
+          "value": "portrait"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_2",
+          "value": "square"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_3",
+          "value": "adapt"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_4",
+          "value": "landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "image_fit_desktop",
+      "label": "t:settings_schema.global.collection_card.image_fit.label",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.contain",
+          "value": "contain"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.cover",
+          "value": "cover"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_media_full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "label": "Simple",
+          "value": "simple"
+        },
+        {
+          "label": "Peek",
+          "value": "peek"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "select",
+      "id": "mobile_pagination_style",
+      "label": "Pagination style",
+      "options": [
+        {
+          "label": "Thumbnails stack",
+          "value": "thumbnails_stack"
+        },
+        {
+          "label": "Thumbnail overlapping",
+          "value": "thumbnails_overlapping"
+        },
+        {
+          "label": "Dots stack",
+          "value": "dots_stack"
+        },
+        {
+          "label": "Dots overlapping",
+          "value": "dots_overlapping"
+        }
+      ],
+      "default": "thumbnails_stack",
+      "info": "On mobile, thumbnails overlapping works only if aspect ratio is set to portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_enable_parallax",
+      "label": "Enable parallax effect",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio_mobile",
+      "label": "Image ratio",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_1",
+          "value": "portrait"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_2",
+          "value": "square"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_3",
+          "value": "adapt"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_4",
+          "value": "landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "t:settings_schema.global.collection_card.image_fit.label",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.contain",
+          "value": "contain"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.cover",
+          "value": "cover"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swipe_on_mobile",
+      "label": "Enable swipe on mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Thumbnail"
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_ratio",
+      "label": "Thumbnail ratio",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_1",
+          "value": "portrait"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_2",
+          "value": "square"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_3",
+          "value": "adapt"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_ratio.option.label_4",
+          "value": "landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_fit",
+      "label": "Thumbnail fit",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.contain",
+          "value": "contain"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.cover",
+          "value": "cover"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "header",
+      "content": "Media info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_info",
+      "label": "Show info",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "media_text",
+      "label": "Media text",
+      "visible_if": "{{ section.settings.show_info }}",
+      "info": "Text is limited to a maximum of 150 characters.",
+      "default": "<p>Model is 5'9 in size S</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "visible_if": "{{ section.settings.show_info }}",
+      "default": "#FFFFFF",
+       "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "visible_if": "{{ section.settings.show_info }}",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "desktop_position",
+      "label": "Desktop position",
+      "visible_if": "{{ section.settings.show_info }}",
+      "default": "left_top",
+      "options": [
+        {
+          "value": "left_top",
+          "label": "Left Top"
+        },
+        {
+          "value": "left_bottom",
+          "label": "Left Bottom"
+        },
+        {
+          "value": "right_top",
+          "label": "Right Top"
+        },
+        {
+          "value": "right_bottom",
+          "label": "Right Bottom"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_position",
+      "label": "Mobile position",
+      "visible_if": "{{ section.settings.show_info }}",
+      "default": "left_top",
+      "options": [
+        {
+          "value": "left_top",
+          "label": "Left Top"
+        },
+        {
+          "value": "left_bottom",
+          "label": "Left Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_top.label",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_bottom.label",
+      "default": 52
+    },
+    {
+      "type": "select",
+      "id": "border_size",
+      "label": "Border",
+      "options": [
+        {
+          "label": "Hide",
+          "value": "hide"
+        },
+        {
+          "label": "Full width",
+          "value": "full_width"
+        },
+        {
+          "label": "Fixed width",
+          "value": "fixed_width"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "select",
+      "id": "border_position",
+      "label": "Border position",
+      "options": [
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "_vendor" },
+    { "type": "_badges" },
+    { "type": "_title" },
+    { "type": "_price" },
+    { "type": "_buy-button" },
+    { "type": "_collapsible-text" },
+    { "type": "_complementary-products" },
+    { "type": "_custom-liquid" },
+    { "type": "_description" },
+    { "type": "_inventory-status" },
+    { "type": "_payment-installments" },
+    { "type": "_pickup" },
+    { "type": "_quantity-selector" },
+    { "type": "_rating" },
+    { "type": "_share" },
+    { "type": "_sku" },
+    { "type": "_variant-picker" },
+    { "type": "_product-variations" },
+    { "type": "_bar-chart" },
+    { "type": "_nutriscore" },
+    { "type": "_nutritional-block" },
+    { "type": "_count-down-sales-banner" },
+    { "type": "_offer" },
+    { "type": "_gift-wrap" },
+    { "type": "_product-line-item" },
+    { "type": "_fit-indicator" },
+    { "type": "_ugc-reel" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "category": "Products",
+      "settings": {
+        "view_product_more_info": false
+      },
+      "blocks": [
+        { "type": "_vendor" },
+        { "type": "_title" },
+        { "type": "_price" },
+        { "type": "_buy-button" },
+        { "type": "_collapsible-text" },
+        { "type": "_complementary-products" },
+        { "type": "_custom-liquid" },
+        { "type": "_description" },
+        { "type": "_inventory-status" },
+        { "type": "_payment-installments" },
+        { "type": "_pickup" },
+        { "type": "_quantity-selector" },
+        { "type": "_rating" },
+        { "type": "_share" },
+        { "type": "_sku" },
+        { "type": "_variant-picker" }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["*"]
+  }
+}
+{% endschema %}

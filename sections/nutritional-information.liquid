@@ -1,0 +1,437 @@
+{{ 'section-nutritional-information.css' | asset_url | stylesheet_tag }}
+{%- comment -%} Tabs: shared <tabs-toggle> (base.js) switches; <tabs-scroller> keeps the row on one line {%- endcomment -%}
+<script src="{{ 'nutritional-information.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign loading = 'lazy'
+  assign fetchpriority = 'auto'
+  if section.index == 1
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  endif
+
+  assign direction = section.settings.direction
+  assign nutritional_width = section.settings.nutritional_width
+  assign content_width = section.settings.content_width
+
+  # "Adapt to image" — the band has to take the image's own proportions, and the images here
+  # are absolute so they contribute no height. Hand the ratio to CSS the way the collection
+  # banner does (--aspect-ratio / --mobile-aspect-ratio). Left unset when there is no image:
+  # the declaration then drops out and the band falls back to hugging its content.
+  assign image_ratio = ''
+  if section.settings.image != blank
+    assign image_ratio = section.settings.image.aspect_ratio
+  endif
+
+  assign mobile_ratio = image_ratio
+  if section.settings.mobile_image != blank
+    assign mobile_ratio = section.settings.mobile_image.aspect_ratio
+  endif
+-%}
+
+{% style %}
+  /* Vertical padding applied inside the image wrapper so background fills the padded area */
+  .section-{{ section.id }} .nutritional-information__inner {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 | append: 'px' }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .nutritional-information__inner {
+      padding-top: {{ section.settings.padding_top | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    }
+  }
+{% endstyle %}
+
+{% comment %} Top border / spacer {% endcomment %}
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'top' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div class="spacer border-top"></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+<section
+  class="nutritional-information section-{{ section.id }} color-{{ section.settings.color_scheme }} nutritional-information--{{ direction }}{% if section.settings.full_width %} nutritional-information--full{% endif %}"
+  {%- comment -%} Background color sits on this full-bleed element so it backs the whole band {%- endcomment -%}
+  style="
+    --nutritional-width: {{ nutritional_width }}px;
+    --content-width: {{ content_width }}px;
+    --overlay-color: {{ section.settings.overlay_color }};
+    background-color: {{ section.settings.background_color }};
+  "
+>
+  {% unless section.settings.full_width %}
+    <div class="container">
+  {% endunless %}
+
+  {%- comment -%}
+    Band height comes from `image-height--*`, overridden below 700px by `image-height-mobile--*`.
+    `bg-color-gradient` paints the Color scheme behind it — the only thing visible with no image.
+  {%- endcomment -%}
+  <div
+    class="nutritional-information__wrapper bg-color-gradient image-height image-height--{{ section.settings.image_size }} image-height-mobile--{{ section.settings.mobile_image_size }}"
+    {% comment %} Plain tags, not whitespace-stripping ones: {%- -%} would butt this attribute
+       straight against the class above it {% endcomment %}
+    {% if image_ratio != blank %}
+      style="--aspect-ratio: {{ image_ratio }}; --mobile-aspect-ratio: {{ mobile_ratio }};"
+    {% endif %}
+  >
+    {% comment %} Background image with overlay {% endcomment %}
+    <div class="nutritional-information__media" image-container>
+      {% comment %} Blur-up placeholders stay OUTSIDE the reveal so they hold the frame {% endcomment %}
+      {% if section.settings.image != blank %}
+        <animation-reveal aoi-type="zoom-out" aoi-duration="0.7" aoi-amount="0">
+          {{
+            section.settings.image
+            | image_url: width: section.settings.image.width
+            | image_tag:
+              widths: '500,800,1200,1800,2400,2880',
+              sizes: '100vw',
+              alt: section.settings.image.alt,
+              class: 'nutritional-information__image desktop-only',
+              loading: loading,
+              fetchpriority: fetchpriority,
+              is: 'image-loading'
+          }}
+        </animation-reveal>
+        {{
+          section.settings.image
+          | image_url: width: 20
+          | image_tag:
+            alt: section.settings.image.alt,
+            class: 'blur-image desktop-only',
+            loading: loading
+        }}
+      {% endif %}
+
+      {% comment %} Mobile image — falls back to desktop image when not set {% endcomment %}
+      {% if section.settings.mobile_image != blank %}
+        <animation-reveal aoi-type="zoom-out" aoi-duration="0.7" aoi-amount="0">
+          {{
+            section.settings.mobile_image
+            | image_url: width: section.settings.mobile_image.width
+            | image_tag:
+              widths: '400,600,800,1100,1480',
+              sizes: '100vw',
+              alt: section.settings.mobile_image.alt,
+              class: 'nutritional-information__image mobile-only',
+              loading: loading,
+              fetchpriority: fetchpriority,
+              is: 'image-loading'
+          }}
+        </animation-reveal>
+        {{
+          section.settings.mobile_image
+          | image_url: width: 20
+          | image_tag:
+            alt: section.settings.mobile_image.alt,
+            class: 'blur-image mobile-only',
+            loading: loading
+        }}
+      {% elsif section.settings.image != blank %}
+        <animation-reveal aoi-type="zoom-out" aoi-duration="0.7" aoi-amount="0">
+          {{
+            section.settings.image
+            | image_url: width: section.settings.image.width
+            | image_tag:
+              widths: '400,600,800,1100,1480',
+              sizes: '100vw',
+              alt: section.settings.image.alt,
+              class: 'nutritional-information__image mobile-only',
+              loading: loading,
+              fetchpriority: fetchpriority,
+              is: 'image-loading'
+          }}
+        </animation-reveal>
+        {{
+          section.settings.image
+          | image_url: width: 20
+          | image_tag:
+            alt: section.settings.image.alt,
+            class: 'blur-image mobile-only',
+            loading: loading
+        }}
+      {% endif %}
+
+      {% comment %} Color overlay on top of image {% endcomment %}
+      <div class="nutritional-information__overlay" aria-hidden="true"></div>
+    </div>
+
+    {% comment %} Inner layout {% endcomment %}
+    <div class="nutritional-information__inner d-flex">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+
+  {% unless section.settings.full_width %}
+    </div>
+  {% endunless %}
+</section>
+
+{% comment %} Bottom border / spacer {% endcomment %}
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'bottom' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div class="spacer border-bottom"></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Nutritional information",
+  "blocks": [
+    {
+      "type": "_nutritional-content"
+    },
+    {
+      "type": "_nutritional"
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "label": "Desktop image size",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "fill",
+          "label": "Fill screen"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_size",
+      "label": "Mobile image size",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "fill",
+          "label": "Fill screen"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "2880 x 1280px (large) .jpg recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "740 x 1100px (large) .jpg recommended. Default to desktop image."
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Desktop Direction",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "range",
+      "id": "nutritional_width",
+      "label": "Desktop nutritional info width",
+      "min": 400,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 540
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Desktop content width",
+      "min": 500,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 740,
+      "visible_if": "{{ section.settings.direction == 'vertical' }}"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_top.label",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_bottom.label",
+      "default": 44
+    },
+    {
+      "type": "select",
+      "id": "border_size",
+      "label": "Border",
+      "options": [
+        {
+          "label": "Hide",
+          "value": "hide"
+        },
+        {
+          "label": "Full width",
+          "value": "full_width"
+        },
+        {
+          "label": "Fixed width",
+          "value": "fixed_width"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "select",
+      "id": "border_position",
+      "label": "Border position",
+      "options": [
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay",
+      "alpha": true,
+      "default": "#00000005"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "info": "Backs the full width of the section, behind the content container.",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutritional information",
+      "category": "Products",
+      "blocks": [
+        {
+          "type": "_nutritional-content",
+          "blocks": [
+            {
+              "type": "sub-heading"
+            },
+            {
+              "type": "heading"
+            },
+            {
+              "type": "paragraph"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "_nutritional",
+          "blocks": [
+            {
+              "type": "_information"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

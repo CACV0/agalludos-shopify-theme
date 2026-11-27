@@ -1,0 +1,327 @@
+{%- comment %}
+  Card background — results product cards are fetched from a bare collection template
+  (collection.quiz.liquid, layout none) that has no access to this section's settings, so
+  card-product cannot read section.settings there. We reproduce the card-product "--has-bg"
+  mechanism here: forward the colours as inherited custom properties on the results wrapper
+  (which IS inside the section), so each .product-card-item picks them up. Same gating logic
+  as card-product.
+{% endcomment -%}
+{%- comment %} Product card color scheme (opt-in). When enabled and a scheme is selected, that scheme's background, text and offer text colours drive the card, overriding the flat card background setting. {% endcomment -%}
+{%- assign card_scheme = section.settings.product_card_color_scheme -%}
+{%- assign card_scheme_enabled = false -%}
+{%- if section.settings.enable_product_card_background and card_scheme != blank -%}
+  {%- assign card_scheme_enabled = true -%}
+{%- endif -%}
+{%- comment %} Flat card background (used when no scheme is active): section-level setting falls back to the global setting {% endcomment -%}
+{%- capture card_bg -%}{{ section.settings.card_background_color | default: settings.card_background_color }}{%- endcapture -%}
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- assign show_card_background = false -%}
+{%- if card_scheme_enabled -%}
+  {%- comment %} Merchant explicitly opted in — always paint the card {% endcomment -%}
+  {%- assign show_card_background = true -%}
+{%- else -%}
+  {%- unless card_bg == 'rgba(0,0,0,0)' or card_bg == 'transparent' or card_bg == blank or section_bg == card_bg and section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign show_card_background = true -%}
+  {%- endunless -%}
+{%- endif -%}
+{%- comment %} When a product card scheme is active, the results wrapper adopts the scheme via the color-<id> class so the cards inherit its background, text and offer text CSS variables — no per-card custom properties are written in the markup {% endcomment -%}
+{%- assign card_scheme_class = '' -%}
+{%- if card_scheme_enabled -%}
+  {%- assign card_scheme_class = 'color-' | append: card_scheme.id -%}
+{%- endif -%}
+<div class="quiz__results-page  d-none" results-page {{ block.shopify_attributes }}>
+  {% comment %} Results Header {% endcomment %}
+  <div class="quiz__results-page-wrapper w-100">
+    {% capture results_page_content %}
+       <div class="d-flex justify-content-{{ block.settings.content_alignment }} text-{{ block.settings.content_alignment }}">
+     
+      <div
+        class="quiz__results-page-header  mb-24 "
+      >
+           {% if request.design_mode  %}
+          <div class="design__mode__layout">
+            <p class="h6 layout__message fnt-body">{{ 'section.quiz.design_mode_message' | t }}</p>
+          </div>
+        {% endif %}
+        {% if block.settings.heading %}
+          <p class="quiz__results-heading h2 ">{{ block.settings.heading }}</p>
+        {% endif %}
+        {% if block.settings.content %}
+          <div class="quiz__results-content">
+            {{ block.settings.content }}
+          </div>
+        {% endif %}
+        <ul class="badges p-0 d-flex justify-content-{{ block.settings.content_alignment }} gap-8">
+          {% for i in (1..4) %}
+            {% assign heading = 'heading_' | append: i %}
+            {% assign icon_style = 'icon_style_' | append: i %}
+            {% assign color_scheme = 'color_scheme_' | append: i %}
+            {% assign custom_icon = 'custom_icon_' | append: i %}
+            {% liquid
+              case block.settings[icon_style]
+                when 'truck'
+                  assign icon = 'icon-vehicle'
+                when 'globe'
+                  assign icon = 'icon-globe'
+                when 'box'
+                  assign icon = 'icon-box'
+                when 'heart'
+                  assign icon = 'icon-heart'
+                when 'gift'
+                  assign icon = 'icon-gift'
+                when 'smile'
+                  assign icon = 'icon-smile'
+                when 'back'
+                  assign icon = 'icon-back'
+                when 'star'
+                  assign icon = 'icon-star-sm'
+                when 'building'
+                  assign icon = 'building-icon'
+                when 'timer'
+                  assign icon = 'timer-strok'
+                when 'plane'
+                  assign icon = 'plane-icon'
+                when 'credit-card'
+                  assign icon = 'credit-card'
+                when 'lock'
+                  assign icon = 'lock-icon'
+                when 'shield-strok'
+                  assign icon = 'shield-strok'
+                when 'money'
+                  assign icon = 'money'
+              endcase
+            %}
+            {% if block.settings[heading] != blank %}
+              <li class="badge-item color-{{ block.settings[color_scheme] }}">
+                <div class="badge">
+                  {% if block.settings[custom_icon] != blank %}
+                    <span class="badge-icon d-flex align-items-center justify-content-center">
+                      {{
+                        block.settings[custom_icon]
+                        | image_url: width: 24
+                        | image_tag: widths: '24,48', sizes: '24px', alt: block.settings[custom_icon].alt, class: 'badge-icon-image'
+                      }}
+                    </span>
+                  {% else %}
+                    {% render 'icon' with icon %}
+                  {% endif %}
+                  <span class="badge-icon-text">
+                    {{ block.settings[heading] }}
+                  </span>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endcapture %}
+    {% capture no_results_content %}
+  <div class="quiz__noResultsContentWrapper">
+        <div class="quiz__noResultsContentContainer d-flex justify-content-{{ block.settings.no_results_content_alignment }} text-{{ block.settings.no_results_content_alignment }}">
+         
+          <div class="quiz__noResultsContent">
+               {% if request.design_mode  %}
+          <div class="design__mode__layout">
+            <p class="h6 layout__message fnt-body">{{ 'section.quiz.design_mode_message_no_results' | t }}</p>
+          </div>
+        {% endif %}
+            {% if block.settings.heading_no_results != blank %}
+              <p class="{{ block.settings.style_size }}">{{ block.settings.heading_no_results }}</p>
+            {% endif %}
+            {% if block.settings.content_no_results != blank %}
+              <div class="quiz__noResultsContent RTE-content mb-1">
+                {{ block.settings.content_no_results }}
+              </div>
+            {% endif %}
+            {% if block.settings.retry_button_text != blank %}
+              <div class="btn-group-container mt-12">
+                <button class="btn btn--fill quiz__retry text-upper btn--sm" quiz-retry>
+                  <span>{{ block.settings.retry_button_text }}</span>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+         {% if block.settings.product_recommendations_products != blank
+              or block.settings.product_recommendations_collections != blank
+            %}
+          <div class="product-recommendations">
+            <p class="h3 mb-24 text-{{ block.settings.product_recommendations_content_alignment }}">
+              {{ block.settings.product_recommendations_heading }}
+            </p>
+           
+              <div class="product-recommendations-wrapper">
+                <div class="product-recommendations-items">
+                  <carousel-component
+                    {{ intersection }}
+                    class="swiper js-element"
+                    slide-layout-type="carousel"
+                    slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+                    slide-pagination-type="progressbar"
+                    slide-per-view="1.3"
+                    slide-responsive-breakpoints='{"480":{"slidesPerView": "1.5"},"640":{"slidesPerView":"2.3"},"1024":{"slidesPerView":"3"},"1336":{"slidesPerView":"4"}}'
+                    slide-speed="{{ settings.slide_duration }}"
+                  >
+                    <div class="swiper-container" main-slider>
+                      <animation-reveal aoi-type="fade-up" aoi-amount="0.2" class="swiper-wrapper">
+                        {% if block.settings.product_recommendations_products != blank %}
+                          {% for product in block.settings.product_recommendations_products %}
+                            <div class="product-recommendations-item swiper-slide">
+                              {% render 'card-product', product: product, allow_variant_popup: true %}
+                            </div>
+                          {% endfor %}
+                        {% elsif block.settings.product_recommendations_collections != blank %}
+                          {% assign products = block.settings.product_recommendations_collections.products %}
+                          {% for product in products limit: 10 %}
+                            <div class="product-recommendations-item swiper-slide">
+                              {% render 'card-product', product: product, allow_variant_popup: true %}
+                            </div>
+                          {% endfor %}
+                        {% endif %}
+                      </animation-reveal>
+                    </div>
+                    <div class="sliderControl desktop-only">
+                      <div class="sliderProgressBar collectionsProgress" slide-progress></div>
+                      <div class="d-flex sliderPagination">
+                        <!-- next / prev arrows -->
+                        <div class="" slide-prev>
+                          <div
+                            aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+                            class="sliderPagination__prev collectionControl__prev"
+                          >
+                            {% render 'icon', icon: 'left' %}
+                          </div>
+                        </div>
+                        <div class="" slide-next>
+                          <div
+                            aria-label="{{ 'accessibility.next_slide_label' | t }}"
+                            class="sliderPagination__next  collectionControl__next"
+                          >
+                            {% render 'icon', icon: 'right' %}
+                          </div>
+                        </div>
+
+                        <!-- !next / prev arrows -->
+                      </div>
+                    </div>
+                  </carousel-component>
+                </div>
+              </div>
+           
+          </div>
+         {% endif %}
+      </div>
+    {% endcapture %}
+
+    <add-all-products-to-cart
+      class="product_collection{% if show_card_background %} quiz-results--has-card-bg{% endif %}{% if card_scheme_enabled %} quiz-results--scheme-bg{% endif %}{% if card_scheme_class != blank %} {{ card_scheme_class }}{% endif %}"
+      dont-remove-products-on-close
+      hide-empty-results
+      drawer-type="quiz-results-drawer-{{ section.id }}"
+      {%- if show_card_background and card_scheme_enabled == false %} style="--card-background-color: {{ card_bg }};"{% endif -%}
+    >
+      {{ results_page_content }}
+      {% if block.settings.desktop_product_layout == 'grid' %}
+        <div
+          class="grid-layout-results"
+          results-items-container
+        ></div>
+      {% else %}
+        <div class="carousel-layout ">
+          <carousel-component
+            {{ intersection }}
+            class="swiper js-element"
+            slide-layout-type="carousel"
+            slide-pagination-type="progressbar"
+            slide-per-view="1.3"
+             slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+            slide-responsive-breakpoints='{"480":{"slidesPerView": "1.5"},"640":{"slidesPerView":"2.3"},"1024":{"slidesPerView":"3"},"1336":{"slidesPerView":"4"}}'
+            slide-speed="{{ settings.slide_duration }}"
+          >
+            <div class="swiper-container" main-slider>
+              <animation-reveal aoi-type="fade-up" aoi-amount="0.2" class="swiper-wrapper" results-items-container>
+              </animation-reveal>
+            </div>
+            <div class="container  p-0 ">
+              <div class="sliderControl desktop-only">
+                <div class="sliderProgressBar collectionsProgress" slide-progress></div>
+                <div class="d-flex sliderPagination">
+                  <!-- next / prev arrows -->
+                  <div class="" slide-prev>
+                    <div
+                      aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+                      class="sliderPagination__prev collectionControl__prev"
+                    >
+                      {% render 'icon', icon: 'left' %}
+                    </div>
+                  </div>
+                  <div class="" slide-next>
+                    <div
+                      aria-label="{{ 'accessibility.next_slide_label' | t }}"
+                      class="sliderPagination__next  collectionControl__next"
+                    >
+                      {% render 'icon', icon: 'right' %}
+                    </div>
+                  </div>
+
+                  <!-- !next / prev arrows -->
+                </div>
+              </div>
+            </div>
+          </carousel-component>
+        </div>
+      {% endif %}
+      <div class="drawer__action__btn d-flex justify-content-center" animation-fade-up>
+        <div class="btn-group text-center">
+          {% if block.settings.enable_add_all_products_to_cart %}
+            <div class="btn-group-container result-page_add_to_cart">
+              <button
+                aria-label="{{ 'general.drawer.view_all_products.add_all_to_cart' | t }}"
+                class="btn {% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} text-upper"
+                add-to-cart
+                type="button"
+              >
+                <div aria-hidden="true" class="btn--preloader">
+                  <div aria-hidden="true" class="btn--preloader--circular">
+                    <div aria-hidden="true" class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div aria-hidden="true" class="btn--text">
+                  {{ block.settings.button_text }}
+                </div>
+              </button>
+            </div>
+          {% endif %}
+          <div class="btn-group-container mt-12">
+            <button class="link quiz__retry text-upper" quiz-retry>
+              <span>{{ 'section.quiz.retry' | t }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </add-all-products-to-cart>
+    {% if request.design_mode %}
+      <div class="design__mode__layout">
+        {{ results_page_content }}
+      </div>
+    {% endif %}
+    <div class=" quiz__noResults d-none" no-results>
+      {{ no_results_content }}
+    </div>
+    {% comment %}
+      <div class="quiz__loadMoreWrp" load-more watch-element animation-fade-up hide-empty-results>
+        <button class="quiz__loadMore btn{% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %}">
+          <div class="btn--preloader">
+            <div class="btn--preloader--circular">
+              <div class="checkmark draw"></div>
+            </div>
+          </div>
+          <div class="btn--text">
+            {{ 'section.quiz.button.load-more' | t }}
+          </div>
+        </button>
+      </div>
+    {% endcomment %}
+  </div>
+</div>

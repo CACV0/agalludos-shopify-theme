@@ -1,0 +1,190 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "aside",
+  "name": "Overlay group",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "blocks": {
+        "cart_offer_card_FB6pNk": {
+          "type": "_cart-offer-card",
+          "name": "Offer card",
+          "settings": {
+            "show_in_empty_cart": false,
+            "enble_full_width": true,
+            "auto_rotate": true,
+            "autoplay_delay": 3,
+            "padding_top_desktop": 0,
+            "padding_bottom_desktop": 5,
+            "padding_top_mobile": 0,
+            "padding_bottom_mobile": 5
+          },
+          "blocks": {
+            "cart_offer_Vfhrah": {
+              "type": "_cart-offer",
+              "disabled": true,
+              "settings": {
+                "show_icon": false,
+                "icon_style": "box",
+                "icon_width": 25,
+                "offer_heading": "¡Sabemos que tienes las AGALLAS!",
+                "offer_subheading": "Más de 500 familias en Bogotá ya eligen Pura Agalla cada semana.",
+                "offer_background_color": "#fcf9f1",
+                "offer_heading_color": "#290804",
+                "offer_subheading_color": "#290804",
+                "offer_link_text_color": "#b8b8b8",
+                "offer_icon_color": "#ffffff"
+              },
+              "blocks": {}
+            },
+            "cart_offer_feNkTC": {
+              "type": "_cart-offer",
+              "disabled": true,
+              "settings": {
+                "show_icon": false,
+                "icon_style": "box",
+                "icon_width": 25,
+                "offer_heading": "Oferta especial",
+                "offer_subheading": "<strong>Agrega 6 productos y paga solo 5</strong><a href=\"/collections/seleccion-premium-pescados-mariscos\" title=\"Selección Premium de Pescados y Mariscos\">. Nosotros te regalamos el otro. <em><strong>Ver productos que aplican.</strong></em></a>",
+                "offer_background_color": "#fcf9f1",
+                "offer_heading_color": "#290804",
+                "offer_subheading_color": "#290804",
+                "offer_link_text_color": "#ee704a",
+                "offer_icon_color": "#ffffff"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cart_offer_Vfhrah",
+            "cart_offer_feNkTC"
+          ]
+        }
+      },
+      "block_order": [
+        "cart_offer_card_FB6pNk"
+      ],
+      "settings": {
+        "view_cart_link": true,
+        "cart_recommendation_title": "Recomendados",
+        "desktop_layout_style": "stack_outside",
+        "recommendation_product_list": [
+          "camaron-jumbo-crudo",
+          "anillos-de-calamar",
+          "bagre-rayado-en-posta",
+          "mixtura",
+          "mojarra",
+          "trucha"
+        ],
+        "enable_recently_viewed_tab": true,
+        "recently_viewed_limit": 6
+      }
+    },
+    "search-drawer": {
+      "type": "search-drawer",
+      "settings": {
+        "prompt_animation": true,
+        "prompt_mobile": true,
+        "prompt_text_1": "salmón",
+        "prompt_text_2": "atún",
+        "prompt_text_3": "róbalo",
+        "prompt_text_4": "sierra",
+        "prompt_text_5": "trucha",
+        "heading": "Los preferidos",
+        "collections": "todos-los-productos"
+      }
+    },
+    "newsletter-popup": {
+      "type": "newsletter-popup",
+      "settings": {
+        "apparition_delay": 2,
+        "popup_placement": "bottom-left",
+        "show_only_on_index": true,
+        "show_only_for_visitors": true,
+        "show_only_once": true,
+        "title": "¡Lo mejor del río y el mar!",
+        "subtext": "Entérate primero de nuestras promociones, descuentos de temporada y novedades.",
+        "content_alignment": "row",
+        "image_width": 780
+      }
+    },
+    "announcement_popup_8a8UUM": {
+      "type": "announcement-popup",
+      "blocks": {
+        "announcement_MTkCV3": {
+          "type": "announcement",
+          "settings": {
+            "announcement_image_shape": "circle",
+            "announcement_image_radius": 0,
+            "announcement_text": "🎁 Por compras <strong>iguales o superiores a $150.000</strong> el domicilio <strong>GRATIS</strong>.",
+            "announcement_link": "",
+            "announcement_link_target": "_top",
+            "announcement_color_scheme": "scheme-2"
+          }
+        },
+        "announcement_9VtnB3": {
+          "type": "announcement",
+          "settings": {
+            "announcement_image_shape": "circle",
+            "announcement_image_radius": 0,
+            "announcement_text": "🎁 Por compras superiores a <strong>$220.000</strong> recibes <strong>10% OFF</strong> aplicado automáticamente.",
+            "announcement_link": "",
+            "announcement_link_target": "_top",
+            "announcement_color_scheme": "scheme-2"
+          }
+        },
+        "announcement_E8aiNY": {
+          "type": "announcement",
+          "settings": {
+            "announcement_image_shape": "circle",
+            "announcement_image_radius": 0,
+            "announcement_text": "🎁 <strong>Agrega 6 productos y paga solo 5</strong>. Nosotros te regalamos el otro. <em>Ver productos que aplican.</em>",
+            "announcement_link": "shopify://collections/seleccion-premium-pescados-mariscos",
+            "announcement_link_target": "_top",
+            "announcement_color_scheme": "scheme-2"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_MTkCV3",
+        "announcement_9VtnB3",
+        "announcement_E8aiNY"
+      ],
+      "name": "Announcement Popup",
+      "settings": {
+        "popup_placement": "left",
+        "popup_position_desktop": 80,
+        "popup_position_mobile": 20,
+        "popup_subheading": "",
+        "popup_heading": "¡Llegaste a la red de ofertas Pura Agalla!",
+        "popup_text_alignment": "center",
+        "popup_heading_color": "#ffffff",
+        "popup_heading_background": "#1a1411",
+        "popup_icon_style": "gift-icon",
+        "popup_icon_color": "#ffffff",
+        "popup_button_label": "OFERTAS",
+        "popup_button_label_color": "#ffffff",
+        "popup_button_background_color": "#69c5d4",
+        "popup_button_corner_radius": 30,
+        "show_announcement_counter": true,
+        "counter_color": "#ffffff",
+        "counter_background": "#131313",
+        "popup_body_background_color": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "cart-drawer",
+    "search-drawer",
+    "newsletter-popup",
+    "announcement_popup_8a8UUM"
+  ]
+}

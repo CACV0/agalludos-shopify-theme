@@ -1,0 +1,65 @@
+{% comment %}
+  Variable used:
+  block : {{Object}} Block object
+{% endcomment %}
+<accordion-tab {{ block.shopify_attributes }}>
+  <details
+    accordionTab
+    aria-expanded="{{ block.settings.open_by_default }}"
+    class="accordion__item d-block{% if block.settings.open_by_default %} active{% endif %}"
+    {% if block.settings.open_by_default %}open{% endif %}
+
+    {% if block.settings.block_bottom_spacing %}
+      style="margin-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+    {% endif %}
+  >
+    <summary aria-label="{{ block.settings.heading | default: block.settings.page.title }}">
+      <div class="accordion__item__head">
+        <{{block.settings.heading_tag}} class="m-0 fnt-16 fnt-body {{ block.settings.style }}">{{ block.settings.heading | default: block.settings.page.title }}</{{block.settings.heading_tag}}>
+      </div>
+    </summary>
+    <div accordionBody class="accordion__item__body{% if block.settings.open_by_default %} active{% endif %}">
+      <div class="accordion__item__body-content">
+        <div class="RTE-content">
+          {{ block.settings.content }}
+          {{ block.settings.page.content }}
+        </div>
+        {% if block.settings.image %}
+          {%- capture sizes -%}
+            {%- unless section.settings.full_width -%}
+              (min-width: {{ page_width }}px) 780px,
+              (min-width: 768px) calc({{ imageWidth }} - 50px), calc(100vw - 100px)
+              {%- else -%}
+              (min-width: 768px) calc({{ imageWidth }} - 50px), calc(100vw - 100px)
+            {%- endunless -%}
+          {%- endcapture -%}
+          {% assign widths = '500, 780, 1060, 1280, 1440' %}
+          <div
+            class="accordion__item__image"
+            style="--desktop-image-width:{{ block.settings.desktop_image_width | append: '%' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: '%' }}"
+            image-container
+          >
+            {{
+              block.settings.image
+              | image_url: width: block.settings.image.width
+              | image_tag:
+                sizes: sizes,
+                widths: widths,
+                alt: block.settings.image.alt,
+                class: 'accordion-image',
+                is: 'image-loading'
+            }}
+            {{
+              block.settings.image
+              | image_url: width: 40
+              | image_tag:
+                alt: block.settings.image.alt,
+                class: 'blur-image',
+                loading: 'eager'
+            }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </details>
+</accordion-tab>

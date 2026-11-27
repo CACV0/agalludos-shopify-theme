@@ -1,0 +1,28 @@
+# Agalludos - Shopify Development
+
+# Shopify CLI local
+.shopify/
+
+# Dependencies
+node_modules/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+
+# IDE settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files and logs
+*.log
+*.tmp
+
+# Local backup archives
+*.zip

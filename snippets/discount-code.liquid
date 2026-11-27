@@ -1,0 +1,32 @@
+{% liquid
+  assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
+  for item in cart.items
+    for allocation in item.line_level_discount_allocations
+      if allocation.discount_application.type == 'discount_code'
+        assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
+      endif
+    endfor
+  endfor
+
+  assign discount_codes = discount_codes | uniq
+%}
+
+<ul class="d-flex flex-wrap column-gap-8" manual-discount-code>
+  {%- for discount_code in discount_codes -%}
+    <li class="d_badge fnt-14 d-flex align-items-center column-gap-4" data-code="{{ discount_code }}">
+      {{ discount_code }}
+      <remove-discount-pill
+        class="d-block cursor-pointer"
+      >
+        <button
+          type="button"
+          class="p-0 border-0 bg-transparent"
+
+          aria-label="{{ 'accessibility.cart_remove' | t: title: discount_code }}"
+        >
+          {%- render 'icon' with 'close-small', color: 'var(--color-discount-badge-text)' -%}
+        </button>
+      </remove-discount-pill>
+    </li>
+  {%- endfor -%}
+</ul>

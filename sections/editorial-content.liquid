@@ -1,0 +1,264 @@
+{{ 'section-editorial-content.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 | append: 'px' }};
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    }
+  }
+{% endstyle %}
+
+{% case section.settings.desktop_content_position %}
+  {% when 'top' %}{% assign d_pos = 'left' %}
+  {% when 'bottom' %}{% assign d_pos = 'right' %}
+  {% else %}{% assign d_pos = 'center' %}
+{% endcase %}
+{% case section.settings.mobile_content_position %}
+  {% when 'top' %}{% assign m_pos = 'left' %}
+  {% when 'bottom' %}{% assign m_pos = 'right' %}
+  {% else %}{% assign m_pos = 'center' %}
+{% endcase %}
+{%  capture content_for_block %} {% content_for 'blocks' %} {% endcapture %} 
+
+<div
+  id="shopify-section-{{ section.id }}"
+  class="section-{{ section.id }} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} overflow-hidden"
+>
+  <div
+    class="editorial-content__wrapper position-relative {% unless section.settings.full_width %}container{% endunless %}{% unless section.settings.enable_animation %} editorial-content--no-animation{% endunless %}"
+  >
+  <div class="editorial-content position-relative d-flex justify-content-{{ section.settings.desktop_content_alignment }} justify-content-{{ section.settings.mobile_content_alignment }}-md align-item-{{ d_pos }} align-item-{{ m_pos }}-md">
+      <div class="editorial-content__image--only position-absolute"> {{ content_for_block }} </div>
+      <div
+      class="editorial-content__center d-flex d-flex-dir-c w-100 overflow-hidden  text-{{ section.settings.desktop_content_alignment }} text-{{ section.settings.mobile_content_alignment }}-md"
+      style="--content-width: {{ section.settings.content_width }}px; --text-blend-mode: {{ section.settings.text_blend_mode }}; {% unless section.settings.text_blend_mode == 'normal' %}--color-text: {{ section.settings.text_blend_color }}; {% endunless %}"
+      >
+        {{ content_for_block }}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Editorial Content",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "label": "Content width",
+      "default": 500
+    },
+     {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable image animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "text_blend_mode",
+      "label": "Text blend mode",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Exclusion", "value": "exclusion" },
+        { "label": "Soft light", "value": "soft-light" }
+      ],
+      "default": "normal",
+      "info": "Exclusion blend mode to work effectively, the text color should be the same as or similar to the background color."
+    },
+    {
+      "type": "color",
+      "id": "text_blend_color",
+      "label": "Text color",
+      "default": "#ffffff",
+      "visible_if": "{{ section.settings.text_blend_mode != 'normal' }}",
+      "info": "It will not override hightlight color and custom color from heading and paragraph block."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "text_alignment",
+      "id": "desktop_content_alignment",
+      "label": "Content alignment",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Content position",
+      "options": [
+        { "label": "Top", "value": "top" },
+        { "label": "Center", "value": "center" },
+        { "label": "Bottom", "value": "bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Content alignment",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "Content position",
+      "options": [
+        { "label": "Top", "value": "top" },
+        { "label": "Center", "value": "center" },
+        { "label": "Bottom", "value": "bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 0
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    { "type": "_image-editorial" },
+    { "type": "heading" },
+    { "type": "paragraph" },
+    { "type": "_editorial-timer" },
+    { "type": "button" }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Content",
+      "blocks": [
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 0,
+            "horizontal": 4,
+            "image_width_desktop": 28,
+            "vertical_mobile": 14,
+            "horizontal_mobile": 0,
+            "image_width_mobile": 50,
+            "show_border": false
+          }
+        },
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 7,
+            "horizontal": 93,
+            "image_width_desktop": 34,
+            "vertical_mobile": 2,
+            "horizontal_mobile": 98,
+            "image_width_mobile": 50,
+            "show_border": false
+          }
+        },
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 89,
+            "horizontal": 4,
+            "image_width_desktop": 31,
+            "vertical_mobile": 98,
+            "horizontal_mobile": 2,
+            "image_width_mobile": 50,
+            "show_border": false
+          }
+        },
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 100,
+            "horizontal": 94,
+            "image_width_desktop": 29,
+            "vertical_mobile": 80,
+            "horizontal_mobile": 98,
+            "image_width_mobile": 50,
+            "show_border": false
+          }
+        },
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 42,
+            "horizontal": 0,
+            "image_width_desktop": 15,
+            "hide_on_mobile": true,
+            "show_border": false
+          }
+        },
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 45,
+            "horizontal": 100,
+            "image_width_desktop": 20,
+            "hide_on_mobile": true,
+            "show_border": false
+          }
+        },
+
+        {
+          "type": "_image-editorial",
+          "settings": {
+            "vertical": 100,
+            "horizontal": 45,
+            "image_width_desktop": 20,
+            "hide_on_mobile": true,
+            "show_border": false
+          }
+        },
+        { "type": "heading" },
+        { "type": "paragraph" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

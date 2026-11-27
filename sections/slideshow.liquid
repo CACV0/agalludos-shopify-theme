@@ -1,0 +1,836 @@
+{%- liquid
+  assign loading = 'eager'
+  assign fetchpriority = 'auto'
+  assign intersection = ''
+  if section.index == 1
+    assign fetchpriority = 'high'
+  elsif section.index > 2
+    assign loading = 'lazy'
+    assign intersection = 'intersection-element'
+  endif
+  assign ratio = 1.77
+
+  # autoHeight measures the active slide once and freezes the result as an inline height on
+  # .swiper-wrapper. A fill-screen slide only reaches its real height after height-calc.js
+  # publishes --header-height / --announcement-height, which happens after Swiper initialises,
+  # so the frozen value never catches up and the absolutely positioned .dash_arrows is left
+  # stranded away from the media. Fill-screen slides are all the same height anyway, so
+  # autoHeight earns nothing there — drop it for that size only, per breakpoint, and keep it
+  # everywhere else so the carousel still shrink-wraps slides of differing heights.
+  assign desktop_auto_height = true
+  if section.settings.media_size == 'fill-screen'
+    assign desktop_auto_height = false
+  endif
+  assign mobile_auto_height = true
+  if section.settings.mobile_media_size == 'fill-screen'
+    assign mobile_auto_height = false
+  endif
+-%}
+
+{{ 'section-slide-show.css' | asset_url | stylesheet_tag }}
+{{ 'section-video.css' | asset_url | stylesheet_tag }}
+<style>
+  .rich-text__wrp--{{ section.id }}{
+    background-color: {{ section.settings.bg_color }}
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 | append: 'px;' }}
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 | append: 'px;' }}
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | append: 'px;' }}
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px;' }}
+    }
+  }
+
+  #section-{{ section.id }} .sliderControl .sliderProgressBar .swiper-pagination-bullet::after {
+    --progress-duration : {{ settings.slide_duration | append: 'ms' }}
+  }
+</style>
+
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'top' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper" style="--color-border: {{ section.settings.border_color.rgba }}">
+      <div
+        class="spacer border-top"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+<div
+  class="slideshow bannerSlider  section-{{ section.id }}-padding "
+  id="section-{{ section.id }}"
+  role="region"
+  aria-label="Slider Section"
+  style="background-color: {{ section.settings.section_background_color }}"
+  animate-section
+  aoi-no-container
+>
+  <div class="{% unless section.settings.section_width %} container {% else %} full-width {% endunless %}">
+    {{ 'section-slide-show.css' | asset_url | stylesheet_tag }}
+    {{ 'section-video.css' | asset_url | stylesheet_tag }}
+    <carousel-component
+      {{ intersection }}
+      dynamic-navigation-color
+      class="swiper  mobile-content-over-media  js-element"
+      slide-autoplay-delay="{{ section.settings.autoplay_delay }}"
+      slide-autoplay="{{ section.settings.slider_autoplay }}"
+      slide-enable-after-interaction
+      slide-layout-type="carousel"
+      slide-pagination-type="bullets"
+      slide-per-view="1"
+      {%- comment -%} autoHeight is dropped per breakpoint for fill-screen only — see the top of the file {%- endcomment -%}
+      slide-responsive-breakpoints='{"320":{"slidesPerView":"1"{% if mobile_auto_height %},"autoHeight":"true"{% endif %}},"768":{"slidesPerView":"1"{% if desktop_auto_height %},"autoHeight":"true"{% endif %}}}'
+      slide-speed="{{ settings.slide_duration }}"
+      slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+      animate-on-slide-change
+      {% if section.index == 1 %}
+        animate-on-load
+      {% endif %}
+      slide-animation="fade"
+      aria-label="Slider"
+    >
+      <div
+        class="swiper-container {% unless section.settings.section_width %} border-radius border-radius--block {% endunless %}"
+        main-slider
+        style="--pagination-width: {{ section.blocks.size }}"
+      >
+        <div class="swiper-wrapper">
+          {% content_for 'blocks' %}
+        </div>
+        {% if section.settings.desktop_navigation != 'none' and section.blocks.size > 1 %}
+          <div class="" slider-controller>
+            <div
+              class="dash_arrows{% unless section.settings.desktop_navigation == 'dash_arrows' or section.settings.desktop_navigation == 'dash'%} dash_arrows-mobile-sm-only{% endunless %} {{ section.settings.desktop_navigation }}"
+            >
+              {% unless section.settings.desktop_navigation == 'dash' %}
+                <!-- Next Arrow -->
+                <div
+                  class="slideshow__next sliderPagination__next desktop-only"
+                  slide-next
+                  role="button"
+                  tabindex="0"
+                  aria-label="{{ 'accessibility.next_slide_label' | t }}"
+                >
+                  {% render 'icon', icon: 'right' %}
+                </div>
+              {% endunless %}
+
+              <!-- Pagination Dots -->
+              <div
+                class="sliderControl  {% if section.settings.desktop_navigation == 'arrows' %}  mobile-only  {% endif %}"
+                role="group"
+                aria-label="Slider Controls"
+              >
+                <div class="sliderProgressBar">
+                  <div class="swiper-pagination" slide-progress role="group" aria-label="{{ 'accessibility.slider_pagination' | t }}"></div>
+                </div>
+              </div>
+
+              {% unless section.settings.desktop_navigation == 'dash' %}
+                <!-- Previous Arrow -->
+                <div
+                  class="slideshow__prev sliderPagination__prev desktop-only"
+                  slide-prev
+                  role="button"
+                  tabindex="0"
+                  aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+                >
+                  {% render 'icon', icon: 'left' %}
+                </div>
+              {% endunless %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </carousel-component>
+
+    <noscript>
+      <div
+        class="swiper  mobile-content-over-media {% unless section.settings.section_width %} border-radius border-radius--block {% endunless %}"
+        role="region"
+        aria-label="Slider"
+      >
+        <div class="swiper-wrapper">
+          {%- assign firstBlock = section.blocks | first -%}
+          {% case firstBlock.type %}
+            {% when 'image_slide' %}
+              <div
+                class="swiper-slide color-{{ firstBlock.settings.color_scheme }}"
+                data-color-scheme="color-{{ firstBlock.settings.color_scheme }}"
+                {{ firstBlock.shopify_attributes }}
+                role="region"
+              >
+                {% liquid
+                  if section.settings.media_size == 'adapt'
+                    assign ratio = firstBlock.settings.slide_image.aspect_ratio
+                  endif
+                %}
+                <div
+                  class="slideshow__slide slideshow__slide--bgColor media-size--{{ section.settings.media_size }} {% if  firstBlock.settings.image_video_positin == 'right' %} image-right {% endif %}"
+                  {% if section.settings.media_size == 'adapt' %}
+                    style="--aspect-ratio: {{ ratio }}"
+                  {% endif %}
+                >
+                  <div class="slideshow__slideImg {% if firstBlock.settings.image_video_width == 'full' %} image-full-width {% else %} position-relative {% endif %} {% if firstBlock.settings.mobile_slide_image != blank %} mobile-image-available {% endif %}">
+                    <animation-reveal aoi-type="scale" aoi-delay="0.2" aoi-duration="0.6" aoi-amount="0">
+                      {% if firstBlock.settings.overlay_color != 'rgba(0,0,0,0)' %}
+                        {%- assign overlay_rgba_color = firstBlock.settings.overlay_color.rgba -%}
+                        <div
+                          class="image__overlay position-absolute {% if firstBlock.settings.hide_on_desktop %} hide-over-on-desktop {% endif %}"
+                          style="background-color:  rgba({{ overlay_rgba_color }})"
+                          video-overlay-elements
+                        ></div>
+                      {% endif %}
+                      {%- capture sizes -%}
+                      {%- if firstBlock.settings.image_video_width == 'full' -%}
+                        100vw
+                        {%- else -%}
+                        (min-width: 780px) calc({{ settings.page_width |  divided_by: 2 |  append: 'px' }} - 100px ), calc(83.33vw + 50px)
+                      {%- endif -%}
+                    {%- endcapture -%}
+                      {% if firstBlock.settings.slide_image != blank %}
+                        {{
+                          firstBlock.settings.slide_image
+                          | image_url: width: firstBlock.settings.slide_image.width
+                          | image_tag:
+                            loading: loading,
+                            fetchpriority: fetchpriority,
+                            alt: firstBlock.settings.slide_image.alt,
+                            widths: '2040,1600,1335,900,700',
+                            sizes: sizes,
+                            class: 'desktop-image'
+                        }}
+                      {% else %}
+                        {{ 'hero-apparel-1' | placeholder_svg_tag: 'slideshow__svg desktop-image' }}
+                      {% endif %}
+                      {% if firstBlock.settings.mobile_slide_image != blank %}
+                        {{
+                          firstBlock.settings.mobile_slide_image
+                          | image_url: width: firstBlock.settings.mobile_slide_image.width
+                          | image_tag:
+                            loading: loading,
+                            fetchpriority: fetchpriority,
+                            alt: firstBlock.settings.mobile_slide_image.alt,
+                            widths: '767,512,320',
+                            sizes: 'calc(100vw-30px)',
+                            class: 'mobile-image'
+                        }}
+                      {% endif %}
+                    </animation-reveal>
+                  </div>
+                  {% if firstBlock.settings.enable_image_link and firstBlock.settings.slide_link != blank %}
+                    <a
+                      class="slideshow__slide-link"
+                      href="{{ firstBlock.settings.slide_link }}"
+                      target="{{ firstBlock.settings.slide_link_target }}"
+                      aria-label="{{ firstBlock.settings.slide_link | default: 'Slide link' }}"
+                    ></a>
+                  {% endif %}
+                  <div
+                    class="{% if firstBlock.settings.image_video_width == 'full' %} container full-image-content {% endif %}{% unless firstBlock.settings.image_video_width == 'full' %} slideshow__slideContent {% endunless %} content-desktop-alignment-{{ firstBlock.settings.desktop_content_position }} content-mobile-alignment-{{ firstBlock.settings.mobile_content_position }}"
+                    role="region"
+                    aria-label="Slide Content"
+                  >
+                    <div
+                      class="slideshow__slideBody {% unless section.settings.desktop_navigation == 'arrows' %} arrows-not-at-verticle-center {% endunless %} desktop-text-{{ firstBlock.settings.desktop_content_alignment }} mobile-text-{{ firstBlock.settings.mobile_content_alignment }}"
+                      role="region"
+                      aria-label="Slide Text"
+                      style="--slider-content-width: {{ firstBlock.settings.content_width | append: "px" }}"
+                    >
+                      {% if firstBlock.settings.subheading != blank %}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <p class="text-size-small mb-2">{{ firstBlock.settings.subheading }}</p>
+                        </animation-reveal>
+                      {% endif %}
+                      {% if firstBlock.settings.slide_header != blank %}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <{{ firstBlock.settings.heading_tag }} class="h1 slideshow__head fnt-heading mb-1">
+                            {{- firstBlock.settings.slide_header -}}
+                          </{{ firstBlock.settings.heading_tag }}>
+                        </animation-reveal>
+                      {% endif %}
+                      {% if firstBlock.settings.slide_sub_text != blank %}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <div class="fnt-16 slideshow__subtext slideshow__text clr-black RTE-content">
+                            {{ firstBlock.settings.slide_sub_text }}
+                          </div>
+                        </animation-reveal>
+                      {% endif %}
+                      {% if firstBlock.settings.button_label != blank %}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <div class="btn--wrap">
+                            <a
+                              class="btn {% if firstBlock.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} slideshow__shop-btn"
+                              href="{{ firstBlock.settings.button_link | default: '#' }}"
+                              target="{{ firstBlock.settings.link_target }}"
+                            >
+                              {{- firstBlock.settings.button_label }}
+                            </a>
+                          </div>
+                        </animation-reveal>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% when 'video_slide' %}
+              <div
+                class="swiper-slide color-{{ firstBlock.settings.color_scheme }}"
+                data-color-scheme="color-{{ firstBlock.settings.color_scheme }}"
+                {{ firstBlock.shopify_attributes }}
+                role="region"
+              >
+                {% assign coverImage = firstBlock.settings.cover_image
+                  | default: firstBlock.settings.slide_video.preview_image
+                %}
+                {% liquid
+                  if section.settings.media_size == 'adapt'
+                    assign ratio = coverImage.aspect_ratio
+                  endif
+                %}
+                <div
+                  class="media-size--{{ section.settings.media_size }} d-flex"
+                  {% if section.settings.media_size == 'adapt' %}
+                    style="--aspect-ratio: {{ ratio }}"
+                  {% endif %}
+                >
+                  <div class=" slideshow__slide slideshow__slide--bgColor {% if firstBlock.settings.image_video_positin == 'right' %} image-right {% endif %}">
+                    <div class="slideshow__slideImg {% if firstBlock.settings.image_video_width == 'full' %} image-full-width {% endif %}">
+                      {%- assign media_autoplay = firstBlock.settings.media_autoplay -%}
+                      {% if firstBlock.settings.overlay_color != 'rgba(0,0,0,0)' %}
+                        {%- assign overlay_rgba_color = firstBlock.settings.overlay_color.rgba -%}
+                      {%- endif -%}
+                      {%- assign is_video_width_full = false -%}
+                      {%- if firstBlock.settings.image_video_width == 'full' -%}
+                        {%- assign is_video_width_full = true -%}
+                      {%- endif -%}
+                      {% comment %} Display Play button if autoplay is true for media {% endcomment %}
+                      {%- capture display_video_overlay_elements -%}
+                          {% if firstBlock.settings.overlay_color != 'rgba(0,0,0,0)' %}
+                          <div class="video__overlay__elements" video-overlay-elements>
+                            <div class="video__overlay__elements__wrapper">
+                            </div>
+                            </div>
+                          {% endif %}
+                      {%- endcapture -%}
+                      {% if firstBlock.settings.slide_video != blank %}
+                        {% comment %} {% render 'media-new', media: video_url, show_preview_image: render_preview_image | default: false, media_autoplay: media_autoplay %} {% endcomment %}
+                        <default-player
+                          class="d-block custom__player__element position-relative set-100-percentage-size-media"
+                          watch-element
+                          data-media-type="video"
+                          media-autoplay
+                          role="group"
+                          aria-label="Video Player"
+                        >
+                          <animation-reveal aoi-type="scale" aoi-delay="0.2" aoi-duration="0.6" aoi-amount="0">
+                            <video
+                              preload="metadata"
+                              poster="false"
+                              webkit-playsinline
+                              playsinline
+                              muted
+                              autoplay
+                              loop
+                              {% if firstBlock.settings.slide_video.alt %}
+                                aria-label="{{ firstBlock.settings.slide_video.alt}}"
+                              {% endif %}
+                            >
+                              {%- for source in firstBlock.settings.slide_video.sources -%}
+                                <source data-src="{{ source.url }}" type="{{ source.mime_type }}">
+                              {%- endfor -%}
+                              Your browser does not support the video tag.
+                            </video>
+                          </animation-reveal>
+                          {{ display_video_overlay_elements }}
+                          <div
+                            class="video__overlay position-absolute {% if firstBlock.settings.hide_on_desktop %} hide-over-on-desktop {% endif %}"
+                            style="background-color: rgba({{ overlay_rgba_color }})"
+                            video-overlay-elements
+                          ></div>
+                        </default-player>
+                      {%- else -%}
+                        <animation-reveal aoi-type="scale" aoi-delay="0.2" aoi-duration="0.6" aoi-amount="0">
+                          {%- if coverImage != blank -%}
+                            {{
+                              coverImage
+                              | image_url: width: coverImage.width
+                              | image_tag:
+                                widths: '340,767,980,1024',
+                                sizes: '(max-width: 520px) 340px,(max-width: 767px) 767px,(max-width: 980px) 980px,(max-width: 1024) 1024px',
+                                alt: coverImage.alt,
+                                loading: loading,
+                                fetchpriority: fetchpriority,
+                                class: 'set-100-percentage-size-media'
+                            }}
+                          {%- else -%}
+                            {{ 'hero-apparel-2' | placeholder_svg_tag: 'set-100-percentage-size-media' }}
+                          {%- endif -%}
+                        </animation-reveal>
+                      {% endif %}
+                    </div>
+                    {% if firstBlock.settings.enable_image_link and firstBlock.settings.slide_link != blank %}
+                      <a
+                        class="slideshow__slide-link"
+                        href="{{ firstBlock.settings.slide_link }}"
+                        target="{{ firstBlock.settings.slide_link_target }}"
+                        aria-label="{{ firstBlock.settings.slide_link | default: 'Slide link' }}"
+                      ></a>
+                    {% endif %}
+                    <div class="{% if firstBlock.settings.image_video_width == 'full' %} container full-image-content {% endif %} {% unless firstBlock.settings.image_video_width == 'full' %} slideshow__slideContent {% endunless %} content-desktop-alignment-{{ firstBlock.settings.desktop_content_position }} content-mobile-alignment-{{ firstBlock.settings.mobile_content_position }}">
+                      <div
+                        class="slideshow__slideBody {% unless section.settings.desktop_navigation == 'arrows' %} arrows-not-at-verticle-center {% endunless %} desktop-text-{{ firstBlock.settings.desktop_content_alignment }} mobile-text-{{ firstBlock.settings.mobile_content_alignment }}"
+                        style="--slider-content-width: {{ firstBlock.settings.content_width | append: "px" }}"
+                      >
+                        {% if firstBlock.settings.subheading != blank %}
+                          <animation-reveal
+                            class=""
+                            aoi-type="fade-up"
+                            aoi-delay="0.4"
+                            aoi-duration="0.6"
+                          >
+                            <p class="text-size-small mb-2">{{ firstBlock.settings.subheading }}</p>
+                          </animation-reveal>
+                        {% endif %}
+                        {%- if firstBlock.settings.slide_header -%}
+                          <animation-reveal
+                            class=""
+                            aoi-type="fade-up"
+                            aoi-delay="0.4"
+                            aoi-duration="0.6"
+                          >
+                            <{{ firstBlock.settings.heading_tag }} class="h1 slideshow__head fnt-heading mb-1">
+                              {{- firstBlock.settings.slide_header -}}
+                            </{{ firstBlock.settings.heading_tag }}>
+                          </animation-reveal>
+                        {%- endif -%}
+                        {%- if firstBlock.settings.slide_sub_text -%}
+                          <animation-reveal
+                            class=""
+                            aoi-type="fade-up"
+                            aoi-delay="0.4"
+                            aoi-duration="0.6"
+                          >
+                            <div class="fnt-16 slideshow__subtext slideshow__text enable-listy-style clr-black">
+                              {{ firstBlock.settings.slide_sub_text }}
+                            </div>
+                          </animation-reveal>
+                        {% endif %}
+                        {%- if firstBlock.settings.button_label != blank -%}
+                          <animation-reveal
+                            class=""
+                            aoi-type="fade-up"
+                            aoi-delay="0.4"
+                            aoi-duration="0.6"
+                          >
+                            <div class="btn--wrap">
+                              <a
+                                class="btn {% if firstBlock.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} slideshow__shop-btn"
+                                href="{{ firstBlock.settings.button_link | default: '#' }}"
+                              >
+                                {{ firstBlock.settings.button_label }}
+                              </a>
+                            </div>
+                          </animation-reveal>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            {% when 'text_slide' %}
+              <div
+                class="swiper-slide color-{{ firstBlock.settings.color_scheme }}"
+                data-color-scheme="color-{{ firstBlock.settings.color_scheme }}"
+                {{ firstBlock.shopify_attributes }}
+                role="region"
+              >
+                <div
+                  class="slideshow__slide slideshow__slide--bgColor media-size--{{ section.settings.media_size }}"
+                  {% if section.settings.media_size == 'adapt' %}
+                    style="--aspect-ratio: {{ ratio }}"
+                  {% endif %}
+                >
+                  {% if firstBlock.settings.enable_image_link and firstBlock.settings.slide_link != blank %}
+                    <a
+                      class="slideshow__slide-link"
+                      href="{{ firstBlock.settings.slide_link }}"
+                      target="{{ firstBlock.settings.slide_link_target }}"
+                      aria-label="{{ firstBlock.settings.slide_link | default: 'Slide link' }}"
+                    ></a>
+                  {% endif %}
+                  <div class="container only-content  content-desktop-alignment-{{ firstBlock.settings.desktop_content_position }} content-mobile-alignment-{{ firstBlock.settings.mobile_content_position }}">
+                    <div
+                      class="slideshow__slideBody {% unless section.settings.desktop_navigation == 'arrows' %} arrows-not-at-verticle-center {% endunless %} desktop-text-{{ firstBlock.settings.desktop_content_alignment }} mobile-text-{{ firstBlock.settings.mobile_content_alignment }}"
+                      style="--slider-content-width: {{ firstBlock.settings.content_width | append: "px" }}"
+                    >
+                      {% if firstBlock.settings.subheading != blank %}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <p class="text-size-small mb-2">{{ firstBlock.settings.subheading }}</p>
+                        </animation-reveal>
+                      {% endif %}
+                      {%- if firstBlock.settings.slide_header -%}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <{{ firstBlock.settings.heading_tag }} class="h1 slideshow__head fnt-heading mb-1">
+                            {{- firstBlock.settings.slide_header -}}
+                          </{{ firstBlock.settings.heading_tag }}>
+                        </animation-reveal>
+                      {%- endif -%}
+                      {%- if firstBlock.settings.slide_sub_text -%}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <div
+                            class="fnt-16 slideshow__subtext RTE-content slideshow__text clr-black"
+                            aria-label="Slide Subtext"
+                          >
+                            {{ firstBlock.settings.slide_sub_text }}
+                          </div>
+                        </animation-reveal>
+                      {% endif %}
+                      {%- if firstBlock.settings.button_label != blank -%}
+                        <animation-reveal
+                          class=""
+                          aoi-type="fade-up"
+                          aoi-delay="0.4"
+                          aoi-duration="0.6"
+                        >
+                          <div class="btn--wrap">
+                            <a
+                              class="btn {% if firstBlock.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} slideshow__shop-btn"
+                              href="{{ firstBlock.settings.button_link | default: '#' }}"
+                              target="{{ firstBlock.settings.link_target }}"
+                              aria-label="Shop Now Button"
+                            >
+                              {{ firstBlock.settings.button_label }}
+                            </a>
+                          </div>
+                        </animation-reveal>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        </div>
+      </div>
+    </noscript>
+  </div>
+</div>
+
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'bottom' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper" style="--color-border: {{ section.settings.border_color.rgba }}">
+      <div
+        class="spacer border-bottom"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "tag": "section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Desktop media size",
+      "options": [
+        {
+          "label": "Adapt",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "sm"
+        },
+        {
+          "label": "Medium",
+          "value": "md"
+        },
+        {
+          "label": "Large",
+          "value": "lg"
+        },
+        {
+          "label": "Fill screen",
+          "value": "fill-screen"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_size",
+      "label": "Mobile media size",
+      "options": [
+        {
+          "label": "Adapt",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "sm"
+        },
+        {
+          "label": "Medium",
+          "value": "md"
+        },
+        {
+          "label": "Large",
+          "value": "lg"
+        },
+        {
+          "label": "Fill screen",
+          "value": "fill-screen"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "checkbox",
+      "label": "Enable auto-rotate",
+      "id": "slider_autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Change slides every",
+      "min": 1,
+      "max": 15,
+      "unit": "s",
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "desktop_navigation",
+      "label": "Desktop navigation style",
+      "options": [
+        {
+          "label": "Arrows",
+          "value": "arrows"
+        },
+        {
+          "label": "Dash",
+          "value": "dash"
+        },
+        {
+          "label": "Dash and arrows",
+          "value": "dash_arrows"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "dash_arrows"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_top.label",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_bottom.label",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_size",
+      "label": "Border",
+      "options": [
+        {
+          "label": "Hide",
+          "value": "hide"
+        },
+        {
+          "label": "Full width",
+          "value": "full_width"
+        },
+        {
+          "label": "Fixed width",
+          "value": "fixed_width"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "select",
+      "id": "border_position",
+      "label": "Border position",
+      "options": [
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "default": "#ffffff",
+      "label": "Background color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_image-slide"
+    },
+    {
+      "type": "_video-slide"
+    },
+    {
+      "type": "_text-slide"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        {
+          "type": "_image-slide",
+          "blocks": [
+            {
+              "type": "sub-heading"
+            },
+            {
+              "type": "heading"
+            },
+            {
+              "type": "paragraph"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "_video-slide",
+          "blocks": [
+            {
+              "type": "sub-heading"
+            },
+            {
+              "type": "heading"
+            },
+            {
+              "type": "paragraph"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "_text-slide",
+          "blocks": [
+            {
+              "type": "sub-heading"
+            },
+            {
+              "type": "heading"
+            },
+            {
+              "type": "paragraph"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

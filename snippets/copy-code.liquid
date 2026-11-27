@@ -1,0 +1,32 @@
+{% comment %}
+  Reusable <copy-text> snippet.
+  - content: Required. HTML/Text (wrap codes in {}).
+  - icon_color: Optional. Override the default icon color.
+  - popup_message: Optional. Override translation.
+  - class, style, is_tabindex: Optional attributes.
+{% endcomment %}
+
+{%- capture copy_button -%}
+  <button type="button" class="copy-icon cursor-pointer border-0 d-v-center p-0" aria-label="{{ 'general.popup.copy' | t }}"{% if is_tabindex %} tabindex="-1"{% endif %}>
+    {%- render 'icon' with 'copy-icon' -%}
+  </button>
+{%- endcapture -%}
+{%- assign close_wrapper = '</span>' | append: copy_button | append: '</span>' -%}
+{%- comment -%}
+  richtext/text fields may encode { as &lcub; (HTML entity); inline_richtext outputs a literal {.
+  Both replace passes run every time — one will always be a no-op depending on the field type.
+  Merchants must always close braces: {CODE} — an unclosed { produces a broken wrapper span.
+{%- endcomment -%}
+{%- assign parsed_content = content
+  | replace: '&lcub;', '<span class="code-wrapper"><span class="copy-target">'
+  | replace: '{', '<span class="code-wrapper"><span class="copy-target">'
+  | replace: '&rcub;', close_wrapper
+  | replace: '}', close_wrapper
+-%}
+<copy-text
+  popup-message="{{ 'general.popup.code_copied' | t }}"
+  {% if class != blank %}class="{{ class }}"{% endif %}
+  style="--color-icon: {{ icon_color | default: 'var(--color-icon)' }};{% if style != blank %} {{ style }}{% endif %}"
+>
+  {{ parsed_content }}
+</copy-text>

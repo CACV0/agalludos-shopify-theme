@@ -1,0 +1,85 @@
+{% render 'age-verification-popup', section: section %}
+
+{% schema %}
+{
+  "name": "Age verification",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "text_title",
+      "label": "Heading",
+      "default": "Confirm your age to continue"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtext",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "approve_text",
+      "label": "Approve button",
+      "default": "Yes, I'm over 21"
+    },
+    {
+      "type": "select",
+      "id": "approve_style",
+      "label": "Approve button style",
+      "default": "fill",
+      "options": [
+        {
+          "value": "fill",
+          "label": "Filled"
+        },
+        {
+          "value": "border",
+          "label": "Outline"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "reject_button",
+      "label": "Reject button",
+      "default": "Decline"
+    },
+    {
+      "type": "url",
+      "id": "rejection_url",
+      "label": "Rejection button URL"
+    },
+    {
+      "type": "select",
+      "id": "reject_style",
+      "label": "Reject button style",
+      "default": "fill",
+      "options": [
+        {
+          "value": "fill",
+          "label": "Filled"
+        },
+        {
+          "value": "border",
+          "label": "Outline"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Age verification"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

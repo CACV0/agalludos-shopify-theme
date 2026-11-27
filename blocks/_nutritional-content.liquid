@@ -1,0 +1,80 @@
+{% comment %}
+  Content block — left/top column of the Nutritional information section.
+  Hosts theme-level blocks: Sub heading, Heading, Paragraph, Button.
+{% endcomment %}
+
+<div
+  class="nutritional-information__content d-flex d-flex-dir-c flex-1 nutritional-information__content--align-{{ block.settings.content_alignment }} nutritional-information__content--mobile-align-{{ block.settings.mobile_content_alignment }} nutritional-information__content--position-{{ block.settings.content_position }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="nutritional-information__content-inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Content Block",
+  "tag": null,
+  "blocks": [
+    { "type": "sub-heading" },
+    { "type": "heading" },
+    { "type": "paragraph" },
+    { "type": "button" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "info": "When 'Direction' on the section is set to Vertical, this setting has no effect.",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content Block",
+      "blocks": [
+        { "type": "sub-heading" },
+        { "type": "heading" },
+        { "type": "paragraph" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

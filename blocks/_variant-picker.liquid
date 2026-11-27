@@ -1,0 +1,128 @@
+{% assign product = closest.product %}
+{%- liquid
+  assign enable_product_deep_link = false
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+<div
+  class="block-{{ block.id }}"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }};{% if block.settings.show_swatches and block.settings.variant_swatches_style == 'pills' %} --swatch-size-desktop: {{ block.settings.swatch_size_desktop | append: 'px' }}; --swatch-size-mobile: {{ block.settings.swatch_size_mobile | append: 'px' }};{% endif %}"
+  variant-block>
+  {% render 'product-variant-selector',
+    product: product,
+    form_id: product_form_id,
+    block: block,
+    enable_product_deep_link: enable_product_deep_link
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Variant picker",
+  "settings": [
+    {
+      "type": "select",
+      "id": "varaint_selector_type",
+      "label": "Style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        }
+      ],
+      "default": "dropdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatches",
+      "label": "Show swatches",
+      "default": true
+    },
+     {
+      "type": "select",
+      "id": "variant_swatches_style",
+      "label": "Swatches style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        }
+      ],
+      "default": "pills",
+      "visible_if": "{{ block.settings.show_swatches }}"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size_desktop",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Swatch size desktop",
+      "default": 50,
+      "visible_if": "{{ block.settings.show_swatches == true and block.settings.variant_swatches_style == 'pills' }}"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size_mobile",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Swatch size mobile",
+      "default": 50,
+      "visible_if": "{{ block.settings.show_swatches == true and block.settings.variant_swatches_style == 'pills' }}"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Guide drawer"
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "guide_heading",
+      "info": "Example: Size guide"
+    },
+    {
+      "type": "text",
+      "label": "Option for drawer",
+      "id": "guide_option",
+      "info": "Enter option name to which the guide will be applied to"
+    },
+    {
+      "type": "page",
+      "label": "Page",
+      "id": "guide_content"
+    },
+    {
+      "type": "image_picker",
+      "label": "Image",
+      "id": "guide_image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Variant picker",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

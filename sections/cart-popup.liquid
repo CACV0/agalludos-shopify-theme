@@ -1,0 +1,51 @@
+{% comment %}
+  This section is used to render the "cart popup" in the theme. Avoid using this section for any other purpose.
+{% endcomment %}
+
+{%- liquid
+  assign product_image = product_variant.featured_image | default: product_variant.product.featured_media
+-%}
+
+<cart-popup>
+  {% comment %} Left content {% endcomment %}
+  <div class="d-flex align-item-center">
+    <div class="cart__notification__left-content">
+      <div class="cart__notification__product-image">
+        <div class="image--aspectSize aspect-ratio-square" image-container>
+          {%- unless product_image == blank -%}
+            {{
+              product_image
+              | image_url: width: product_image.width
+              | image_tag:
+                widths: '86,172,258',
+                sizes: '86px',
+                alt: product_image.alt,
+                loading: 'lazy',
+                is: 'image-loading',
+                class: 'image-responsive object-fit-contain'
+            }}
+            {{
+              product_image
+              | image_url: width: 20
+              | image_tag:
+                alt: product_image.alt,
+                class: 'blur-image',
+                loading: 'lazy',
+                width: 20,
+                height: 20,
+                style: 'height: 100%; object-fit: contain;'
+            }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'image-responsive object-fit-contain' }}
+          {%- endunless -%}
+        </div>
+      </div>
+    </div>
+    <div class="cart__notification__middle-content ml-2 w-100">
+      <p class="fnt-16 text-color fnt-body-weight-bold">{{ product_variant.product.title }}</p>
+      {%- if settings.show_variant_information and product_variant.product.has_only_default_variant == false -%}
+        <p class="fnt-14 mb-0">{{ product_variant.title }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</cart-popup>

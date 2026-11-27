@@ -1,0 +1,902 @@
+{{ 'section-multi-column.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign loading = 'eager'
+  assign fetchpriority = 'auto'
+  assign intersection = ''
+  if section.index == 1
+    assign fetchpriority = 'high'
+  elsif section.index > 2
+    assign loading = 'lazy'
+    assign intersection = 'intersection-element'
+  endif
+%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 | append: 'px' }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    }
+  }
+{%- endstyle -%}
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'top' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-top"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+<media-cards
+  aria-label="{{ section.settings.heading }}"
+  class="d-block how-to-use section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}"
+  role="region"
+>
+  <div class="container">
+    {% render 'section-only-heading', section: section %}
+    {% if section.settings.layout_style == 'carousel' or section.settings.mobile_layout_style == 'carousel' %}
+      {% liquid
+        assign responsiveGrid = ''
+        if section.settings.layout_style == 'carousel' and section.settings.mobile_layout_style != 'carousel'
+          assign responsiveGrid = 'tab-only'
+        elsif section.settings.mobile_layout_style == 'carousel' and section.settings.layout_style != 'carousel'
+          assign responsiveGrid = 'mobile-sm-only'
+        endif
+      %}
+      <carousel-component
+        {{ intersection }}
+        class="swiper js-element {{ responsiveGrid }}"
+        disable-accessibility
+        slide-layout-type="carousel"
+        slide-pagination-type="progressbar"
+        slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+        slide-per-view="1.3"
+        slide-responsive-breakpoints='{"480":{"slidesPerView": "1.5"},"640":{"slidesPerView":"2.3"},"1024":{"slidesPerView":"3.4"},"1336":{"slidesPerView":"4"}}'
+        slide-speed="{{ settings.slide_duration }}"
+      >
+        <div class="swiper-container" main-slider>
+          <animation-reveal aoi-type="fade-up" aoi-amount="0.2" class="swiper-wrapper">
+            {% if section.blocks.size > 0 %}
+              {% for block in section.blocks %}
+                {% liquid
+                  assign ratio = false
+                  if section.settings.image_aspect_ratio == 'adapt'
+                    if block.settings.card_image != blank
+                      assign ratio = block.settings.card_image.aspect_ratio
+                    else
+                      assign ratio = 1
+                    endif
+                  endif
+                  assign widths = '600,500,400'
+                %}
+                {%- capture sizes -%}
+                (min-width: {{ settings.page_width | append: 'px' }}) {{ settings.page_width | minus: 50 | divided_by: 4 | append: 'px' }},(min-width: 768px) calc(100vw / 2.5 - 60px),calc(100vw / 1.5 - 30px)
+              {%- endcapture -%}
+                <div class="swiper-slide">
+                  <div class="how-to-use__card" {{ block.shopify_attributes }}>
+                    {% if block.settings.video != blank %}
+                      {% liquid
+                        if section.settings.image_aspect_ratio == 'adapt'
+                          assign ratio = block.settings.video.aspect_ratio
+                        endif
+                      %}
+                      <div class="how-to-use__card__video">
+                        <div
+                          class="how-to-use__card__videoWrap aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+                          {% if ratio %}
+                            style="--aspect-ratio:{{ ratio }}"
+                          {% endif %}
+                        >
+                          <media-player
+                            class="d-block custom__player__element position-relative set-100-percentage-size-media"
+                            watch-element
+                            data-media-type="video"
+                            {% if block.settings.media_autoplay %}
+                              media-autoplay
+                            {% endif %}
+                            role="group"
+                            aria-label="Video Player"
+                          >
+                            <video
+                              preload="metadata"
+                              poster="false"
+                              webkit-playsinline
+                              playsinline
+                              {% unless block.settings.media_autoplay %}
+                                controls
+                              {% else %}
+                                muted autoplay loop
+                              {% endunless %}
+                              {% if block.settings.video.alt %}
+                                aria-label="{{ block.settings.video.alt}}"
+                              {% endif %}
+                            >
+                              {%- for source in block.settings.video.sources -%}
+                                <source data-src="{{ source.url }}" type="{{ source.mime_type }}">
+                              {%- endfor -%}
+                              Your browser does not support the video tag.
+                            </video>
+                            <div
+                              class="set-100-percentage-size-media how-to-use__card__video--preview-element position-absolute "
+                              video-preview-elements
+                            >
+                              {% liquid
+                                assign cover_image = block.settings.card_image | default: block.settings.video.preview_image
+                              %}
+                              {% if cover_image != blank %}
+                                {{
+                                  cover_image
+                                  | image_url: width: cover_image.width
+                                  | image_tag:
+                                    widths: '500,600',
+                                    sizes: '(min-width: 1400px) 314px, (min-width: 1220px) 247px, (min-width: 1000px) 365px, (min-width: 780px) 261px, (min-width: 580px) 313px, (min-width: 480px) calc(67.5vw - 51px), calc(67.5vw - 23px)',
+                                    alt: cover_image.alt,
+                                    class: 'set-100-percentage-size-media primary_image',
+                                    loading: loading,
+                                    fetchpriority: fetchpriority
+                                }}
+                              {% endif %}
+                            </div>
+                            <div class="video__loader">
+                              <div class="preloader-circle"></div>
+                            </div>
+                            {% unless block.settings.media_autoplay %}
+                              <div
+                                class="how-to-use__card__video--play-button video__overlay__elements"
+                                video-overlay-elements
+                              >
+                                <div
+                                  class="how-to-use__card__video--play-icon icon-center"
+                                  play-media
+                                  role="button"
+                                  tabindex="0"
+                                  {{ block.shopify_attributes }}
+                                  style="
+                                    --color-button-background: {{ section.settings.play_button_bg }};
+                                    --color-button-text: {{ section.settings.play_button_color }};
+                                  "
+                                >
+                                  {% render 'icon' with 'play' %}
+                                </div>
+                              </div>
+                            {% endunless %}
+                          </media-player>
+                        </div>
+                      </div>
+                    {% elsif block.settings.card_image != blank %}
+                      <div class="how-to-use__card__img">
+                        <div
+                          class="how-to-use__card__imgWrap aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+                          {% if ratio %}
+                            style="--aspect-ratio:{{ ratio }}"
+                          {% endif %}
+                          image-container
+                        >
+                          {{
+                            block.settings.card_image
+                            | image_url: width: block.settings.card_image.width
+                            | image_tag:
+                              alt: block.settings.card_image.alt,
+                              class: 'image-responsive',
+                              loading: loading,
+                              fetchpriority: fetchpriority,
+                              widths: widths,
+                              sizes: sizes,
+                              is: 'image-loading'
+                          }}
+                          {{ block.settings.card_image | image_url: width: 40 | image_tag: alt: block.settings.card_image.alt, class: 'blur-image', loading: loading, fetchpriority: fetchpriority }}
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    <div class="how-to-use__card__body ">
+                      <div class="text-{{ section.settings.caption_align }}">
+                        {% if block.settings.card_image == blank and block.settings.video == blank %}
+                          {% if block.settings.title != blank %}
+                            <div class="how-to-use__card__step">{{ block.settings.title }}</div>
+                          {% endif %}
+                        {% else %}
+                          {% if block.settings.title != blank %}
+                            <div class="how-to-use__card__step how-to-use__card__step--onImage">
+                              {{ block.settings.title }}
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      </div>
+                      <div class="text-{{ section.settings.content_alignment }}">
+                        {% if block.settings.heading != blank %}
+                          <{{ block.settings.heading_tag }} class="mb-0 how-to-use__card__header {{ block.settings.style }}">
+                            {{- block.settings.heading -}}
+                          </{{ block.settings.heading_tag }}>
+                        {% endif %}
+                        {% if block.settings.card_content != blank %}
+                          <div class="fnt-16 text-color RTE-content ">
+                            {{ block.settings.card_content }}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </animation-reveal>
+        </div>
+
+        <div class="sliderControl">
+          <div class="sliderProgressBar" slide-progress></div>
+          <div class="d-flex sliderPagination">
+            <!-- next / prev arrows -->
+            <div class="" slide-prev role="button" tabindex="0" aria-label="{{ 'accessibility.prev_slide_label' | t }}">
+              <div class="sliderPagination__prev productSlider__prev">
+                {% render 'icon', icon: 'left' %}
+              </div>
+            </div>
+            <div class="" slide-next role="button" tabindex="0" aria-label="{{ 'accessibility.next_slide_label' | t }}">
+              <div class="sliderPagination__next productSlider__next">
+                {% render 'icon', icon: 'right' %}
+              </div>
+            </div>
+            <!-- !next / prev arrows -->
+          </div>
+        </div>
+      </carousel-component>
+    {% endif %}
+    {% if section.settings.layout_style == 'grid' or section.settings.mobile_layout_style == 'grid' %}
+      {% liquid
+        assign responsiveGrid = ''
+        if section.settings.layout_style == 'grid' and section.settings.mobile_layout_style != 'grid'
+          assign responsiveGrid = 'tab-only'
+        elsif section.settings.mobile_layout_style == 'grid' and section.settings.layout_style != 'grid'
+          assign responsiveGrid = 'mobile-sm-only'
+        endif
+      %}
+
+      <div
+        class="
+          how-to-use__grid grid-layout grid-layout--{{ section.settings.columns_desktop }}-desktop grid-layout--{{ section.settings.columns_mobile }}-mobile
+          {{responsiveGrid}}
+        "
+      >
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% liquid
+              assign ratio = false
+              if section.settings.image_aspect_ratio == 'adapt'
+                if block.settings.card_image != blank
+                  assign ratio = block.settings.card_image.aspect_ratio
+                else
+                  assign ratio = 1
+                endif
+              endif
+              assign widths = '600,500,400'
+            %}
+            {%- capture sizes -%}
+            (min-width: {{ settings.page_width | append: 'px' }}) {{ settings.page_width | minus: 50 | divided_by: 4 | append: 'px' }},(min-width: 768px) calc(100vw / 2.5 - 60px),calc(100vw / 1.5 - 30px)
+          {%- endcapture -%}
+
+            <animation-reveal
+              aoi-type="fade-up"
+              aoi-amount="0.1"
+              aoi-fade-delay="{{ 0.2 | times: forloop.index }}"
+              class="how-to-use__card"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.video != blank -%}
+                {% liquid
+                  if section.settings.image_aspect_ratio == 'adapt'
+                    assign ratio = block.settings.video.aspect_ratio
+                  endif
+                %}
+                <div class="how-to-use__card__video">
+                  <div
+                    class="how-to-use__card__videoWrap aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+                    {% if ratio %}
+                      style="--aspect-ratio:{{ ratio }}"
+                    {% endif %}
+                  >
+                    <media-player
+                      class="d-block custom__player__element position-relative set-100-percentage-size-media"
+                      watch-element
+                      data-media-type="video"
+                      {% if block.settings.media_autoplay %}
+                        media-autoplay
+                      {% endif %}
+                      role="group"
+                      aria-label="Video Player"
+                    >
+                      <video
+                        preload="metadata"
+                        poster="false"
+                        webkit-playsinline
+                        playsinline
+                        {% unless block.settings.media_autoplay %}
+                          controls
+                        {% else %}
+                          muted autoplay loop
+                        {% endunless %}
+                        {% if block.settings.video.alt %}
+                          aria-label="{{ block.settings.video.alt}}"
+                        {% endif %}
+                      >
+                        {%- for source in block.settings.video.sources -%}
+                          <source data-src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {%- endfor -%}
+                        Your browser does not support the video tag.
+                      </video>
+                      <div
+                        class="set-100-percentage-size-media how-to-use__card__video--preview-element position-absolute "
+                        video-preview-elements
+                      >
+                        {% liquid
+                          assign cover_image = block.settings.card_image | default: block.settings.video.preview_image
+                        %}
+                        {% if cover_image != blank %}
+                          {{
+                            cover_image
+                            | image_url: width: cover_image.width
+                            | image_tag:
+                              widths: '500,600',
+                              sizes: '(min-width: 1400px) 314px, (min-width: 1220px) 247px, (min-width: 1000px) 365px, (min-width: 780px) 261px, (min-width: 580px) 313px, (min-width: 480px) calc(67.5vw - 51px), calc(67.5vw - 23px)',
+                              alt: cover_image.alt,
+                              class: 'set-100-percentage-size-media primary_image',
+                              loading: loading,
+                              fetchpriority: fetchpriority
+                          }}
+                        {% endif %}
+                      </div>
+                      <div class="video__loader">
+                        <div class="preloader-circle"></div>
+                      </div>
+                      {% unless block.settings.media_autoplay %}
+                        <div
+                          class="how-to-use__card__video--play-button video__overlay__elements"
+                          video-overlay-elements
+                        >
+                          <div
+                            class="how-to-use__card__video--play-icon icon-center"
+                            play-media
+                            role="button"
+                            tabindex="0"
+                            {{ block.shopify_attributes }}
+                            style="
+                              --color-button-background: {{ section.settings.play_button_bg }};
+                              --color-button-text: {{ section.settings.play_button_color }};
+                            "
+                          >
+                            {% render 'icon' with 'play' %}
+                          </div>
+                        </div>
+                      {% endunless %}
+                    </media-player>
+                  </div>
+                </div>
+              {% elsif block.settings.card_image != blank %}
+                <div class="how-to-use__card__img">
+                  <div
+                    class="how-to-use__card__imgWrap aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+                    {% if ratio %}
+                      style="--aspect-ratio:{{ ratio }}"
+                    {% endif %}
+                    image-container
+                  >
+                    {{
+                      block.settings.card_image
+                      | image_url: width: block.settings.card_image.width
+                      | image_tag:
+                        alt: block.settings.card_image.alt,
+                        class: 'image-responsive',
+                        loading: loading,
+                        fetchpriority: fetchpriority,
+                        widths: widths,
+                        sizes: sizes,
+                        is: 'image-loading'
+                    }}
+                    {{ block.settings.card_image | image_url: width: 40 | image_tag: alt: block.settings.card_image.alt, class: 'blur-image', loading: loading, fetchpriority: fetchpriority }}
+                  </div>
+                </div>
+              {% endif %}
+              <div class="how-to-use__card__body ">
+                <div class="text-{{ section.settings.caption_align }}">
+                  {% if block.settings.card_image == blank and block.settings.video == blank %}
+                    {% if block.settings.title != blank %}
+                      <div class="how-to-use__card__step">{{ block.settings.title }}</div>
+                    {% endif %}
+                  {% else %}
+                    {% if block.settings.title != blank %}
+                      <div class="how-to-use__card__step how-to-use__card__step--onImage">
+                        {{ block.settings.title }}
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                </div>
+                <div class="text-{{ section.settings.content_alignment }}">
+                  {% if block.settings.heading != blank %}
+                    <{{ block.settings.heading_tag }} class="mb-0 how-to-use__card__header {{ block.settings.style }}">
+                      {{- block.settings.heading -}}
+                    </{{ block.settings.heading_tag }}>
+                  {% endif %}
+                  {% if block.settings.card_content != blank %}
+                    <div class="fnt-16 text-color RTE-content">
+                      {{ block.settings.card_content }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </animation-reveal>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</media-cards>
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'bottom' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-bottom"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Multi-column",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Desktop Layout",
+      "options": [
+        {
+          "label": "Carousel",
+          "value": "carousel"
+        },
+        {
+          "label": "Grid",
+          "value": "grid"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout_style",
+      "label": "Mobile Layout",
+      "options": [
+        {
+          "label": "Carousel",
+          "value": "carousel"
+        },
+        {
+          "label": "Grid",
+          "value": "grid"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "header",
+      "content": "Grid settings",
+      "visible_if": "{{ section.settings.layout_style == 'grid' or section.settings.mobile_layout_style == 'grid' }}"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Number of columns on desktop",
+      "options": [
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        }
+      ],
+      "default": "4",
+      "visible_if": "{{ section.settings.layout_style == 'grid' }}"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        }
+      ],
+      "default": "1",
+      "label": "Number of columns on mobile",
+      "visible_if": "{{ section.settings.mobile_layout_style == 'grid' }}"
+    },
+    {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Multi Column"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Block settings"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "caption_align",
+      "label": "Caption alignment",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Media Size",
+      "options": [
+        {
+          "label": "Portrait (3:4)",
+          "value": "portrait"
+        },
+        {
+          "label": "Square (1:1)",
+          "value": "square"
+        },
+        {
+          "label": "Adapt",
+          "value": "adapt"
+        },
+        {
+          "label": "Landscape (4:3)",
+          "value": "landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "play_button_bg",
+      "label": "Play button background",
+      "default": "#000000",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "play_button_color",
+      "label": "Play button",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_top.label",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_bottom.label",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "border_size",
+      "label": "Border",
+      "options": [
+        {
+          "label": "Hide",
+          "value": "hide"
+        },
+        {
+          "label": "Full width",
+          "value": "full_width"
+        },
+        {
+          "label": "Fixed width",
+          "value": "fixed_width"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "select",
+      "id": "border_position",
+      "label": "Border position",
+      "options": [
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-3",
+      "label": "Color scheme"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Card",
+      "type": "card",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "image_picker",
+          "label": "Image",
+          "id": "card_image",
+          "info": "1200 x 1200px (square 1:1) recommended and this image will be used as Cover image if video is added"
+        },
+        {
+          "type": "checkbox",
+          "id": "media_autoplay",
+          "label": "Enable video autoplay",
+          "info": "Video will be muted",
+          "default": false,
+          "visible_if": "{{ block.settings.video != blank }}"
+        },
+        {
+          "type": "text",
+          "label": "Caption",
+          "id": "title"
+        },
+        {
+          "type": "text",
+          "label": "Heading",
+          "id": "heading",
+          "default": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading tag",
+          "default": "h3",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Size",
+          "options": [
+            {
+              "label": "H1",
+              "value": "h1"
+            },
+            {
+              "label": "H2",
+              "value": "h2"
+            },
+            {
+              "label": "H3",
+              "value": "h3"
+            },
+            {
+              "label": "H4",
+              "value": "h4"
+            },
+            {
+              "label": "H5",
+              "value": "h5"
+            },
+            {
+              "label": "H6",
+              "value": "h6"
+            }
+          ],
+          "default": "h3"
+        },
+        {
+          "type": "richtext",
+          "id": "card_content",
+          "label": "Content",
+          "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-column",
+      "category": "Storytelling",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["*"]
+  }
+}
+{% endschema %}

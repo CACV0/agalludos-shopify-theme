@@ -1,0 +1,106 @@
+{% comment %} Product Variant Selector {% endcomment %}
+{% assign product = closest.product %}
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+<div style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}">
+  {% render 'product-buy-buttons',
+    form_id: product_form_id,
+    product: product,
+    block: block,
+    show_cart_popup: settings.show_cart_popup
+  %}
+  {% if block.settings.show_payment_icon %}
+    <div>
+      <ul
+        aria-label="Accepted Payment Methods"
+        class="list list-payment"
+        role="list"
+        style="--desktop-image-width:{{ block.settings.desktop_image_width | append: 'px' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: 'px' }}"
+      >
+        {%- for type in shop.enabled_payment_types -%}
+          <li class="list-payment__item">
+            {{ type | payment_type_svg_tag: class: 'payment_method_icon' }}
+          </li>
+        {%- endfor -%}
+      </ul>
+      <div class="secured-lock-content">
+        {% render 'icon' with 'secured-lock' -%}
+        <span class="fnt-14 secured-lock-content__text ">{{ 'products.payment_icons_info' | t }}</span>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Buy Buttons",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout buttons",
+      "default": true,
+      "info": "Using the payment methods available on your store, customers see their preferred option, like PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift_card_recipient",
+      "default": true,
+      "label": "Show recipient information form for gift cards",
+      "info": "Allows buyers to send gift cards on a scheduled date along with a personal message. [Learn more](https://help.shopify.com/manual/online-store/themes/customizing-themes/add-gift-card-recipient-fields)"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_outline_button",
+      "label": "Use outline button style",
+      "info": "Applies for add to cart button",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "label": "Show payment icons",
+      "id": "show_payment_icon",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_width",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop icon width",
+      "default": 70,
+      "visible_if": "{{ block.settings.show_payment_icon }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_width",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile icon width",
+      "default": 50,
+      "visible_if": "{{ block.settings.show_payment_icon }}"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buy buttons",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

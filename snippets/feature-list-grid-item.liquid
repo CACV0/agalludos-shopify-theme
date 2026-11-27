@@ -1,0 +1,42 @@
+{% comment %}
+  Variable used:
+  block : {{Object}} Block object
+{% endcomment %}
+{% liquid
+  case section.settings.icon_style
+    when 'tick'
+      assign icon = 'icon-circle-tick'
+    when 'arrow'
+      assign icon = 'circle-with-arrow'
+    when 'star'
+      assign icon = 'icon-star'
+    when 'counter'
+      assign icon = 'icon-counter'
+    when 'star-2'
+      assign icon = 'icon-star-2'
+  endcase
+%}
+
+{% capture sizes %}
+  (min-width: 768px) {{ section.settings.icon_width | append: "px" }}, {{ section.settings.icon_width_mobile | append: "px" }}
+  {% endcapture %}
+<div class="feature-list-grid-item">
+  {% if block.settings.custom_image == blank %}
+    <span
+      class="accordion-icon"
+      style="--icon-line-color: {{ section.settings.icon_line_color }}; --icon-bg-color: {{ section.settings.icon_bg_color }}"
+    >
+      {%- render 'icon' with icon, index: index , width:"32" , height:"32" , fillColor:"var(--icon-bg-color)" , circleColor:"var(--icon-line-color)" , pathColor:"var(--icon-line-color)"-%}
+    </span>
+  {% else %}
+    {{
+      block.settings.custom_image
+      | image_url: width: 240
+      | image_tag: widths: '90,120', sizes: sizes, alt: block.settings.custom_image.alt, class: 'accordion-icon'
+    }}
+  {% endif %}
+  <{{ block.settings.heading_tag }} class="mt-0 {{ block.settings.style }}">{{ block.settings.heading }}</{{ block.settings.heading_tag }}>
+  <div class="RTE-content">
+    {{ block.settings.content }}
+  </div>
+</div>

@@ -1,0 +1,68 @@
+{% comment %} Product Price {% endcomment %}
+
+{% assign product = closest.product %}
+
+{% liquid
+  assign on_sale = false
+  if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+    assign on_sale = true
+  endif
+%}
+<div
+  id="price-{{ section.id }}"
+  role="status"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+  {{ block.shopify_attributes }}
+>
+  {% render 'price',
+    product: product,
+    on_sale: on_sale,
+    container_class: 'main-product__price__wrapper',
+    use_variant: true,
+    show_custom_badges: true,
+    hide_badges: section.settings.hide_badges
+  %}
+  {%- if block.settings.show_taxes_notice -%}
+    <p class="fnt-16 price-taxes">
+      {%- if cart.taxes_included -%}
+        {{ 'products.product.taxes_included' | t }}
+      {%- else -%}
+        {{ 'products.product.taxes_excluded' | t }}
+      {%- endif -%}
+
+      {%- if shop.shipping_policy.body != blank -%}
+        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+      {%- endif -%}
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Price",
+  "settings": [
+    {
+      "type": "checkbox",
+      "label": "Show taxes notice",
+      "id": "show_taxes_notice",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Price",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,155 @@
+{% comment %}
+  position: slide number to show hightlight
+  prevelement: pervious slide of highlighted slide
+  heading_positions : positions of table key value present
+{% endcomment %}
+<div
+  class="swiper-slide {% if block.settings.product == blank  %} custom-product {% endif %} {% if prevelement == forloopIndex %} highlight-prev-element {% endif %}  {% if position == forloopIndex  %} highlight-active {% if position == 1 %} first-column {% endif %}{% endif %} color-{{ section.settings.desktop_column_color_scheme }} mobile-color-{{ section.settings.mobile_tabel_color_scheme }} "
+  table-column
+>
+  {% for i in heading_positions %}
+    {%- assign value_id = 'value_' | append: i -%}
+    {%- assign icon_id = 'icon_' | append: i -%}
+    <div
+      class="comparison_table__value-container {% if section.settings.quick_view_position == 'bottom'  and section.settings.show_quick_buy %} quick_view_bottom {% elsif section.settings.show_quick_buy %} quick_view_top {% endif %}"
+      table-row
+    >
+      <div class="comparison_table_mobile-padding h-100">
+        <div
+          class="comparison__table-heading comparison__table-heading--mobile mobile-sm-only justify-content-{{ section.settings.column_text_alignment }}"
+          style="--color-text: {{ section.settings.mobile_heading_color }};"
+        >
+          {% assign heading = 'heading_' | append: i %}
+          {% assign custom_icon = 'custom_icon_' | append: i %}
+          {% if table_heading_block.settings[heading] != blank or table_heading_block.settings[custom_icon] != blank %}
+            {% unless table_heading_block.settings[custom_icon] == blank %}
+              {{
+                table_heading_block.settings[custom_icon]
+                | image_url: width: table_heading_block.settings[custom_icon].width
+                | image_tag:
+                  class: 'comparison_icon',
+                  widths: '300,200,100,500',
+                  alt: table_heading_block.settings[custom_icon].alt,
+                  loading: loading,
+                  fetchpriority: fetchpriority
+              }}
+            {% endunless %}
+            {% unless table_heading_block.settings[heading] == blank %}
+              <{{ table_heading_block.settings.heading_tag }} class="fnt-16 fnt-body fnt-body-weight-bold m-0 text-{{ section.settings.column_text_alignment }}">
+                {{ table_heading_block.settings[heading] }}
+              </{{ table_heading_block.settings.heading_tag }}>
+            {% endunless %}
+          {% endif %}
+        </div>
+        {% if block.settings[value_id] != blank or block.settings[icon_id] != 'none' %}
+          <div
+            class="comparison__table-values {% if section.settings.quick_view_position == 'bottom' and section.settings.show_quick_buy %} quick_view_bottom {% elsif section.settings.show_quick_buy %} quick_view_top {% endif %}"
+          >
+            <div class="comparison__table-values-content justify-content-{{ section.settings.column_text_alignment }} text-{{ section.settings.column_text_alignment }}">
+              {% if block.settings[value_id] != blank %}
+                <p class="m-0">{{ block.settings[value_id] }}</p>
+              {% endif %}
+              {% if block.settings[icon_id] == 'cross' %}
+                <div class="comparison__icon">
+                  {% render 'icon' with 'icon-cross', color: 'var(--color-text)' %}
+                </div>
+              {% elsif block.settings[icon_id] == 'tick' %}
+                <div class="comparison__icon">
+                  {% render 'icon' with 'checkmark', color: 'var(--color-text)' %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div
+            class="comparison__table-values {% if section.settings.quick_view_position == 'bottom' %} quick_view_bottom {% else %} quick_view_top {% endif %}"
+          >
+            <div class="comparison__table-values-content justify-content-{{ section.settings.column_text_alignment }}">
+              <span class="empty-value"></span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor -%}
+  {%- if block.settings.product != blank and section.settings.quick_view_position == 'bottom' and section.settings.show_quick_buy %}
+    <product-card
+      class="comparison-product-slider-buttons {% if section.settings.show_quick_buy_on_mobile == false %} tab-only {% endif %}"
+      product-url="{{ block.settings.product.url }}"
+      product-handle="{{ block.settings.product.handle }}"
+      product-id="{{ block.settings.product.selected_or_first_available_variant.id }}"
+    >
+      {% liquid
+        assign quick_buy_button_type = settings.quick_buy_button
+        assign show_calltoaction_btn = show_calltoaction_btn | default: quick_buy_button_type, allow_false: true
+        assign show_quick_buy = section.settings.show_quick_buy
+        assign quick_buy_button = true
+        unless show_quick_buy and show_calltoaction_btn
+          assign quick_buy_button = false
+        endunless
+      %}
+      {% assign is_product_available = block.settings.product.selected_or_first_available_variant.available %}
+      {% assign has_no_varaint = block.settings.product.has_only_default_variant %}
+      {%- assign product_form_id = 'product_form_' | append: block.settings.product.id -%}
+      {% form 'product', block.settings.product, class: 'product-card-item__form', id: product_form_id %}
+        <input
+          name="id"
+          type="hidden"
+          value="{{ block.settings.product.first_available_variant.id }}"
+        >
+        <input
+          name="quantity"
+          type="hidden"
+          value="1"
+        >
+
+        <!-- form content -->
+        {% if quick_buy_button %}
+          {% if is_product_available %}
+            {% unless has_no_varaint %}
+              <button
+                aria-label="{{ 'products.product.button_choose_options' | t }}"
+                class="btn  btn--fill w-100 text-upper"
+                toggle-element="options-drawer"
+                type="submit"
+              >
+                <div aria-hidden="true" class="btn--preloader">
+                  <div aria-hidden="true" class="btn--preloader--circular">
+                    <div aria-hidden="true" class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div aria-hidden="true" class="btn--text">
+                  {{ 'products.product.button_choose_options' | t }}
+                </div>
+              </button>
+            {% else %}
+              <button
+                aria-label="{{ 'products.product.button_add_to_cart' | t }}"
+                class="btn btn--fill w-100 text-upper"
+                toggle-element="cart-drawer"
+                type="submit"
+              >
+                <div aria-hidden="true" class="btn--preloader">
+                  <div aria-hidden="true" class="btn--preloader--circular">
+                    <div aria-hidden="true" class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div aria-hidden="true" class="btn--text">
+                  {{ 'products.product.button_add_to_cart' | t }}
+                </div>
+              </button>
+            {% endunless %}
+          {%- else -%}
+            <button
+              aria-label="{{ 'products.product.button_out_of_stock' | t }}"
+              class="btn btn--fill w-100 text-upper disable"
+              type="button"
+            >
+              {{ 'products.product.button_out_of_stock' | t }}
+            </button>
+          {% endif %}
+        {% endif %}
+      {% endform %}
+    </product-card>
+  {% endif %}
+</div>

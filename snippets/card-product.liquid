@@ -1,0 +1,612 @@
+{% comment %}
+  Required Parameters
+  product : {object} Product object
+  show_product_rating: {Boolean} Show product ratings - Based on checkbox
+  show_product_vendor : {Boolean} Show product vendor
+  show_calltoaction_btn:  {Boolean} Show product call to action button like "Add to cart", "Variant Selection button"
+{% endcomment %}
+
+{%- comment %} Product card color scheme (opt-in per section). When enabled and a scheme is selected, that scheme's background, text and offer text colours drive the card, overriding the flat card background setting. {% endcomment -%}
+{%- assign card_scheme = section.settings.product_card_color_scheme -%}
+{%- assign card_scheme_enabled = false -%}
+{%- if section.settings.enable_product_card_background and card_scheme != blank -%}
+  {%- assign card_scheme_enabled = true -%}
+{%- endif -%}
+{%- comment %} Flat card background (used when no scheme is active): section-level setting falls back to the global setting {% endcomment -%}
+{%- capture card_bg -%}{{ section.settings.card_background_color | default: settings.card_background_color }}{%- endcapture -%}
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- assign show_card_background = false -%}
+{%- if card_scheme_enabled -%}
+  {%- comment %} Merchant explicitly opted in — always paint the card {% endcomment -%}
+  {%- assign show_card_background = true -%}
+{%- else -%}
+  {%- unless card_bg == 'rgba(0,0,0,0)' or card_bg == 'transparent' or card_bg == blank or section_bg == card_bg and section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign show_card_background = true -%}
+  {%- endunless -%}
+{%- endif -%}
+{%- comment %} When a product card scheme is active, the whole card adopts the scheme via the color-<id> class — background, text and offer text all resolve from the scheme's own CSS variables, so no per-card custom properties are written in the markup {% endcomment -%}
+{%- assign card_scheme_class = '' -%}
+{%- if card_scheme_enabled -%}
+  {%- assign card_scheme_class = 'color-' | append: card_scheme.id -%}
+{%- endif -%}
+{%- assign show_product_rating = show_product_rating | default: settings.show_product_rating -%}
+{%- assign show_product_vendor = show_product_vendor | default: settings.show_product_vendor -%}
+{%- assign show_product_image = show_product_image | default: settings.show_product_image_hover -%}
+{%- assign media_aspect_ratio = media_aspect_ratio | default: settings.image_aspect_ratio -%}
+{%- assign quick_buy_button_type = settings.quick_buy_button -%}
+{%- assign show_calltoaction_btn = show_calltoaction_btn | default: quick_buy_button_type, allow_false: true -%}
+{%- assign show_quick_view = show_quick_view | default: settings.show_quick_view -%}
+{%- assign show_quick_buy = settings.show_quick_buy %}
+{%- assign product_form_id = 'product_form_' | append: section.id | append: '_' | append: product.id -%}
+{%- if layout_block != blank -%}
+  {%- assign product_form_id = product_form_id | append: '_' | append: layout_block -%}
+{%- endif -%}
+{%- liquid
+  assign has_no_varaint = false
+  if product.has_only_default_variant or product.variants_count == 1
+    assign has_no_varaint = true
+  endif
+  assign first_option_value = product.options_with_values.first.values.first
+  if first_option_value.product_url != blank
+    assign has_no_varaint = false
+  endif
+  assign is_product_available = product.available
+  assign on_sale = false
+  assign product_on_sale_text = 'products.product.on_sale' | t
+  assign product_sold_out_text = 'products.product.sold_out' | t
+  assign discounted_variant_object = blank
+  for variant in product.variants
+    if variant.compare_at_price > variant.price
+      assign on_sale = true
+      assign discounted_variant_object = variant
+      break
+    endif
+  endfor
+
+  assign hide_percentage_off = false
+  unless settings.show_offer_text
+    assign hide_percentage_off = true
+  endunless
+
+
+  assign quick_buy_button = true
+  unless show_quick_buy and show_calltoaction_btn
+    assign quick_buy_button = false
+  endunless
+
+  # Inline variant popup — opt-in per section via allow_variant_popup param
+  assign show_variant_popup = false
+  if allow_variant_popup and settings.enable_variant_selector and has_no_varaint == false
+    assign show_variant_popup = true
+  endif
+  assign variant_popup_style = 'with_button'
+  assign remaining_count = 2
+
+  case settings.cart_type
+    when 'drawer'
+      assign cart_section_type = 'cart-drawer'
+    when 'page'
+      assign cart_section_type = 'main-cart'
+  endcase
+  for option in product.options_with_values
+    assign swatch_count = option.values | map: 'swatch' | compact | size
+    assign show_swatch = false
+    if swatch_count > 0 and settings.show_swatches
+      assign show_swatch = true
+    endif
+  endfor
+  if product.featured_media != blank
+    assign featured_image = product.featured_media
+  endif
+  if use_variant_image and product.selected_or_first_available_variant.featured_image != blank
+    assign image = product.selected_or_first_available_variant.featured_image
+  elsif show_swatch
+    assign image_source = settings.image_source
+    case image_source
+      when 'featured_image'
+        assign image = featured_image
+      when 'selected_variant_image'
+        if product.selected_or_first_available_variant.featured_image != blank
+          assign image = product.selected_or_first_available_variant.featured_image
+        else
+          assign image = featured_image
+        endif
+      else
+        assign image = featured_image
+    endcase
+  else
+    assign image = featured_image
+  endif
+
+assign ratio = false
+  if media_aspect_ratio == 'adapt'
+      assign ratio = image.aspect_ratio
+   else
+      assign ratio = 1
+   endif
+-%}
+{% capture product_card_badge %}
+  <div class="product-tags-container {{ settings.badge_position }}">
+    {% if is_product_available %}
+    {%- if on_sale -%}
+      {% if settings.show_sale_badge %}
+        {% assign current_product = discounted_variant_object  %}
+
+        {% comment %} {%- if current_product.price_varies -%}
+          {% assign current_product = current_product.variants | sort: 'price' | first %}
+        {%- endif -%} {% endcomment %}
+      {%- case settings.sale_badge_format -%}
+        {%- when 'sale' -%}
+            {% comment %} Show Out of stock badge {% endcomment %}
+            <span class="p_badge on_sale {% if settings.enable_badge_animation_sale %} animmate_product_badge {% endif %}">{{ product_on_sale_text }}</span>
+          
+        {%- when 'percent' -%}
+          {%- assign discount_value = current_product.compare_at_price
+            | minus: current_product.price
+            | times: 100.0
+            | divided_by: current_product.compare_at_price
+            | ceil -%}
+            
+            <span class="p_badge on_sale {% if settings.enable_badge_animation_sale %} animmate_product_badge {% endif %}">{{ 'products.product.percentage_text' | t : discount_value: discount_value }}</span>
+        {%- when 'difference' -%}
+          {%- assign diff = current_product.compare_at_price | minus: current_product.price -%}
+            <span class="p_badge on_sale {% if settings.enable_badge_animation_sale %} animmate_product_badge {% endif %}">
+              {% if settings.currency_code_enabled %}
+                - {{ diff | money_with_currency }}
+              {% else %}
+                - {{ diff | money }}
+              {% endif %}
+            </span>
+
+      {%- endcase -%}
+    
+        {% assign remaining_count = remaining_count | minus: 1 %}
+    
+    {%- endif -%}
+  {% endif %}
+  {% elsif settings.show_sold_out_badge %}
+
+    {% assign remaining_count = remaining_count | minus: 1 %}
+
+  {% comment %} Show Sales Badge {% endcomment %}
+  <span class="p_badge out_of_stock {{ settings.badge_position }}">{{ product_sold_out_text }}</span>
+{% endif %}
+
+{% render 'product-tags-badges', current_product: product , remaining_count: remaining_count%}
+</div>
+{% endcapture %}
+{%- unless onboarding -%}
+  {% unless product == blank %}
+    {%- comment %} Card background lives on <product-card> (not the inner .product-card-item) so it
+      survives variant re-renders: on a swatch change only the element's innerHTML is replaced, so
+      classes/vars on the element itself persist. The CSS targets these classes as descendant roots. {% endcomment -%}
+    <product-card
+      class="{% if show_card_background %} product-card-item--has-bg{% endif %}{% if card_scheme_enabled %} product-card-item--scheme-bg{% endif %}{% if card_scheme_class != blank %} {{ card_scheme_class }}{% endif %}"
+      {% if show_card_background and card_scheme_enabled == false %}
+        style="--card-background-color: {{ card_bg }};"
+      {% endif %}
+      product-url="{{ product.selected_or_first_available_variant.url | split: '?' | first }}"
+      product-handle="{{ product.selected_or_first_available_variant.url | split: '/products/' | last | split: '?' | first }}"
+      product-id="{{ product.selected_or_first_available_variant.id }}"
+      data-product-id="{{ product.id }}"
+      {% if settings.show_cart_popup -%}
+        show-cart-popup
+      {%- endif %}
+      {% if show_variant_popup -%}
+        has-variant-popup
+        variant-popup-style="{{ variant_popup_style }}"
+      {%- endif %}
+      data-cart-type="{{ cart_section_type }}"
+      data-columns-mobile="{{ columns_mobile | default: '1' }}"
+    >
+      <div class="product-card-item d-flex d-flex-dir-c position-relative">
+        <div class="w-100 position-relative">
+          {%- comment -%} Show/Hide sales Badges {%- endcomment -%}
+
+          {{ product_card_badge }}
+          <div
+            class="image--aspectSize product-card-item__aspectSize aspect-ratio-{{ settings.image_aspect_ratio }}"
+            {% if ratio %}
+              style="--aspect-ratio:{{ ratio }}"
+            {% endif %}
+            image-container
+          >
+            <a
+              class="product-card-link"
+              aria-label="{{ product.title }} image"
+              href="{{ product.selected_or_first_available_variant.url }}"
+            >
+              <div class="visually-hidden">
+                {{ product_card_badge }}
+              </div>
+              {%- capture imageClass -%}
+                {%- if show_product_image and product.media[1] != null -%}
+                  product-first-image
+                {%- endif %}
+                   object-fit-{{ settings.image_fit }} set-100-percentage-size-media product_featured_image primary_image
+                {%- endcapture -%}
+
+              {% if image != blank %}
+                {{
+                  image
+                  | image_url: width: image.width
+                  | image_tag:
+                    widths: '500,600',
+                    sizes: '(min-width: 1400px) 314px, (min-width: 1220px) 247px, (min-width: 1000px) 365px, (min-width: 780px) 261px, (min-width: 580px) 313px, (min-width: 480px) calc(67.5vw - 51px), calc(67.5vw - 23px)',
+                    alt: image.alt,
+                    loading: product_image_loading,
+                    fetchpriority: product_image_fetchpriority,
+                    class: imageClass,
+                    is: 'image-loading'
+                }}
+                {{
+                  image
+                  | image_url: width: 20
+                  | image_tag:
+                    alt: image.alt,
+                    class: 'blur-image',
+                    loading: product_image_loading,
+                    fetchpriority: product_image_fetchpriority
+                }}
+              {% else %}
+                <div class="aspect-ratio-{{ settings.image_aspect_ratio }} product-cart-no-image-container">
+                  <div class="product-cart-no-image">
+                    {% if show_product_vendor %}
+                      <p class="fnt-14 text-color">{{ product.vendor }}</p>
+                    {% endif %}
+
+                    <p class="product-card-item__head">{{ product.title }}</p>
+                  </div>
+                </div>
+              {% endif %}
+              {% if show_product_image and product.media[1] != null %}
+                {{
+                  product.media[1]
+                  | image_url: width: product.media[1].width
+                  | image_tag:
+                    widths: '500,600',
+                    sizes: '(min-width: 1400px) 314px, (min-width: 1220px) 247px, (min-width: 1000px) 365px, (min-width: 780px) 261px, (min-width: 580px) 313px, (min-width: 480px) calc(67.5vw - 51px), calc(67.5vw - 23px)',
+                    alt: product.featured_media.alt,
+                    loading: product_image_loading,
+                    fetchpriority: product_image_fetchpriority,
+                    class: 'set-100-percentage-size-media product_second_media_image'
+                }}
+              {% endif %}
+
+              <div class="quick-buttons-wrapper d-flex d-flex-dir-c">
+                {% if quick_buy_button
+                  and quick_buy_button_type == 'overlay'
+                  and is_product_available
+                  and has_no_varaint
+                %}
+                  {% form 'product', product, class: 'product-card-item__form', id: product_form_id %}
+                    <input
+                      name="id"
+                      type="hidden"
+                      value="{{ product.selected_or_first_available_variant.id }}"
+                    >
+                    <input
+                      name="quantity"
+                      type="hidden"
+                      value="1"
+                    >
+
+                    <!-- form content -->
+                    <button
+                      aria-label="{{ 'products.product.button_add_to_cart' | t }}"
+                      class="btn  btn--fill quick-buy-overlay btn--icon"
+                      toggle-element="cart-drawer"
+                      type="submit"
+                    >
+                      <div aria-hidden="true" class="btn--preloader">
+                        <div aria-hidden="true" class="btn--preloader--circular">
+                          <div aria-hidden="true" class="checkmark draw"></div>
+                        </div>
+                      </div>
+                      <div aria-hidden="true" class="btn--text">
+                        {% render 'icon', icon: 'plus', color_var: 'var(--color-button-text)' %}
+                      </div>
+                    </button>
+                  {% endform %}
+                {% endif %}
+                {% if settings.show_quick_view and show_variant_popup == false %}
+                  <button
+                    aria-label="{{ 'products.product.button_quick_view' | t }}"
+                    class="quick-view-icon btn btn--fill btn--icon"
+                    quick-view-button
+                  >
+                    <div aria-hidden="true" class="btn--preloader">
+                      <div aria-hidden="true" class="btn--preloader--circular">
+                        <div aria-hidden="true" class="checkmark draw"></div>
+                      </div>
+                    </div>
+                    <div aria-hidden="true" class="btn--text d-flex">
+                      {% render 'icon' with 'eye-icon', width: '20', height: '12', color: 'var(--color-button-text)' %}
+                    </div>
+                  </button>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+
+          {% comment %} Trigger button — opens inline popup on desktop, bottom-sheet on mobile {% endcomment %}
+          {% if show_variant_popup %}
+            <button
+              type="button"
+              class="btn btn--fill position-absolute card-variant-popup__trigger"
+              trigger-variant-popup
+              aria-expanded="false"
+              aria-label="{{ 'products.product.select_options' | t }}"
+            >
+              {{ 'products.product.select_options' | t }}
+            </button>
+          {% endif %}
+
+        </div>
+
+        {% comment %} Variant selector — outside image wrapper so popup opens from the card bottom {% endcomment %}
+        {% if show_variant_popup %}
+          {% comment %}
+            Desktop popup always renders — it binds the trigger button click and routes to the
+            mobile sheet on small viewports. Skipping it would break the trigger entirely.
+            skip_mobile_popup suppresses the bottom-sheet only for desktop-only cards where the
+            sheet would never be reachable (card is CSS-hidden on mobile).
+          {% endcomment %}
+          {% render 'card-product-variant-popup',
+            product: product,
+            product_form_id: product_form_id,
+            hide_percentage_off: hide_percentage_off,
+            section_id: section.id,
+            layout_block: layout_block,
+            variant_render: variant_render
+          %}
+          {% unless skip_mobile_popup %}
+            {% render 'card-product-variant-popup',
+              product: product,
+              product_form_id: product_form_id,
+              hide_percentage_off: hide_percentage_off,
+              is_bottom_sheet: true,
+              section_id: section.id,
+              layout_block: layout_block,
+              variant_render: variant_render
+            %}
+          {% endunless %}
+        {% endif %}
+        <div class="product-card-item__body d-flex d-flex-dir-c">
+          <div class="d-flex d-flex-dir-c h-100">
+            <div class="product-top-info">
+              {% if image != blank %}
+                {% if show_product_vendor %}
+                  <p class="fnt-14 text-color">{{ product.vendor }}</p>
+                {% endif %}
+
+                <a class="" href="{{ product.selected_or_first_available_variant.url }}">
+                  <p class="product-card-item__head">{{ product.title }}</p>
+                </a>
+              {% endif %}
+              {% if show_product_rating %}
+                <div class="mb-4">
+                  {% render 'product-rating', product: product %}
+                </div>
+              {% endif %}
+            </div>
+            <div card-price-container>
+              {% render 'price',
+                product: product,
+                on_sale: on_sale,
+                has_no_varaint: has_no_varaint,
+                hide_percentage_off: hide_percentage_off
+              %}
+            </div>
+            {% for option in product.options_with_values %}
+              {%- liquid
+                assign swatch_count = option.values | map: 'swatch' | compact | size
+
+                assign show_swatch = false
+                if swatch_count > 0 and settings.show_swatches
+                  assign show_swatch = true
+                endif
+
+                # Opt-in per section: hide_swatches renders the card without the colour swatch row
+                # (minimal image / title / price card). Defaults to off, so every other section that
+                # renders this card keeps its swatches.
+                if hide_swatches
+                  assign show_swatch = false
+                endif -%}
+              {%- capture name -%}
+                {{ section.id }}-{{ product.id }}-{% if layout_block != blank %}{{ layout_block }}-{% endif %}color-swatch
+              {%- endcapture -%}
+              {%- capture name_mobile -%}
+                {{ section.id }}-{{ product.id }}-{% if layout_block != blank %}{{ layout_block }}-{% endif %}color-swatch-mobile
+              {%- endcapture -%}
+              {%- if show_swatch -%}
+                <div class="mb-2">
+                  {% if settings.enable_swatch_animation %}
+                    <product-card-swatch-animation class="product-swatch-container">
+                      <div class="product-swatch-wrapper" product-card-swatch-wrapper>
+                  {% endif %}
+                  {% if settings.show_only_color_count or settings.enable_swatch_animation %}
+                    <a
+                      product-swatch-count
+                      class="text-color d-block text-decoration-none fnt-14 fnt-body-weight-regular {% unless settings.show_only_color_count %} desktop-lg {% endunless %}"
+                      href="{{ product.selected_or_first_available_variant.url }}"
+                    >
+                      {{ 'products.swatch_count' | t: count: swatch_count }}
+                    </a>
+                  {% endif %}
+                  {% if settings.enable_swatch_animation or settings.show_only_color_count == false %}
+                    <fieldset
+                      class="product-card-item__swatch position-relative"
+                      product-color-swatch
+                      data-option-position="{{ option.position }}"
+                    >
+                      <div class="desktop-lg">
+                        {% render 'card-product-swatch',
+                          product: product,
+                          option: option,
+                          value: option.values,
+                          shape: settings.swatch_style,
+                          swatch_count: swatch_count,
+                          name: name,
+                          limit: 4,
+                          visually_disabled: true
+                        %}
+                      </div>
+                      <div class="mobile-lg">
+                        {% render 'card-product-swatch',
+                          product: product,
+                          option: option,
+                          value: option.values,
+                          shape: settings.swatch_style,
+                          swatch_count: swatch_count,
+                          name: name_mobile,
+                          mobile_input: true,
+                          limit: 3,
+                          visually_disabled: true
+                        %}
+                      </div>
+                    </fieldset>
+                  {% endif %}
+                  {% if settings.enable_swatch_animation %}
+                    </div>
+                    </product-card-swatch-animation>
+                  {% endif %}
+                </div>
+              {%- endif -%}
+            {% endfor %}
+            <div class="product-bottom-info">
+              {% comment %} Force-render the form when popup is enabled so its Add-to-Bag has a target {% endcomment %}
+              {% if quick_buy_button_type != 'overlay' or show_variant_popup %}
+                {% form 'product',
+                  product,
+                  class: 'product-card-item__form',
+                  id: product_form_id,
+                  data-product-available: is_product_available
+                %}
+                  <input
+                    name="id"
+                    type="hidden"
+                    value="{{ product.selected_or_first_available_variant.id }}"
+                  >
+                  <input
+                    name="quantity"
+                    type="hidden"
+                    value="1"
+                  >
+
+                  <!-- form content -->
+                  {% if quick_buy_button and quick_buy_button_type != 'overlay' %}
+                    {% if is_product_available %}
+                      {% unless has_no_varaint %}
+                        {% comment %} Popup replaces Choose options only in overlay style; stacked keeps both {% endcomment %}
+                        {% unless show_variant_popup and quick_buy_button_type != 'stacked' %}
+                          <button
+                            aria-label="{{ 'products.product.button_choose_options' | t }}"
+                            class="btn {% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} w-100 text-upper"
+                            toggle-element="options-drawer"
+                            type="submit"
+                          >
+                            <div aria-hidden="true" class="btn--preloader">
+                              <div aria-hidden="true" class="btn--preloader--circular">
+                                <div aria-hidden="true" class="checkmark draw"></div>
+                              </div>
+                            </div>
+                            <div aria-hidden="true" class="btn--text">
+                              {{ 'products.product.button_choose_options' | t }}
+                            </div>
+                          </button>
+                        {% endunless %}
+                      {% else %}
+                        <button
+                          aria-label="{{ 'products.product.button_add_to_cart' | t }}"
+                          class="btn {% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} w-100 text-upper"
+                          toggle-element="cart-drawer"
+                          type="submit"
+                        >
+                          <div aria-hidden="true" class="btn--preloader">
+                            <div aria-hidden="true" class="btn--preloader--circular">
+                              <div aria-hidden="true" class="checkmark draw"></div>
+                            </div>
+                          </div>
+                          <div aria-hidden="true" class="btn--text">
+                            {{ 'products.product.button_add_to_cart' | t }}
+                          </div>
+                        </button>
+                      {% endunless %}
+                    {%- else -%}
+                      <button
+                        aria-label="{{ 'products.product.button_out_of_stock' | t }}"
+                        class="btn {% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} w-100 text-upper disable"
+                        type="button"
+                      >
+                        {{ 'products.product.button_out_of_stock' | t }}
+                      </button>
+                    {% endif %}
+                  {% endif %}
+                {% endform %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if show_only_form_on_overlay
+        and is_product_available
+        and quick_buy_button_type == 'overlay'
+        and has_no_varaint == false
+      %}
+        {% form 'product',
+          product,
+          class: 'product-card-item__form visually-hidden',
+          data-product-available: is_product_available
+        %}
+          <input
+            name="id"
+            type="hidden"
+            value="{{ product.selected_or_first_available_variant.id }}"
+          >
+          <input
+            name="quantity"
+            type="hidden"
+            value="1"
+          >
+        {% endform %}
+      {% endif %}
+    </product-card>
+  {% endunless %}
+{% else %}
+  {%- comment -%} Render Dummy placeholder image until product data is not found{%- endcomment -%}
+  <div
+    aria-label="Example Product Title"
+    class="product-card-item{% if show_card_background %} product-card-item--has-bg{% endif %}{% if card_scheme_enabled %} product-card-item--scheme-bg{% endif %}{% if card_scheme_class != blank %} {{ card_scheme_class }}{% endif %}"
+    role="article"
+    {% if show_card_background and card_scheme_enabled == false %}
+      style="--card-background-color: {{ card_bg }};"
+    {% endif %}
+  >
+    <div
+      class="image--aspectSize aspect-ratio--{{ media_aspect_ratio }}"
+      {% if ratio %}
+        style="--aspect-ratio:{{ ratio }}"
+      {% endif %}
+    >
+      {%- assign placeholder_image_index = index | modulo: 4 | plus: 1 -%}
+      {%- assign placeholder_image = 'product-apparel-' | append: placeholder_image_index -%}
+      {%- capture imageClass -%}
+          aspect-ratio-{{ settings.image_aspect_ratio }} object-fit-{{ settings.image_fit }} set-100-percentage-size-media product-card-item__img
+        {%- endcapture -%}
+      {{ placeholder_image | placeholder_svg_tag: imageClass }}
+      {% comment %} {{ placeholder_image | placeholder_svg_tag: 'product-card-item__img img_placeholder ' }} {% endcomment %}
+    </div>
+    <div class="product-card-item__body">
+      <p class="product-card-item__head">Example Product Title</p>
+      <div class="product-card-item__details mb-16">
+        <div class="product-card-item__price">
+          <span class="price"> {{ 3000 | money_with_currency }} </span>
+
+          {%- comment -%} <span class="offer"> 50% OFF </span> {%- endcomment -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endunless -%}

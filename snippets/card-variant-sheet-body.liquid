@@ -1,0 +1,224 @@
+{% comment %}
+  Shared bottom-sheet and popup body — product image (optional), title/price header, variant options, and buy button.
+  Used by card-product-variant-popup (desktop popup and mobile bottom-sheet) and ugc-reel bottom sheet.
+
+  Accepts:
+    product             : {object}  required
+    product_form_id     : {string}  required
+    id_suffix           : {string}  required — makes input IDs unique per card instance
+    hide_percentage_off : {boolean} optional
+    block               : {object}  optional — forwarded to product-buy-buttons
+    section             : {object}  optional — forwarded to product-variant-options
+    use_variant_picker  : {boolean} optional — wraps option in <variant-picker> for UGC
+    is_ugc              : {boolean} optional — adapts settings scope for UGC
+    hide_image          : {boolean} optional — hides product image (e.g. on desktop inline popup)
+    is_bottom_sheet     : {boolean} optional — renders product-buy-buttons or simple submit button
+{% endcomment %}
+
+{%- liquid
+  assign product_first_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  if product_first_media.media_type == 'model'
+    assign product_first_media = product_first_media.preview_image
+  endif
+  assign on_sale = false
+  if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+    assign on_sale = true
+  endif
+  assign image_fit_class = 'object-fit-contain'
+  assign image_class = image_fit_class | append: ' set-100-percentage-size-media d-block'
+  assign blur_class = 'blur-image ' | append: image_fit_class
+
+  assign sel = product.selected_variant
+  if sel != blank
+    if sel.available
+      assign variant_state = 'available'
+    else
+      assign variant_state = 'sold_out'
+    endif
+  elsif variant_render
+    assign variant_state = 'unavailable'
+  else
+    assign sofav = product.selected_or_first_available_variant
+    assign selected_title = ''
+    for opt in product.options_with_values
+      if forloop.first
+        assign selected_title = opt.selected_value
+      else
+        assign selected_title = selected_title | append: ' / ' | append: opt.selected_value
+      endif
+    endfor
+    if sofav.title == selected_title
+      if sofav.available
+        assign variant_state = 'available'
+      else
+        assign variant_state = 'sold_out'
+      endif
+    else
+      assign variant_state = 'unavailable'
+    endif
+  endif
+-%}
+<div class="variant__body__wrapper">
+  <div class="bottom-sheet__product--header d-flex align-item-center mb-16">
+    {%- unless hide_image -%}
+      <div class="position-relative product--image d-flex-shrink-0 overflow-hidden" image-container>
+        {%- if product_first_media != blank -%}
+          {{
+            product_first_media
+            | image_url: width: 200
+            | image_tag:
+              widths: '141, 57',
+              sizes: '(max-width: 767) 57px',
+              alt: product.featured_media.alt,
+              loading: 'lazy',
+              class: image_class,
+              is: 'image-loading'
+          }}
+          {{
+            product_first_media
+            | image_url: width: 5
+            | image_tag: class: blur_class, alt: product_first_media.alt, loading: 'lazy'
+          }}
+        {%- else -%}
+          <div class="product-cart-no-image-container">
+            <div class="product-cart-no-image"></div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+    <div class="bottom-sheet__product--header--title-price flex-1 text-left">
+      <p
+        class="fnt-body-weight-bold m-0 fnt-18 product_title h4 main-product__heading"
+        aria-label="{{ product.title }}"
+      >
+        {{ product.title }}
+      </p>
+      <div
+        id="price-{{ id_suffix }}"
+        role="status"
+        class="mt-8{% if variant_state == 'unavailable' %} visibility-hidden{% endif %}"
+        card-variant-sheet-price
+      >
+        {%- render 'price',
+          product: product,
+          use_variant: true,
+          on_sale: on_sale,
+          container_class: 'main-product__price__wrapper',
+          show_custom_badges: show_custom_badges,
+          hide_badges: hide_badges,
+          hide_percentage_off: hide_percentage_off
+        -%}
+      </div>
+    </div>
+  </div>
+
+  {%- unless product.has_only_default_variant -%}
+    {%- if use_variant_picker -%}
+      <div variant-block bottom-sheet-variant-block>
+        {% render 'product-variant-selector',
+          product: product,
+          form_id: product_form_id,
+          block: block,
+          section: block,
+          enable_product_deep_link: enable_product_deep_link,
+          original_section_id: section.id
+        %}
+      </div>
+    {% else %}
+      <div class="product-variant__select__options d-flex d-flex-dir-c" variant-block>
+        <div class="d-block">
+          {% for option in product.options_with_values %}
+            {%- liquid
+              assign swatch_count = option.values | map: 'swatch' | compact | size
+              # Swatch options: render as swatch chips/dropdown when show_swatches is on,
+              # otherwise fall back to the global variant style (pills or dropdown).
+              if swatch_count > 0 and settings.show_variant_swatches
+                if settings.variant_swatches_style == 'dropdown'
+                  assign variant_selector_type = 'swatch_dropdown'
+                else
+                  assign variant_selector_type = 'swatch'
+                endif
+              else
+                assign variant_selector_type = settings.varaint_selector_type | default: 'pills'
+              endif
+            -%}
+
+            <fieldset
+              class="product-variant__pill__item position-relative border-0 p-0 mb-16"
+              product-variant-option
+              data-option-position="{{ option.position }}"
+            >
+              <div class="product-variant__head d-flex align-item-center justify-content-space-btw mb-2">
+                <div class="product-variant__label-container d-flex">
+                  <legend class="select__label text-color fnt-14 fnt-body-weight-bold">{{ option.name }}:</legend>
+                  <span class="fnt-14 text-color" product-variant-option-value>
+                    {{- option.selected_value | capitalize -}}
+                  </span>
+                </div>
+              </div>
+              {%- if variant_selector_type == 'dropdown' or variant_selector_type == 'swatch_dropdown' -%}
+                <div class="select-wrapper w-100{% if variant_selector_type == 'swatch_dropdown' %} swatch-dropdown{% endif %}">
+                  {%- if variant_selector_type == 'swatch_dropdown' -%}
+                    <span data-selected-dropdown-swatch="options[{{ option.name | escape }}]" class="dropdown-swatch">
+                      {%- render 'swatch', swatch: option.selected_value.swatch, shape: settings.swatch_style -%}
+                    </span>
+                  {%- endif -%}
+                  <select
+                    class="select"
+                    form="{{ product_form_id }}"
+                    name="options[{{ option.name | escape }}]"
+                    aria-label="{{ option.name }}"
+                  >
+                    {%- render 'product-variant-options',
+                      product: product,
+                      option: option,
+                      section: section,
+                      variant_selector_type: variant_selector_type,
+                      product_form_id: product_form_id,
+                      id_suffix: id_suffix
+                    -%}
+                  </select>
+                  {%- render 'icon' with 'arrow-icon', color: 'rgba(var(--color-input-variant-color))' -%}
+                </div>
+              {%- elsif variant_selector_type == 'swatch' -%}
+                <div class="variant-pills-wrapper-swatch d-flex flex-wrap">
+                  {%- render 'product-variant-options',
+                    product: product,
+                    option: option,
+                    section: section,
+                    variant_selector_type: variant_selector_type,
+                    product_form_id: product_form_id,
+                    id_suffix: id_suffix
+                  -%}
+                </div>
+              {%- else -%}
+                <div class="variant-pills-wrapper d-flex flex-wrap">
+                  {%- render 'product-variant-options',
+                    product: product,
+                    option: option,
+                    section: section,
+                    variant_selector_type: variant_selector_type,
+                    product_form_id: product_form_id,
+                    id_suffix: id_suffix
+                  -%}
+                </div>
+              {%- endif -%}
+            </fieldset>
+          {% endfor %}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endunless -%}
+</div>
+
+<div class="variant__btn">
+  {%- render 'product-buy-buttons',
+    form_id: product_form_id,
+    product: product,
+    block: block,
+    section: block,
+    show_cart_popup: false,
+    is_popup: true,
+    variant_state: variant_state
+  -%}
+</div>

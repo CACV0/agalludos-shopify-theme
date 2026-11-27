@@ -1,0 +1,968 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "_title",
+          "name": "Title",
+          "settings": {
+            "block_bottom_spacing": 16,
+            "heading_tag": "h1"
+          },
+          "blocks": {}
+        },
+        "rating_M7JqLg": {
+          "type": "_rating",
+          "name": "Rating",
+          "settings": {
+            "show_if_no_reviews": true,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_price",
+          "name": "Price",
+          "settings": {
+            "show_taxes_notice": false,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "count_down_sales_banner_qNdLQr": {
+          "type": "_count-down-sales-banner",
+          "name": "Count down sales banner",
+          "settings": {
+            "background_color": "#f2e9d9",
+            "bottom_desktop": 16,
+            "bottom_mobile": 16
+          },
+          "blocks": {
+            "group_cR7abE": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": false,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 5,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "content_dpME4D": {
+                  "type": "content",
+                  "settings": {
+                    "show_sale_badge": true,
+                    "black_friday_sale": "Limited Time",
+                    "background_color_sale": "#a53e0d",
+                    "text_color_sale": "#ffffff",
+                    "content": "<p>Use Code - <strong>FLAT20</strong></p>",
+                    "text_color_content": "#000000",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                },
+                "timer_8HLDiP": {
+                  "type": "timer",
+                  "settings": {
+                    "custom_time": "",
+                    "start_year": 2026,
+                    "start_month": "8",
+                    "start_day": "31",
+                    "start_hours": "16",
+                    "start_minute": "0",
+                    "hide_timer_on_ending": "hide_on_completion",
+                    "time_zone": "shop_time_zone",
+                    "text": "#1a1411",
+                    "background": "#d7c9b7",
+                    "timer_style": "h4",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "content_dpME4D",
+                "timer_8HLDiP"
+              ]
+            }
+          },
+          "block_order": [
+            "group_cR7abE"
+          ]
+        },
+        "description_aMeBfi": {
+          "type": "_description",
+          "settings": {
+            "collapse_content": false,
+            "heading": "",
+            "heading_tag": "h4",
+            "truncate_description": "280",
+            "hide_truncate_in_desktop": false,
+            "block_bottom_spacing": 12
+          },
+          "blocks": {}
+        },
+        "badges_rADyhJ": {
+          "type": "_badges",
+          "name": "Badges",
+          "settings": {
+            "badge_stack_style": "vertical",
+            "enable_stack": false,
+            "enable_badge_1": true,
+            "icon_style_1": "none",
+            "color_scheme_badge_1": "scheme-3",
+            "heading_1": "Flavour: Dark Chocolate | Cocoa | Toasted nuts",
+            "content_1": "",
+            "page_1": "",
+            "enable_badge_2": false,
+            "icon_style_2": "none",
+            "color_scheme_badge_2": "scheme-3",
+            "heading_2": "Heading",
+            "content_2": "",
+            "page_2": "",
+            "enable_badge_3": false,
+            "icon_style_3": "none",
+            "color_scheme_badge_3": "scheme-3",
+            "heading_3": "Heading",
+            "content_3": "",
+            "page_3": "",
+            "enable_badge_4": false,
+            "icon_style_4": "star",
+            "color_scheme_badge_4": "",
+            "heading_4": "Heading",
+            "content_4": "",
+            "page_4": "",
+            "enable_badge_5": false,
+            "icon_style_5": "star",
+            "color_scheme_badge_5": "",
+            "heading_5": "Heading",
+            "content_5": "",
+            "page_5": "",
+            "enable_badge_6": false,
+            "icon_style_6": "star",
+            "color_scheme_badge_6": "",
+            "heading_6": "Heading",
+            "content_6": "",
+            "page_6": "",
+            "block_bottom_spacing": 12
+          },
+          "blocks": {}
+        },
+        "badges_ezyn9t": {
+          "type": "_badges",
+          "name": "Badges",
+          "settings": {
+            "badge_stack_style": "vertical",
+            "enable_stack": false,
+            "enable_badge_1": true,
+            "icon_style_1": "none",
+            "color_scheme_badge_1": "scheme-3",
+            "heading_1": "Servings: 12 Counts | Makes 50 cups",
+            "content_1": "",
+            "page_1": "",
+            "enable_badge_2": false,
+            "icon_style_2": "none",
+            "color_scheme_badge_2": "scheme-3",
+            "heading_2": "Heading",
+            "content_2": "",
+            "page_2": "",
+            "enable_badge_3": false,
+            "icon_style_3": "none",
+            "color_scheme_badge_3": "scheme-3",
+            "heading_3": "Heading",
+            "content_3": "",
+            "page_3": "",
+            "enable_badge_4": false,
+            "icon_style_4": "star",
+            "color_scheme_badge_4": "",
+            "heading_4": "Heading",
+            "content_4": "",
+            "page_4": "",
+            "enable_badge_5": false,
+            "icon_style_5": "star",
+            "color_scheme_badge_5": "",
+            "heading_5": "Heading",
+            "content_5": "",
+            "page_5": "",
+            "enable_badge_6": false,
+            "icon_style_6": "star",
+            "color_scheme_badge_6": "",
+            "heading_6": "Heading",
+            "content_6": "",
+            "page_6": "",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "nutriscore_ey7yKp": {
+          "type": "_nutriscore",
+          "name": "Nutriscore",
+          "settings": {
+            "heading": "Roast level",
+            "heading_tag": "h3",
+            "tooltip": "",
+            "highlight_value": 2,
+            "custom_highlight_item": "",
+            "value_1": "Light",
+            "value_1_color": "#c2906b",
+            "value_2": "Medium",
+            "value_2_color": "#9c6f4d",
+            "value_3": "Dark",
+            "value_3_color": "#654228",
+            "value_4": "",
+            "value_4_color": "#f47216",
+            "value_5": "",
+            "value_5_color": "#ef3120",
+            "segment_height": 10,
+            "background_color": "rgba(0,0,0,0)",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "variant_picker_Vyc9xd": {
+          "type": "_variant-picker",
+          "name": "Variant picker",
+          "settings": {
+            "varaint_selector_type": "pills",
+            "show_swatches": true,
+            "variant_swatches_style": "pills",
+            "block_bottom_spacing": 5,
+            "guide_heading": "",
+            "guide_option": "",
+            "guide_content": ""
+          },
+          "blocks": {}
+        },
+        "quantity_selector_pJkyyG": {
+          "type": "_quantity-selector",
+          "name": "Quantity selector",
+          "settings": {
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "inventory_heyY46": {
+          "type": "_inventory-status",
+          "settings": {
+            "show_status": "always",
+            "inventory_threshold": 30,
+            "inventory_base_quantity": 60,
+            "show_inventory_quantity": true,
+            "show_inventory_progress": true,
+            "inventory_background_color": "rgba(0,0,0,0)",
+            "inventory_instock_color": "#2e982c",
+            "inventory_lowstock_color": "#ff0000",
+            "inventory_outofstock_color": "#787878",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "buy-buttons": {
+          "type": "_buy-button",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": false,
+            "use_outline_button": true,
+            "show_payment_icon": true,
+            "desktop_image_width": 40,
+            "mobile_image_width": 40,
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "pickup_ALUXBJ": {
+          "type": "_pickup",
+          "name": "Pickup availability",
+          "settings": {
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "offer_KzcdnD": {
+          "type": "_offer",
+          "name": "Offer",
+          "settings": {
+            "alignment": "left",
+            "icon_position": "column",
+            "bottom_desktop": 30,
+            "bottom_mobile": 30
+          },
+          "blocks": {
+            "group_RPQqA9": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": true,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 5,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "offer_block_aLN9Dk": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "Get Free Shipping + Free Gift",
+                    "text": "<p>Enjoy seamless shopping, with free shipping and free gift on orders above $100</p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 0,
+                    "icon_enable": false,
+                    "icon_style": "truck",
+                    "icon_width": 24,
+                    "icon_color": "#000000",
+                    "text_color": "#000000",
+                    "background_color": "#fff4ef",
+                    "Link_text_color": "#000000"
+                  },
+                  "blocks": {}
+                },
+                "offer_block_VnxgN8": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "Limited Time — Extra 20% Off",
+                    "text": "<p>Avail 10% off on your next order. No code needed.</p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 10,
+                    "icon_enable": false,
+                    "icon_style": "gift",
+                    "icon_width": 20,
+                    "icon_color": "#000000",
+                    "text_color": "#000000",
+                    "background_color": "#f8f6ea",
+                    "Link_text_color": "#000000"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "offer_block_aLN9Dk",
+                "offer_block_VnxgN8"
+              ]
+            }
+          },
+          "block_order": [
+            "group_RPQqA9"
+          ]
+        },
+        "ugc_reel_3b9jw3": {
+          "type": "_ugc-reel",
+          "name": "UGC Reel",
+          "settings": {
+            "ugc_heading": "THIS IS YOUR SIGN TO TRY THIS",
+            "heading_tag": "h3",
+            "style": "h3",
+            "layout_style": "portrait",
+            "show_highlight_border": false,
+            "play_first_video": true,
+            "auto_scroll": false,
+            "show_quick_buy": true,
+            "quick_buy_style": "card",
+            "button_label": "Quick buy",
+            "thumbnail_position": "left",
+            "varaint_selector_type": "dropdown",
+            "show_swatches": true,
+            "variant_swatches_style": "pills",
+            "button_label_color": "#ce2525",
+            "button_icon": "#ffffff",
+            "button_background": "#ffffff",
+            "product_text_color": "#ffffff",
+            "background": "#ffffff",
+            "overlay_color": "linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.46) 84%)",
+            "play_button_bg": "#a53e0d",
+            "play_button_color": "#ffffff",
+            "block_bottom_spacing": 30,
+            "block_bottom_spacing_mobile": 30
+          },
+          "blocks": {
+            "reel_x44CBz": {
+              "type": "_reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_rEUm4J": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_NXmkjR": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_FC9EDU": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "reel_x44CBz",
+            "reel_rEUm4J",
+            "reel_NXmkjR",
+            "reel_FC9EDU"
+          ]
+        },
+        "complementary-products": {
+          "type": "_complementary-products",
+          "settings": {
+            "heading": "Customers Also Bought",
+            "heading_tag": "h3",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "rating_M7JqLg",
+        "price",
+        "count_down_sales_banner_qNdLQr",
+        "description_aMeBfi",
+        "badges_rADyhJ",
+        "badges_ezyn9t",
+        "nutriscore_ey7yKp",
+        "variant_picker_Vyc9xd",
+        "quantity_selector_pJkyyG",
+        "inventory_heyY46",
+        "buy-buttons",
+        "pickup_ALUXBJ",
+        "offer_KzcdnD",
+        "ugc_reel_3b9jw3",
+        "complementary-products"
+      ],
+      "settings": {
+        "hide_badges": false,
+        "media_autoplay": false,
+        "slider_hide_arrows": false,
+        "enable_media_zoom": true,
+        "image_fit_zoom": "cover",
+        "desktop_media_full_width": false,
+        "display_options_layout": "thumbnail-left",
+        "desktop_enable_parallax": true,
+        "desktop_media_gap": 5,
+        "desktop_media_position": "left",
+        "desktop_media_size": "large",
+        "image_aspect_ratio_desktop": "square",
+        "image_fit_desktop": "contain",
+        "mobile_media_full_width": true,
+        "mobile_media_layout": "simple",
+        "mobile_pagination_style": "thumbnails_overlapping",
+        "mobile_enable_parallax": true,
+        "mobile_media_gap": 0,
+        "image_aspect_ratio_mobile": "portrait",
+        "image_fit_mobile": "cover",
+        "enable_swipe_on_mobile": true,
+        "thumbnail_ratio": "adapt",
+        "thumbnail_fit": "contain",
+        "show_info": false,
+        "media_text": "<p>Model is 5'9 in size S</p>",
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "desktop_position": "left_top",
+        "mobile_position": "left_top",
+        "enable_sticky_add_to_cart": true,
+        "sticky_add_to_cart_style": "bar",
+        "show_only_for_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "scrolling_content_b9nAjt": {
+      "type": "scrolling-content",
+      "blocks": {
+        "content_PjAdNW": {
+          "type": "content",
+          "settings": {
+            "text": "FLASH SALE - FLAT 20% OFF",
+            "link": "",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_9aUefK": {
+          "type": "image",
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        },
+        "content_LYdpjz": {
+          "type": "content",
+          "settings": {
+            "text": "CRAFTED FOR YOUR DAILY RITUALS",
+            "link": "",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_4Ux8Fe": {
+          "type": "image",
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        },
+        "content_6RppaE": {
+          "type": "content",
+          "settings": {
+            "text": "FREE GIFT ON ORDERS ABOVE $100",
+            "link": "",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_JK3Xef": {
+          "type": "image",
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        }
+      },
+      "block_order": [
+        "content_PjAdNW",
+        "image_9aUefK",
+        "content_LYdpjz",
+        "image_4Ux8Fe",
+        "content_6RppaE",
+        "image_JK3Xef"
+      ],
+      "name": "Scrolling content",
+      "settings": {
+        "full_width": true,
+        "marquee_text_size": 24,
+        "mobile_text_size": 24,
+        "marquee_speed": 18,
+        "padding_top": 12,
+        "padding_bottom": 12,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-1d240e0b-894c-4f01-9968-ecf5e8fdfc89"
+      }
+    },
+    "multicolumn_zhXzDw": {
+      "type": "multicolumn",
+      "blocks": {
+        "card_biFKC8": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "STEP 1",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Drop 4 brew sachets into a mason jar and pour in 2 cups of water</p>"
+          }
+        },
+        "card_MQPxYX": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "STEP 2",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Let it chill for <strong>14–18 hours </strong>(no shaking, no drama, just wait )</p>"
+          }
+        },
+        "card_NTXchz": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "STEP 3",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Take the sachets out, add water or milk. Sip, relax, repeat.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_biFKC8",
+        "card_MQPxYX",
+        "card_NTXchz"
+      ],
+      "disabled": true,
+      "name": "Multi-column",
+      "settings": {
+        "layout_style": "carousel",
+        "mobile_layout_style": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "1",
+        "heading_content_alignment": "center",
+        "subheading": "BREW BAGS",
+        "heading": "HOW TO BREW",
+        "heading_tag": "h2",
+        "style": "h2",
+        "content": "",
+        "content_alignment": "left",
+        "caption_align": "center",
+        "image_aspect_ratio": "adapt",
+        "play_button_bg": "#000000",
+        "play_button_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "rich_text_h6N94G": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_haidxp": {
+          "type": "heading",
+          "settings": {
+            "heading": "ONLY THE GOOD STUFF. ORGANIC BEANS, FINELY GROUND FOR A RICHER SIP.✨ BREWED SLOW, SO EVERY SIP HITS SMOOTH AND STRONG ✨",
+            "heading_tag": "h2",
+            "style": "h1"
+          }
+        },
+        "text_CYDqBq": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "content": "<p>Only the good stuff. Organic beans, finely ground for a richer sip. <br/>✨<strong>Brewed slow, so every sip hits smooth and strong</strong>✨</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_haidxp",
+        "text_CYDqBq"
+      ],
+      "settings": {
+        "container_size": true,
+        "content_width": 860,
+        "content_alignment": "center",
+        "padding_top": 52,
+        "padding_bottom": 32,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "feature_list_D8TtPb": {
+      "type": "feature-list",
+      "blocks": {
+        "feature_Hw7cVM": {
+          "type": "feature",
+          "settings": {
+            "heading": "LATE-NIGHT CHAOS",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": "<p>Fuel late-night scrolls and random thoughts with smooth, no-effort energy.</p>"
+          }
+        },
+        "feature_CfbFfM": {
+          "type": "feature",
+          "settings": {
+            "heading": "MORNING COMEBACKS",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": "<p>Start fresh with a smooth, ready-to-drink boost that gets you going instantly.</p>"
+          }
+        },
+        "feature_tQJLyk": {
+          "type": "feature",
+          "settings": {
+            "heading": "ON-THE-GO MODE",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": "<p>Grab, sip, and move your coffee, ready whenever life doesn’t slow down.</p>"
+          }
+        },
+        "feature_Ep9UVD": {
+          "type": "feature",
+          "settings": {
+            "heading": "LOCK-IN WORK SESSIONS",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": "<p>Stay focused and in your flow with a smooth boost that keeps up with your work.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_Hw7cVM",
+        "feature_CfbFfM",
+        "feature_tQJLyk",
+        "feature_Ep9UVD"
+      ],
+      "settings": {
+        "full_width": false,
+        "icon_style": "tick",
+        "icon_width": 32,
+        "icon_width_mobile": 32,
+        "icon_bg_color": "#ffffff",
+        "icon_line_color": "#000000",
+        "slider_autoplay": false,
+        "autoplay_delay": 3,
+        "change_slide_on": "click",
+        "heading": "MADE FOR YOUR EVERY MODE",
+        "heading_tag": "h2",
+        "style": "h2",
+        "text_aligment": "left",
+        "content_desktop_style": "two_column",
+        "content_mobile_style": "collapsable",
+        "button_text": "",
+        "link": "",
+        "link_target": "_blank",
+        "button_aligment": "left",
+        "padding_top": 60,
+        "padding_bottom": 80,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "comparison_HhTz8L": {
+      "type": "comparison",
+      "blocks": {
+        "table_heading_rPWC3r": {
+          "type": "table_heading",
+          "settings": {
+            "heading_1": "REAL COLD BREW",
+            "heading_2": "REAL COLD BREW",
+            "heading_3": "CLEAN INGREDIENTS",
+            "heading_4": "NO AFTERTASTE",
+            "heading_5": "",
+            "heading_6": "",
+            "heading_7": "",
+            "heading_8": "",
+            "heading_9": "",
+            "heading_10": "",
+            "heading_tag": "h3"
+          }
+        },
+        "table_value_7F34CH": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "value_1": "Yes",
+            "icon_1": "none",
+            "value_2": "Yes",
+            "icon_2": "none",
+            "value_3": "Yes",
+            "icon_3": "none",
+            "value_4": "Yes",
+            "icon_4": "none",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        },
+        "table_value_8amPgp": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "Yes",
+            "heading_tag": "h3",
+            "value_1": "No",
+            "icon_1": "none",
+            "value_2": "No",
+            "icon_2": "none",
+            "value_3": "No",
+            "icon_3": "none",
+            "value_4": "No",
+            "icon_4": "none",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        },
+        "table_value_XVXVER": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "No",
+            "heading_tag": "h3",
+            "value_1": "No",
+            "icon_1": "none",
+            "value_2": "Yes",
+            "icon_2": "none",
+            "value_3": "Yes",
+            "icon_3": "none",
+            "value_4": "No",
+            "icon_4": "none",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        }
+      },
+      "block_order": [
+        "table_heading_rPWC3r",
+        "table_value_7F34CH",
+        "table_value_8amPgp",
+        "table_value_XVXVER"
+      ],
+      "name": "Comparison",
+      "settings": {
+        "subheading": "",
+        "heading": "WE JUST DO IT BETTER",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "<p>No compromises. Just better coffee.</p>",
+        "show_quick_buy": false,
+        "quick_view_position": "bottom",
+        "show_quick_buy_on_mobile": true,
+        "image_aspect_ratio": "adapt",
+        "image_fit": "contain",
+        "card_image_background": "#ffffff",
+        "number_of_column": "2",
+        "column_text_alignment": "center",
+        "desktop_column_color_scheme": "scheme-2",
+        "desktop_heading_color": "#000000",
+        "mobile_heading_color": "#000000",
+        "desktop_background_color": "#ffffff",
+        "desktop_divider_color": "#000000",
+        "mobile_tabel_color_scheme": "scheme-2",
+        "enable_highlight": true,
+        "badge_position": "first",
+        "badge_text": "",
+        "icon_style": "comparison-star",
+        "badge_text_icon_color": "#ffffff",
+        "badge_background_color": "#000000",
+        "highlighted_color_scheme": "scheme-5",
+        "divider_color": "#ffffff",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "media_and_text_eaFNFt": {
+      "type": "media-and-text",
+      "blocks": {
+        "text_content_g3K4Tx": {
+          "type": "text-content",
+          "settings": {
+            "heading": "Heading",
+            "heading_tag": "h2",
+            "style": "h1",
+            "subheading": "Subheading",
+            "content": "<p>Briefly describe what this heading is about</p>",
+            "content_alignment": "left",
+            "button_label": "Button",
+            "button_link": "",
+            "link_target": "_top",
+            "use_outline_button": false
+          }
+        },
+        "image_4rqLe6": {
+          "type": "image",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "text_content_g3K4Tx",
+        "image_4rqLe6"
+      ],
+      "disabled": true,
+      "name": "Media and text",
+      "settings": {
+        "full_width": false,
+        "media_width": 50,
+        "media_size": "md",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "",
+        "background_color": "#ffffff"
+      }
+    },
+    "product-recommendation": {
+      "type": "product-recommendation",
+      "settings": {
+        "heading": "You may also like",
+        "heading_tag": "h2",
+        "products_to_show": 4,
+        "display_options": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "main-product",
+    "scrolling_content_b9nAjt",
+    "multicolumn_zhXzDw",
+    "rich_text_h6N94G",
+    "feature_list_D8TtPb",
+    "comparison_HhTz8L",
+    "media_and_text_eaFNFt",
+    "product-recommendation"
+  ]
+}

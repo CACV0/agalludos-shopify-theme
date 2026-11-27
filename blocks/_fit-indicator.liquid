@@ -1,0 +1,379 @@
+{{ 'fit-indicator.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign fit_highlight = block.settings.highlight_value
+  assign custom_highlight = block.settings.custom_highlight_value | plus: 0
+  if custom_highlight > 0
+    assign fit_highlight = custom_highlight
+  endif
+-%}
+
+{% style %}
+     .fit-indicator--{{ block.id }} .segment-style--circle .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-line {
+        display: none;
+     }
+     .fit-indicator--{{ block.id }} .segment-style--line .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle {
+        display: none;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-line {
+        height: var(--line-height);
+        background-color: var(--highlight-segment-color);
+        width: var(--line-width);
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle .fit-circle {
+        width: calc(var(--circle_width) * 2);
+        height: calc(var(--circle_width) * 2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: 3px solid var(--outline-color);
+        position: relative;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle .fit-circle::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 50%;
+        background: var(--highlight-segment-color);
+        opacity: 0.3;
+        z-index: 1;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle .fit-circle::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 50%;
+        background: var(--outline-color);
+        z-index: -1;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-segment-circle .fit-circle__inner {
+        width: var(--circle_width);
+        height: var(--circle_width);
+        background-color: var(--highlight-segment-color);
+        border-radius: 50%;
+        z-index: 3;
+     }
+
+     .fit-indicator--{{ block.id }} .fit-block-content:nth-child({{ fit_highlight }}) .fit-block-content-text {
+        color: var(--highlight-segment-text-color);
+     }
+{% endstyle %}
+
+<div
+  class="fit-indicator fit-indicator--{{ block.id }}"
+  style="
+    --fit-indicator-padding:{% if block.settings.background_color == 'rgba(0,0,0,0)' or 
+    block.settings.background_color == 'transparent' or section.settings.color_scheme.settings.background == block.settings.background_color %} 0 
+     {% else %} 16px {% endif %};
+    --fit-indicator-background-color: {{ block.settings.background_color }};
+    --bottom-spacing: {{ block.settings.bottom_spacing | append: 'px' }};
+    --bottom-spacing-mobile: {{ block.settings.bottom_spacing_mobile | append: 'px' }}; 
+    --outline-color: {%  if block.settings.background_color == 'rgba(0,0,0,0)'  or block.settings.background_color == 'transparent' %} 
+    var(--color-background) {% else %} var(--fit-indicator-background-color)
+     {%  endif %}
+    
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="d-v-center fit-indicator-heading">
+    <{{ block.settings.heading_tag }} class="{{ block.settings.style }} m-0">
+      {{- block.settings.heading -}}
+    </{{ block.settings.heading_tag }}>
+    {% unless block.settings.tooltip == blank %}
+      <div class="tooltip {% if block.settings.tooltip.size > 150 %} tooltip__left {% endif %}">
+        {% render 'icon' with 'tooltip' %}
+        <span class="tooltiptext fnt-12">{{ block.settings.tooltip }}</span>
+      </div>
+    {% endunless %}
+  </div>
+  <ul
+    class="fit-indicator-blocks segment-style--{{ block.settings.segment_style }}"
+    style="
+      --text-segment-color:{{ block.settings.text_segment_color }};
+      --segment-color:{{ block.settings.segment_color }};
+      --segment-height:{{ block.settings.segment_height | append: 'px' }};
+      --segment-thickness:{{ block.settings.segment_thickness | append: 'px' }};
+      --line-height: {{ block.settings.line_height | append: 'px' }};
+      --line-width: {{ block.settings.line_width | append: 'px' }};
+      --highlight-segment-color: {{ block.settings.highlight_segment_color }};
+      --circle_width: {{ block.settings.circle_width | append: 'px' }};
+      --highlight-segment-text-color: {{ block.settings.highlight_segment_text_color }};
+    "
+  >
+    {% content_for 'blocks' %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "Fit guide",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_fit-block-content"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "default": "h4",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tooltip",
+      "label": "Tooltip text",
+      "default": "Tooltip text"
+    },
+    {
+      "type": "header",
+      "content": "Block content"
+    },
+    {
+      "type": "number",
+      "id": "highlight_value",
+      "label": "Highlight value",
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "custom_highlight_value",
+      "label": "Custom highlight value",
+      "info": "You can add a custom highlight within the same input field and add only integer value"
+    },
+    {
+      "type": "select",
+      "id": "segment_style",
+      "label": "Segment highlight style",
+      "default": "circle",
+      "options": [
+        {
+          "value": "circle",
+          "label": "Circle"
+        },
+        {
+          "value": "line",
+          "label": "Line"
+        }
+      ]
+      
+    },
+    {
+      "type": "range",
+      "label": "Circle width",
+      "id": "circle_width",
+      "default": 8,
+      "min": 8,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ block.settings.segment_style == 'circle' }}"
+    },
+    {
+      "type": "range",
+      "label": "Line height",
+      "id": "line_height",
+      "min": 20,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "visible_if": "{{ block.settings.segment_style == 'line' }}"
+    },
+    {
+      "type": "range",
+      "label": "Line width",
+      "id": "line_width",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 2,
+      "visible_if": "{{ block.settings.segment_style == 'line' }}"
+    },
+    {
+      "type": "color",
+      "id": "highlight_segment_color",
+      "label": "Highlight segment color",
+      "default": "#0039A2"
+    },
+    {
+      "type": "color",
+      "id": "highlight_segment_text_color",
+      "label": "Highlight segment text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "segment_thickness",
+      "label": "Segment thickness",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "segment_height",
+      "label": "Segment vertical height",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_segment_color",
+      "label": "Text segment color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "segment_color",
+      "label": "Segment color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EEEEEE"
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom spacing(desktop)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing_mobile",
+      "label": "Bottom spacing(mobile)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Fit guide",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "_fit-block-content",
+          "settings": {
+           "segment_text": "Small",
+           "text_alignment": "left"
+          }
+        },
+        {
+          "type": "_fit-block-content",
+           "settings": {
+           "segment_text": "True to size",
+           "text_alignment": "center",
+          }
+        },
+         {
+          "type": "_fit-block-content",
+           "settings": {
+           "segment_text": "large",
+           "text_alignment": "right"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

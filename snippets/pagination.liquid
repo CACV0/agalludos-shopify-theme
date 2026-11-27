@@ -1,0 +1,142 @@
+{%- comment -%}
+  Pagination snippet — supports both numbered and infinite scroll modes.
+  Params:
+    paginate: required, paginate object from {% paginate %}
+    pagination_type: optional, 'number' (default) or 'infinite'
+    anchor: optional, hash to append to page URLs
+{%- endcomment -%}
+
+{%- assign pagination_type = pagination_type | default: 'number' -%}
+
+<div class="pagination__contiainer" data-pagination-type="{{ pagination_type }}">
+  {%- if pagination_type == 'infinite' and paginate.pages > 1 -%}
+    <infinite-scroll
+      data-next-url="{% if paginate.next.url != blank %}{{ paginate.next.url }}{{ anchor }}{% endif %}"
+      data-current-page="{{ paginate.current_page }}"
+      data-total-pages="{{ paginate.pages }}"
+    >
+      <div class="infinite-scroll__status" data-infinite-status aria-live="polite">
+        <div class="infinite-scroll__spinner" data-infinite-spinner hidden aria-hidden="true">
+          <span class="visually-hidden">{{ 'general.pagination.loading' | t }}</span>
+          <span class="infinite-scroll__spinner-circle"></span>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn--border infinite-scroll__load-more"
+          data-infinite-load-more
+          hidden
+        >
+          {{ 'general.pagination.load_more' | t }}
+        </button>
+
+        <p class="infinite-scroll__end" data-infinite-end hidden>
+          {{ 'general.pagination.end_of_results' | t }}
+        </p>
+      </div>
+
+      <noscript>
+        <nav aria-label="pagination" role="navigation">
+          <ol class="pagination">
+            {%- if paginate.previous -%}
+              <li>
+                <a
+                  aria-label="{{ 'accessibility.pagination.previous' | t }}"
+                  class="pagination__item pagination__item--previous pagination__item-arrow link motion-reduce"
+                  href="{{ paginate.previous.url }}{{ anchor }}"
+                >
+                  {% render 'icon', icon: 'left' %}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <li>
+                  <a href="{{ part.url }}">
+                    <span class="visuallyhidden">page</span>
+                    <span>{{ part.title }}</span>
+                  </a>
+                </li>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <li aria-current="page" class="active">
+                    <span class="visuallyhidden">page</span>
+                    <span>{{ part.title }}</span>
+                  </li>
+                {%- else -%}
+                  <li>
+                    <span class="visuallyhidden">page</span>
+                    <span>{{ part.title }}</span>
+                  </li>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <li>
+                <a
+                  aria-label="{{ 'accessibility.pagination.next' | t }}"
+                  class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+                  href="{{ paginate.next.url }}{{ anchor }}"
+                >
+                  {% render 'icon', icon: 'right' %}
+                </a>
+              </li>
+            {%- endif -%}
+          </ol>
+        </nav>
+      </noscript>
+    </infinite-scroll>
+  {%- else -%}
+    {%- if paginate.pages > 1 -%}
+      <nav aria-label="pagination" role="navigation">
+        <ol class="pagination">
+          {%- if paginate.previous -%}
+            <li>
+              <a
+                aria-label="{{ 'accessibility.pagination.previous' | t }}"
+                class="pagination__item pagination__item--previous pagination__item-arrow link motion-reduce"
+                href="{{ paginate.previous.url }}{{ anchor }}"
+              >
+                {% render 'icon', icon: 'left' %}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <li>
+                <a href="{{ part.url }}">
+                  <span class="visuallyhidden">page</span>
+                  <span>{{ part.title }}</span>
+                </a>
+              </li>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <li aria-current="page" class="active">
+                  <span class="visuallyhidden">page</span>
+                  <span>{{ part.title }}</span>
+                </li>
+              {%- else -%}
+                <li>
+                  <span class="visuallyhidden">page</span>
+                  <span>{{ part.title }}</span>
+                </li>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <li>
+              <a
+                aria-label="{{ 'accessibility.pagination.next' | t }}"
+                class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+                href="{{ paginate.next.url }}{{ anchor }}"
+              >
+                {% render 'icon', icon: 'right' %}
+              </a>
+            </li>
+          {%- endif -%}
+        </ol>
+      </nav>
+    {%- endif -%}
+  {%- endif -%}
+</div>

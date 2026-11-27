@@ -1,0 +1,42 @@
+[aoi-type=fade-up] > *,
+[aoi-type=slide-right] > *,
+.swiper-slide-prev [aoi-type=scale] > *,
+.swiper-slide-next [aoi-type=scale] > *,
+[aoi-type=stagger] > *,
+[aoi-type=zoom-out] > *,
+.swiper-slide-prev [aoi-type=stagger] > *,
+.swiper-slide-next [aoi-type=stagger] > *,
+[aoi-type=fade-in] > * {
+  opacity: 0;
+}
+
+[aoi-type=scale] > * {
+  transform: scale(1);
+  opacity: 1;
+}
+
+benefits-component [benefit-card]:nth-child(odd) [animate-card] {
+  opacity: 0;
+  transform: translateX(100px);
+}
+@media screen and (max-width: 767px) {
+  benefits-component [benefit-card]:nth-child(odd) [animate-card] {
+    transform: translateY(100px);
+  }
+}
+benefits-component [benefit-card]:nth-child(even) [animate-card] {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+@media screen and (max-width: 767px) {
+  benefits-component [benefit-card]:nth-child(even) [animate-card] {
+    transform: translateY(100px);
+  }
+}
+benefits-component [animation-inner-circle] {
+  opacity: 0;
+}
+benefits-component [animation-border-circle] {
+  border-color: transparent;
+  --color-border: var(--color-background);
+}

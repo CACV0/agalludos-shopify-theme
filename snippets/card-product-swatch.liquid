@@ -1,0 +1,121 @@
+{% comment %}
+  swatch_count: Number of color swatches avaialble
+  limit : Number of swatch to show
+{% endcomment %}
+
+{%- for value in option.values limit: limit -%}
+  {%- liquid
+    if value.selected == true
+      assign checked = true
+    else
+      assign checked = false
+    endif
+  -%}
+  {%- capture id -%}{{ name }}-{{ option.position }}-{{ value }}{%- endcapture -%}
+
+  {%- liquid
+    assign variants_available_arr = product.variants | map: 'available'
+    assign variants_option1_arr = product.variants | map: 'option1'
+    assign variants_option2_arr = product.variants | map: 'option2'
+    assign variants_option3_arr = product.variants | map: 'option3'
+    assign option_disabled = true
+    for option1_name in variants_option1_arr
+      case option.position
+        when 1
+          if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 2
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 3
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+      endcase
+    endfor
+
+    # Pre-compute option_values string: each option's currently selected value ID,
+    # but substitute this swatch value's ID at its own option position.
+    # Uses product.options_with_values + opt.selected_value.id (stable Liquid API).
+    assign swatch_option_value_ids = ''
+    for opt in product.options_with_values
+      unless forloop.first
+        assign swatch_option_value_ids = swatch_option_value_ids | append: ','
+      endunless
+      if opt.position == option.position
+        assign swatch_option_value_ids = swatch_option_value_ids | append: value.id
+      else
+        assign swatch_option_value_ids = swatch_option_value_ids | append: opt.selected_value.id
+      endif
+    endfor
+
+    # Find the first available variant for this swatch value so JS can use ?variant=ID.
+    assign swatch_variant_id = blank
+    for variant in product.variants
+      case option.position
+        when 1
+          if variant.option1 == value
+            assign swatch_variant_id = variant.id
+            if variant.available
+              break
+            endif
+          endif
+        when 2
+          if variant.option2 == value
+            assign swatch_variant_id = variant.id
+            if variant.available
+              break
+            endif
+          endif
+        when 3
+          if variant.option3 == value
+            assign swatch_variant_id = variant.id
+            if variant.available
+              break
+            endif
+          endif
+      endcase
+    endfor
+  -%}
+
+  <input
+    type="{{ type | default: 'radio' }}"
+    id="{{ id }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    data-variant-id="{{ swatch_variant_id }}"
+    data-option-value-id="{{ value.id }}"
+    data-option-value-ids="{{ swatch_option_value_ids }}"
+    class="swatch-input__input visually-hidden"
+    {% if checked %}
+      checked
+    {% endif %}
+    {% if disabled %}
+      disabled
+    {% endif %}
+  >
+  <label
+    for="{{ id }}"
+    title="{{ value }}"
+    class="swatch-input__label {% if option_disabled %} disabled{% endif %} "
+  >
+    {% render 'swatch', swatch: value.swatch, shape: settings.swatch_style %}
+  </label>
+{% endfor %}
+{% liquid
+  assign show_remaing_count = false
+  if swatch_count > limit
+    assign remaining_count = swatch_count | minus: limit
+    assign show_remaing_count = true
+  endif
+%}
+{%- if show_remaing_count -%}
+  <a
+    class="link text-color text-decoration-none d-v-center fnt-14 fnt-body-weight-regular"
+    href="{{ product.url }}"
+  >
+    {{ 'products.swatch_remaining_count' | t: count: remaining_count }}
+  </a>
+{%- endif -%}

@@ -1,0 +1,209 @@
+<div
+  benefit-card
+  class="benefits__card swiper-slide"
+  style="--desktop-width: {{ section.settings.image_width_on_desktop |  append: 'px' }};--mobile-width: {{ section.settings.image_width_on_mobile |  append: 'px' }};--counter-background-color: {{ section.settings.counter_bg_color }};--counter-border-color: {{ section.settings.counter_border_color }};--color-text:{{ block.settings.text_color }};{% if block.settings.heading != blank %}--underline-color: {{ block.settings.underline_color }}{% endif %}"
+>
+  <div class="benefits__card-wrap d-flex align-item-center " animate-card>
+    <div class="benefits__card-img-container">
+      <div
+        class="benefits__card-img-wrap d-flex justify-content-center align-item-center  background-enabled "
+        style="--color-text: {{ section.settings.text_color }}; {% if section.settings.counter_border_color == 'rgba(0,0,0,0)' %}border-width: 0 {% endif %}"
+      >
+        {% unless section.settings.show_counter %}
+          {% if block.settings.custom_image %}
+            {% capture sizes %}
+              (min-width: 992px) {{ section.settings.image_width_on_desktop |  append: 'px' }},{{ section.settings.image_width_on_mobile |  append: 'px' }}
+          {% endcapture %}
+            <div image-container style="width: 100%; height: 100%;">
+              {{
+                block.settings.custom_image
+                | image_url: width: block.settings.custom_image.width
+                | image_tag:
+                  is: 'image-loading',
+                  class: 'benefits__card-image img-100',
+                  widths: '200,400,600',
+                  sizes: sizes,
+                  alt: block.settings.custom_image.alt
+              }}
+              {{
+                block.settings.custom_image
+                | image_url: width: 10
+                | image_tag: class: 'blur-image', loading: 'lazy'
+              }}
+            </div>
+          {% else %}
+            {{ 'product-apparel-2' | placeholder_svg_tag: 'benefits__card-image img-100  ' }}
+          {% endif %}
+        {% else %}
+          <span class="benefits__card-counter">{{ block.settings.counter }}</span>
+        {% endunless %}
+      </div>
+    </div>
+    <div
+      class="benefits__card-body color-{{ block.settings.color_scheme }}"
+      {{ section.settings.icon_label_size }}
+    >
+      {% if section.settings.collapsible == 'closed' %}
+        <accordion-tab>
+          <details
+            accordionTab
+            aria-expanded="false"
+            class="accordion__item d-block"
+            {{ block.shopify_attributes }}
+          >
+            <summary aria-label="Toggle content">
+              <div class="accordion__item__head">
+      {% endif %}
+      {% if block.settings.heading != blank %}
+        <div
+          class="benefits__card-heading"
+          animation-card-content
+        >
+          <{{ section.settings.block_heading_tag }} class="mb-4 {{ section.settings.icon_label_size }}">
+            {{ block.settings.heading }}
+          </{{ section.settings.block_heading_tag }}>
+
+          {% if section.settings.collapsible == 'closed' %}
+            {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if section.settings.collapsible == 'closed' %}
+        </div>
+        </summary>
+      {% endif %}
+      {% if section.settings.collapsible == 'closed' %}
+        <div accordionBody class="accordion__item__body">
+          <div class="accordion__item__body-content">
+      {% endif %}
+      {%- assign full_text = block.settings.text -%}
+      {%- assign short_text = full_text | truncatewords: block.settings.truncate_words_desktop, ' ' -%}
+      {%- assign remaining_text = full_text | remove: short_text -%}
+      {%- assign short_text_mobile = full_text | truncatewords: block.settings.truncate_words_mobile, ' ' -%}
+      {%- assign remaining_text_mobile = full_text | remove: short_text_mobile -%}
+
+      {% assign words = full_text | split: ' ' | size %}
+      {% unless section.settings.collapsible == 'closed' %}
+        <show-button class="desktop-only">
+          <div class="benefits__card-body-content RTE-content " text-content animation-card-content>
+            {% if words <= block.settings.truncate_words_desktop or block.settings.truncate_words_desktop == 0 %}
+              {{ full_text }}
+
+            {% elsif words > block.settings.truncate_words_desktop %}
+              <span>
+                <span class="short-text"> {{ short_text }}</span>
+                <span class="readmore-extra" read-more-extra>
+                  {{ remaining_text }}
+                </span>
+
+                {% unless section.settings.collapsible == 'closed' %}
+                  <button class=" link" toggle-text-button>
+                    <span show-more class="show-more-text"> {{ 'section.benefits.read_more' | t }} </span>
+                    <span show-less class="show-less-text"> {{ 'section.benefits.read_less' | t }} </span>
+                  </button>
+                {% endunless %}
+              </span>
+            {% endif %}
+          </div>
+        </show-button>
+        <show-button class="mobile-only">
+          <div class="benefits__card-body-content RTE-content " text-content animation-card-content>
+            {% if words <= block.settings.truncate_words_mobile or block.settings.truncate_words_mobile == 0 %}
+              {{ full_text }}
+
+            {% elsif words > block.settings.truncate_words_mobile %}
+              <span>
+                {{ short_text_mobile }}
+                <span class="readmore-extra" read-more-extra>
+                  {{ remaining_text_mobile }}
+                </span>
+
+                {% unless section.settings.collapsible == 'closed' %}
+                  <button class=" link" toggle-text-button>
+                    <span show-more class="show-more-text"> {{ 'section.benefits.read_more' | t }} </span>
+                    <span show-less class="show-less-text"> {{ 'section.benefits.read_less' | t }} </span>
+                  </button>
+                {% endunless %}
+              </span>
+            {% endif %}
+          </div>
+        </show-button>
+      {% else %}
+        <div class="benefits__card-body-content RTE-content " animation-card-content>
+          {{ full_text }}
+        </div>
+      {% endunless %}
+      {% if section.settings.collapsible == 'closed' %}
+        </div>
+        </div>
+        </details>
+        </accordion-tab>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Benefit item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "counter",
+      "label": "Count",
+      "default": "1",
+      "visible_if": "{{ section.settings.show_counter }}"
+    },
+    {
+      "type": "image_picker",
+      "label": "Custom image",
+      "id": "custom_image"
+    },
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Text</p>"
+    },
+    {
+      "type": "number",
+      "id": "truncate_words_desktop",
+      "label": "Truncate words on desktop",
+      "default": 15,
+      "info": "Set it to 0 to disable"
+    },
+    {
+      "type": "number",
+      "id": "truncate_words_mobile",
+      "label": "Truncate words on mobile",
+      "default": 10,
+      "info": "Set it to 0 to disable"
+    },
+    {
+      "type": "color",
+      "id": "underline_color",
+      "label": "Underline color",
+      "default": "#000000"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Benefit"
+    }
+  ]
+}
+{% endschema %}

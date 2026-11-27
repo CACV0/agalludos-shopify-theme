@@ -1,0 +1,97 @@
+<div class="col-50 d-flex align-item-center ">
+  <div class="form-container" role="region" aria-label="contact form">
+    {% render 'section-heading', section: section %}
+
+    {%- form 'contact', id: 'ContactForm', class: 'contact-us__form' -%}
+      {% content_for 'blocks' %}
+
+      <animation-reveal aoi-type="fade-up" aoi-delay="0.20">
+        <div>
+          <button class="btn btn--fill w-100" type="submit" aria-label="{{ 'contact.form.button_label' | t }}">
+            {{ 'contact.form.button_label' | t }}
+          </button>
+        </div>
+      </animation-reveal>
+      {%- if form.posted_successfully? -%}
+        <animation-reveal aoi-type="fade-up" aoi-delay="0.20">
+          <section class="success-ms contact-msg">
+            <div class="container">
+              <div class="d-flex justify-content-center">
+                <div>
+                  {% render 'icon' with 'success' %}
+                </div>
+                <span class="success-text">{{- 'contact.form.success_message' | t -}}</span>
+              </div>
+            </div>
+          </section>
+        </animation-reveal>
+      {%- elsif form.errors -%}
+        <!-- error messages will display -->
+        <animation-reveal aoi-type="fade-up" aoi-delay="0.20">
+          <section class="error-ms contact-msg">
+            <div class="container">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex  me-2">
+                  <div>
+
+                    {% render 'icon' with 'error' %}
+                  </div>
+                  <span class="error-text">{{- 'contact.form.error_message' | t -}}<a class="link" href="#ContactForm-email">
+                    {{ form.errors.translated_fields.email | capitalize }}
+                    {{ form.errors.messages.email -}}
+                  </a></span>
+                </div>
+                
+              </div>
+            </div>
+          </section>
+        </animation-reveal>
+      {%- endif -%}
+    {% endform %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Form",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_input-field"
+    },
+    {
+      "type": "_dropdown"
+    }
+  ],
+  "settings": [],
+
+  "presets": [
+    {
+      "name": "Form",
+      "blocks": [
+        {
+          "type": "_input-field",
+          "settings": {
+            "input": "name",
+            "heading": "Name"
+          }
+        },
+        {
+          "type": "_input-field",
+          "settings": {
+            "input": "email",
+            "heading": "Email"
+          }
+        },
+        {
+          "type": "_input-field",
+          "settings": {
+            "input": "message",
+            "heading": "Message"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

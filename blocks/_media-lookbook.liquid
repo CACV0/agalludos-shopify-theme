@@ -1,0 +1,401 @@
+{%- liquid
+  unless loading
+    assign loading = 'lazy'
+  endunless
+  unless fetchpriority
+    assign fetchpriority = 'auto'
+  endunless
+  assign imagealt = block.settings.image.alt | default: ''
+
+  assign ratio = 1
+  if section.settings.image_aspect_ratio == 'portrait'
+    assign ratio = 0.8
+  elsif section.settings.image_aspect_ratio == 'landscape'
+    assign ratio = 1.77
+  elsif section.settings.image_aspect_ratio == 'adapt'
+    # Adapt follows whatever media the block actually shows: the image if there is one, otherwise
+    # the video's own cover. Without the video fallback a video-only block always resolved to 1
+    # and rendered square, both on the card and in the popup.
+    if block.settings.image != blank
+      assign ratio = block.settings.image.aspect_ratio
+    elsif block.settings.video != blank
+      assign ratio = block.settings.video.preview_image.aspect_ratio
+    endif
+    if ratio == 0 or ratio == blank
+      assign ratio = 1
+    endif
+  endif
+
+  assign same_height = true
+  if section.settings.image_aspect_ratio == 'adapt'
+    assign same_height = false
+  endif
+-%}
+
+<div
+  class="gallery__wrp swiper-slide {% if same_height %}h-100{% endif %} gallery__wrp--top {% if section.settings.column_spacing != '0' %}border-radius border-radius--block{% endif %}"
+  style="--image-ratio: {{ 1 | divided_by: ratio | times: 100 | append: '%;' }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="gallery__imageWrp" image-container>
+    {%- if block.settings.video != blank -%}
+      {%- assign cover_image = block.settings.image | default: block.settings.video.preview_image -%}
+      <reel-feed-player
+        video-playing="false"
+        class="gallery__img"
+        data-media-type="video"
+        watch-element
+        {% if section.settings.media_autoplay %}media-autoplay{% endif %}
+      >
+        <video
+          preload="metadata"
+          webkit-playsinline
+          playsinline
+          loop
+          disablepictureinpicture
+          {% if block.settings.video.alt %}aria-label="{{ block.settings.video.alt }}"{% endif %}
+        >
+          {%- for source in block.settings.video.sources -%}
+            <source data-src="{{ source.url }}" type="{{ source.mime_type }}">
+          {%- endfor -%}
+        </video>
+        {%- if cover_image != blank -%}
+          <div
+            class="gallery-video__preview position-absolute"
+            video-preview-elements
+            image-container
+            style="inset: 0;"
+          >
+            {{
+              cover_image
+              | image_url: width: cover_image.width
+              | image_tag:
+                class: 'gallery__img image-responsive',
+                loading: loading,
+                widths: '1336,800,600',
+                fetchpriority: fetchpriority,
+                alt: cover_image.alt,
+                is: 'image-loading'
+            }}
+            {%- comment -%}
+              Loaded eagerly (40px, ~1KB) so a frame is painted the moment the card renders.
+              The full cover above it is held at opacity 0 by [image-container] until it loads,
+              so a lazy placeholder here would leave the video showing through as a blank frame.
+            {%- endcomment -%}
+            {{
+              cover_image
+              | image_url: width: 40
+              | image_tag: alt: cover_image.alt, class: 'blur-image', loading: 'eager', fetchpriority: 'high'
+            }}
+          </div>
+        {%- endif -%}
+        <div class="preloader-circle"></div>
+        {%- comment -%}
+          With autoplay off the shopper needs a way to start the video, so show the play overlay.
+          Same pattern as Multi Column: [video-overlay-elements] wrapper + [play-media] target,
+          which defaultVideoPlayer binds to click and Enter.
+        {%- endcomment -%}
+        {% unless section.settings.media_autoplay %}
+          {%- comment -%}
+            The overlay itself is the button: it already covers the media and swallowed clicks
+            landing outside the icon, so anywhere on a paused video now starts it — and it carries
+            the pointer cursor. A real <button> also brings keyboard support without role/tabindex.
+          {%- endcomment -%}
+          <button
+            type="button"
+            class="gallery-video__play-button d-flex align-item-center justify-content-center position-absolute button-rest-styles cursor-pointer"
+            aria-label="{{ 'products.product.ugc.play_button' | t }}"
+            video-overlay-elements
+            play-media
+          >
+            {% render 'icon', icon: 'feed-play' %}
+          </button>
+          {%- comment -%}
+            Pause target — a started video has no way back without it, since the play overlay is
+            hidden while playing. FeedPlayer binds [pause-media] to click; CSS only exposes this
+            layer while [video-playing='true'], and it sits under the audio and popup buttons so
+            those stay clickable.
+          {%- endcomment -%}
+          <button
+            type="button"
+            class="gallery-video__pause-button position-absolute button-rest-styles cursor-pointer"
+            aria-label="{{ 'products.product.ugc.pause_button' | t }}"
+            pause-media
+          ></button>
+        {% endunless %}
+        {%- comment -%}
+          Autoplaying videos must start muted (browser autoplay policy). A video the shopper
+          starts with the play button is a user gesture, so it can play with sound — same rule
+          Shoppable Feed uses for its audio-state.
+        {%- endcomment -%}
+        <div
+          class="gallery-video__audio position-absolute cursor-pointer"
+          audio-state="{% if section.settings.media_autoplay %}mute{% else %}unmute{% endif %}"
+          tabindex="0"
+          aria-label="{{ 'accessibility.mute_unmute_audio' | t }}"
+        >
+          <div class="audio__umute">{% render 'icon', icon: 'unmute-audio' %}</div>
+          <div class="audio__mute">{% render 'icon', icon: 'mute-audio' %}</div>
+        </div>
+      </reel-feed-player>
+    {%- else -%}
+      <animation-reveal
+        class="gallery__img"
+        aoi-type="zoom-out"
+        aoi-duration="0.7"
+        aoi-amount="0"
+      >
+        {% if block.settings.image != blank %}
+          {%- capture size -%}
+            (min-width:1336px) calc({{ settings.page_width | append: 'px' }} / 3 - 45px), (min-width:767px) calc(100vw / 2.3 - 50px), calc(100vw / 1.2 - 30px)
+          {%- endcapture -%}
+          {{
+            block.settings.image
+            | image_url: width: block.settings.image.width
+            | image_tag:
+              class: 'gallery__img image-responsive',
+              loading: loading,
+              widths: '1336,800,600',
+              fetchpriority: fetchpriority,
+              sizes: size,
+              alt: imagealt,
+              is: 'image-loading'
+          }}
+        {% else %}
+          {{ 'detailed-apparel-1' | placeholder_svg_tag }}
+        {% endif %}
+      </animation-reveal>
+
+      {% if block.settings.image %}
+        {{
+          block.settings.image
+          | image_url: width: 40
+          | image_tag: alt: block.settings.image.alt, class: 'blur-image', loading: 'lazy'
+        }}
+      {% endif %}
+    {%- endif -%}
+
+    {%- comment -%}
+      Popup trigger icon — needs the section toggle on AND something to show in the popup,
+      so it stays hidden until the merchant picks a collection or products.
+    {%- endcomment -%}
+    {%- liquid
+      assign has_popup_products = false
+      if block.settings.popup_collection != blank
+        assign has_popup_products = true
+      endif
+      if block.settings.popup_product_list != blank
+        assign has_popup_products = true
+      endif
+    -%}
+    {%- if section.settings.show_popup and has_popup_products -%}
+      <button
+        class="gallery__icon btn btn--fill btn--icon position-absolute cursor-pointer"
+        type="button"
+        gallery-popup-trigger="lookbook-popup-{{ section.id }}"
+        data-lookbook-block="{{ block.id }}"
+        aria-label="{{ 'accessibility.view_gallery' | t }}"
+      >
+        {%- comment -%} Same trigger icon the Shoppable Image section uses for its popup {%- endcomment -%}
+        {% render 'icon', icon: 'view-product' %}
+        {%- comment -%}
+          Popup body for this card. The section renders a single <lookbook-popup> shell and the
+          trigger click copies this template into it, so a gallery of N cards carries one popup
+          instead of N — the same pattern the quiz support guide drawer uses. Template content is
+          inert: no images fetched, no custom elements upgraded, until it is cloned on open.
+        {%- endcomment -%}
+        <template lookbook-popup-content>
+          <div class="lookbook-popup__image-col position-relative overflow-hidden flex-shrink-0" image-container style="--popup-image-ratio: {{ ratio }}">
+            {%- if block.settings.video != blank -%}
+              {%- assign popup_cover = block.settings.image | default: block.settings.video.preview_image -%}
+              <reel-feed-player
+                video-playing="false"
+                class="lookbook-popup__media"
+                data-media-type="video"
+                watch-element
+                {% if section.settings.media_autoplay %}media-autoplay{% endif %}
+              >
+                <video
+                  preload="metadata"
+                  webkit-playsinline
+                  playsinline
+                  loop
+                  disablepictureinpicture
+                  {% if block.settings.video.alt %}aria-label="{{ block.settings.video.alt }}"{% endif %}
+                >
+                  {%- for source in block.settings.video.sources -%}
+                    <source data-src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endfor -%}
+                </video>
+                {%- if popup_cover != blank -%}
+                  <div
+                    class="gallery-video__preview position-absolute"
+                    video-preview-elements
+                    image-container
+                    style="inset: 0;"
+                  >
+                    {{
+                      popup_cover
+                      | image_url: width: popup_cover.width
+                      | image_tag:
+                        class: 'lookbook-popup__img image-responsive',
+                        loading: 'lazy',
+                        widths: '600,800',
+                        sizes: '(min-width: 768px) 46vw, 100vw',
+                        alt: popup_cover.alt,
+                        is: 'image-loading'
+                    }}
+                    {%- comment -%}
+                      Eager like the card's placeholder — the full cover above it is held at opacity 0
+                      by [image-container] until it loads, so a lazy placeholder leaves the popup
+                      media blank for the first frames after opening.
+                    {%- endcomment -%}
+                    {{
+                      popup_cover
+                      | image_url: width: 40
+                      | image_tag: alt: popup_cover.alt, class: 'blur-image', loading: 'eager'
+                    }}
+                  </div>
+                {%- endif -%}
+                <div class="preloader-circle"></div>
+                {%- comment -%} Play / pause overlays when autoplay is off — same as the card player above {%- endcomment -%}
+                {% unless section.settings.media_autoplay %}
+                  <button
+                    type="button"
+                    class="gallery-video__play-button d-flex align-item-center justify-content-center position-absolute button-rest-styles cursor-pointer"
+                    aria-label="{{ 'products.product.ugc.play_button' | t }}"
+                    video-overlay-elements
+                    play-media
+                  >
+                    {% render 'icon', icon: 'feed-play' %}
+                  </button>
+                  <button
+                    type="button"
+                    class="gallery-video__pause-button position-absolute button-rest-styles cursor-pointer"
+                    aria-label="{{ 'products.product.ugc.pause_button' | t }}"
+                    pause-media
+                  ></button>
+                {% endunless %}
+                {%- comment -%} Same rule as the card player — click-to-play starts with sound {%- endcomment -%}
+                <div
+                  class="gallery-video__audio position-absolute cursor-pointer"
+                  audio-state="{% if section.settings.media_autoplay %}mute{% else %}unmute{% endif %}"
+                  tabindex="0"
+                  aria-label="{{ 'accessibility.mute_unmute_audio' | t }}"
+                >
+                  <div class="audio__umute">{% render 'icon', icon: 'unmute-audio' %}</div>
+                  <div class="audio__mute">{% render 'icon', icon: 'mute-audio' %}</div>
+                </div>
+              </reel-feed-player>
+            {%- elsif block.settings.image != blank -%}
+
+              {{
+                block.settings.image
+                | image_url: width: block.settings.image.width
+                | image_tag:
+                  class: 'lookbook-popup__img image-responsive',
+                  loading: 'lazy',
+                  widths: '600,800,1000',
+                  sizes: '(min-width: 768px) 40vw, 100vw',
+                  alt: block.settings.image.alt,
+                  is: 'image-loading'
+              }}
+              {{
+                block.settings.image
+                | image_url: width: 40
+                | image_tag: alt: block.settings.image.alt, class: 'blur-image', loading: 'lazy'
+              }}
+            {%- else -%}
+              {{ 'detailed-apparel-1' | placeholder_svg_tag: 'lookbook-popup__img' }}
+            {%- endif -%}
+          </div>
+          <div class="lookbook-popup__content-col flex-1">
+            {%- liquid
+              assign productsForPopup = block.settings.popup_collection.products
+              if block.settings.popup_product_list.count > 0
+                assign productsForPopup = block.settings.popup_product_list
+              endif
+            -%}
+            <div class="lookbook-popup__products mb-16">
+              <div class="lookbook-popup__products-track">
+                {%- for product in productsForPopup -%}
+                  <div class="lookbook-popup__product-slide">
+                    {%- comment -%}
+                      Minimal card in the lookbook popup — image, title and price only.
+                      hide_swatches drops the colour swatch row, show_calltoaction_btn: false drops the
+                      quick-buy / call-to-action button over the image, and allow_variant_popup is
+                      deliberately not passed so no "Select options" trigger renders.
+                    {%- endcomment -%}
+                    {%- render 'card-product',
+                      product: product,
+                      product_image_loading: 'lazy',
+                      section: section,
+                      index: forloop.index0,
+                      hide_swatches: true,
+                      show_calltoaction_btn: false
+                    -%}
+                  </div>
+                {%- else -%}
+                  {%- for i in (1..4) -%}
+                    <div class="lookbook-popup__product-slide">
+                      {%- render 'card-product', onboarding: true, index: forloop.index0 -%}
+                    </div>
+                  {%- endfor -%}
+                {%- endfor -%}
+              </div>
+            </div>
+            {%- if block.settings.popup_collection != blank -%}
+              <a
+                href="{{ block.settings.popup_collection.url }}"
+                class="button lookbook-popup__link d-inline-block mt-8"
+              >
+                {{ 'accessibility.multi_column_view_all' | t }}
+              </a>
+            {%- endif -%}
+          </div>
+        </template>
+      </button>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Media",
+  "tag": null,
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "The video will autoplay, loop and be muted."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "This image will be used as the cover image if a video is added"
+    },
+    {
+      "type": "header",
+      "content": "Lookbook popup"
+    },
+    {
+      "type": "collection",
+      "id": "popup_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "popup_product_list",
+      "label": "Products",
+      "info": "Select products here will override the collection products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media"
+    }
+  ]
+}
+{% endschema %}

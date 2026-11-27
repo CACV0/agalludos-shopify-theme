@@ -1,0 +1,190 @@
+{{ 'snippet-nutriscore.css' | asset_url | stylesheet_tag }}
+<div
+  class="nutriscore"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="d-v-center">
+    <{{ block.settings.heading_tag }} class="fnt-20 m-0">{{ block.settings.heading }}</{{ block.settings.heading_tag }}>
+    {% unless block.settings.tooltip == blank %}
+      <div class="tooltip {% if block.settings.tooltip.size > 150 %} tooltip__left {% endif %}">
+        {% render 'icon' with 'tooltip' %}
+        <span class="tooltiptext fnt-12">{{ block.settings.tooltip }}</span>
+      </div>
+    {% endunless %}
+  </div>
+
+  {% render 'snippet-nutriscore', block: block %}
+</div>
+
+{% schema %}
+{
+  "name": "Nutriscore",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tooltip",
+      "label": "Tooltip text",
+      "default": "Tooltip text"
+    },
+    {
+      "type": "header",
+      "content": "Block content"
+    },
+    {
+      "type": "range",
+      "id": "highlight_value",
+      "label": "Highlight value",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1,
+      "info": "Choose which item you would like to highlight"
+    },
+    {
+      "type": "text",
+      "id": "custom_highlight_item",
+      "label": "Custom highlight item",
+      "info": "Use dynamic sources to customize the highlight item or segment based on product metafields [Learn more](https://help.ascendthemes.com/article/61-product-page)"
+    },
+    {
+      "type": "text",
+      "id": "value_1",
+      "label": "Value 1",
+      "default": "A"
+    },
+    {
+      "type": "color",
+      "id": "value_1_color",
+      "label": "Color",
+      "default": "#0E8A4A",
+      "alpha": true
+    },
+    {
+      "type": "text",
+      "id": "value_2",
+      "label": "Value 2",
+      "default": "B"
+    },
+    {
+      "type": "color",
+      "id": "value_2_color",
+      "label": "Color",
+      "default": "#73C82C",
+      "alpha": true
+    },
+    {
+      "type": "text",
+      "id": "value_3",
+      "label": "Value 3",
+      "default": "C"
+    },
+    {
+      "type": "color",
+      "id": "value_3_color",
+      "label": "Color",
+      "default": "#FBC707",
+      "alpha": true
+    },
+    {
+      "type": "text",
+      "id": "value_4",
+      "label": "Value 4",
+      "default": "D"
+    },
+    {
+      "type": "color",
+      "id": "value_4_color",
+      "label": "Color",
+      "default": "#F47216",
+      "alpha": true
+    },
+    {
+      "type": "text",
+      "id": "value_5",
+      "label": "Value 5",
+      "default": "E"
+    },
+    {
+      "type": "color",
+      "id": "value_5_color",
+      "label": "Color",
+      "default": "#EF3120",
+      "alpha": true
+    },
+    {
+      "type": "range",
+      "id": "segment_height",
+      "label": "Segments height",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 10,
+      "unit": "px"
+    },
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F4F4F4",
+      "alpha": true
+    },
+
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutriscore",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

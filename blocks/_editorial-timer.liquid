@@ -1,0 +1,246 @@
+{% comment %} Editorial Content — Countdown Timer {% endcomment %}
+<script defer src="{{ 'countdown-timer.js' | asset_url }}"></script>
+
+{% assign hide_timer = false %}
+{% if block.settings.hide_timer_on_ending == 'hide_on_completion' %}
+  {% assign hide_timer = true %}
+{% endif %}
+
+<animation-reveal aoi-type="stagger" aoi-delay="0.13" aoi-duration="0.6">
+  <div
+    class="pdp-countdown-timer d-flex justify-content-{{ section.settings.desktop_content_alignment }} justify-content-{{ section.settings.mobile_content_alignment }}-md"
+    {{ block.shopify_attributes }}
+    {% if hide_timer %}
+      hide-on-expiry-parent-element
+    {% endif %}
+  >
+    {% render 'countdown-timer', block: block %}
+  </div>
+</animation-reveal>
+
+{% schema %}
+{
+  "name": "Timer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "number",
+      "id": "start_year",
+      "label": "Year",
+      "default": 2024
+    },
+    {
+      "type": "select",
+      "id": "start_month",
+      "label": "Month",
+      "options": [
+        { "value": "1", "label": "January" },
+        { "value": "2", "label": "February" },
+        { "value": "3", "label": "March" },
+        { "value": "4", "label": "April" },
+        { "value": "5", "label": "May" },
+        { "value": "6", "label": "June" },
+        { "value": "7", "label": "July" },
+        { "value": "8", "label": "August" },
+        { "value": "9", "label": "September" },
+        { "value": "10", "label": "October" },
+        { "value": "11", "label": "November" },
+        { "value": "12", "label": "December" }
+      ],
+      "default": "7"
+    },
+    {
+      "type": "select",
+      "id": "start_day",
+      "label": "Day",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" },
+        { "value": "6", "label": "6" },
+        { "value": "7", "label": "7" },
+        { "value": "8", "label": "8" },
+        { "value": "9", "label": "9" },
+        { "value": "10", "label": "10" },
+        { "value": "11", "label": "11" },
+        { "value": "12", "label": "12" },
+        { "value": "13", "label": "13" },
+        { "value": "14", "label": "14" },
+        { "value": "15", "label": "15" },
+        { "value": "16", "label": "16" },
+        { "value": "17", "label": "17" },
+        { "value": "18", "label": "18" },
+        { "value": "19", "label": "19" },
+        { "value": "20", "label": "20" },
+        { "value": "21", "label": "21" },
+        { "value": "22", "label": "22" },
+        { "value": "23", "label": "23" },
+        { "value": "24", "label": "24" },
+        { "value": "25", "label": "25" },
+        { "value": "26", "label": "26" },
+        { "value": "27", "label": "27" },
+        { "value": "28", "label": "28" },
+        { "value": "29", "label": "29" },
+        { "value": "30", "label": "30" },
+        { "value": "31", "label": "31" }
+      ],
+      "default": "27"
+    },
+    {
+      "type": "select",
+      "id": "start_hours",
+      "label": "Hours",
+      "options": [
+        { "label": "12 AM (Midnight)", "value": "0" },
+        { "label": "1 AM", "value": "1" },
+        { "label": "2 AM", "value": "2" },
+        { "label": "3 AM", "value": "3" },
+        { "label": "4 AM", "value": "4" },
+        { "label": "5 AM", "value": "5" },
+        { "label": "6 AM", "value": "6" },
+        { "label": "7 AM", "value": "7" },
+        { "label": "8 AM", "value": "8" },
+        { "label": "9 AM", "value": "9" },
+        { "label": "10 AM", "value": "10" },
+        { "label": "11 AM", "value": "11" },
+        { "label": "12 PM (Noon)", "value": "12" },
+        { "label": "1 PM", "value": "13" },
+        { "label": "2 PM", "value": "14" },
+        { "label": "3 PM", "value": "15" },
+        { "label": "4 PM", "value": "16" },
+        { "label": "5 PM", "value": "17" },
+        { "label": "6 PM", "value": "18" },
+        { "label": "7 PM", "value": "19" },
+        { "label": "8 PM", "value": "20" },
+        { "label": "9 PM", "value": "21" },
+        { "label": "10 PM", "value": "22" },
+        { "label": "11 PM", "value": "23" }
+      ],
+      "default": "16"
+    },
+    {
+      "type": "select",
+      "id": "start_minute",
+      "label": "Minute",
+      "options": [
+        { "value": "0", "label": "00" },
+        { "value": "1", "label": "01" },
+        { "value": "2", "label": "02" },
+        { "value": "3", "label": "03" },
+        { "value": "4", "label": "04" },
+        { "value": "5", "label": "05" },
+        { "value": "6", "label": "06" },
+        { "value": "7", "label": "07" },
+        { "value": "8", "label": "08" },
+        { "value": "9", "label": "09" },
+        { "value": "10", "label": "10" },
+        { "value": "11", "label": "11" },
+        { "value": "12", "label": "12" },
+        { "value": "13", "label": "13" },
+        { "value": "14", "label": "14" },
+        { "value": "15", "label": "15" },
+        { "value": "16", "label": "16" },
+        { "value": "17", "label": "17" },
+        { "value": "18", "label": "18" },
+        { "value": "19", "label": "19" },
+        { "value": "20", "label": "20" },
+        { "value": "21", "label": "21" },
+        { "value": "22", "label": "22" },
+        { "value": "23", "label": "23" },
+        { "value": "24", "label": "24" },
+        { "value": "25", "label": "25" },
+        { "value": "26", "label": "26" },
+        { "value": "27", "label": "27" },
+        { "value": "28", "label": "28" },
+        { "value": "29", "label": "29" },
+        { "value": "30", "label": "30" },
+        { "value": "31", "label": "31" },
+        { "value": "32", "label": "32" },
+        { "value": "33", "label": "33" },
+        { "value": "34", "label": "34" },
+        { "value": "35", "label": "35" },
+        { "value": "36", "label": "36" },
+        { "value": "37", "label": "37" },
+        { "value": "38", "label": "38" },
+        { "value": "39", "label": "39" },
+        { "value": "40", "label": "40" },
+        { "value": "41", "label": "41" },
+        { "value": "42", "label": "42" },
+        { "value": "43", "label": "43" },
+        { "value": "44", "label": "44" },
+        { "value": "45", "label": "45" },
+        { "value": "46", "label": "46" },
+        { "value": "47", "label": "47" },
+        { "value": "48", "label": "48" },
+        { "value": "49", "label": "49" },
+        { "value": "50", "label": "50" },
+        { "value": "51", "label": "51" },
+        { "value": "52", "label": "52" },
+        { "value": "53", "label": "53" },
+        { "value": "54", "label": "54" },
+        { "value": "55", "label": "55" },
+        { "value": "56", "label": "56" },
+        { "value": "57", "label": "57" },
+        { "value": "58", "label": "58" },
+        { "value": "59", "label": "59" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "hide_timer_on_ending",
+      "label": "When timer expires...",
+      "options": [
+        { "value": "hide_on_completion", "label": "Hide block" },
+        { "value": "set_timer_to_zero", "label": "Set timer to zero" }
+      ],
+      "default": "set_timer_to_zero"
+    },
+    {
+      "type": "select",
+      "id": "time_zone",
+      "label": "Time zone",
+      "options": [
+        { "value": "shop_time_zone", "label": "Shop time zone" },
+        { "value": "usr_local_time_zone", "label": "Users local time zone" }
+      ],
+      "default": "shop_time_zone",
+      "info": "Select the time zone you want the countdown to be displayed in"
+    },
+    {
+      "type": "color",
+      "id": "text",
+      "label": "Text",
+      "default": "#042436"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#EDE9A0",
+      "alpha": true
+    },
+    {
+      "type": "select",
+      "id": "timer_style",
+      "label": "Timer size",
+      "options": [
+        { "label": "H1", "value": "h1" },
+        { "label": "H2", "value": "h2" },
+        { "label": "H3", "value": "h3" },
+        { "label": "H4", "value": "h4" },
+        { "label": "H5", "value": "h5" },
+        { "label": "H6", "value": "h6" }
+      ],
+      "default": "h1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Timer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,96 @@
+{% assign product = closest.product %}
+
+{% render 'inventory-status', block: block, product: product %}
+{% schema %}
+{
+  "name": "Inventory status",
+  "settings": [
+    {
+      "type": "select",
+      "id": "show_status",
+      "options": [
+        {
+          "value": "low",
+          "label": "Only when inventory is low"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ],
+      "default": "always",
+      "label": "Show status"
+    },
+    {
+      "type": "number",
+      "id": "inventory_threshold",
+      "label": "Low inventory threshold",
+      "info": "Set the product inventory quantity to alert customers when limited quantities are available. Insert a dynamic source to set different thresholds for multiple products.",
+      "default": 10
+    },
+    {
+      "type": "number",
+      "id": "inventory_base_quantity",
+      "label": "Inventory base quantity",
+      "info": "Enter the initial quantity of your product inventory for progress bar. Insert a dynamic source to set different base quantities for multiple products",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inventory_quantity",
+      "label": "Show inventory count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inventory_progress",
+      "label": "Show status bar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "inventory_background_color",
+      "label": "Background color",
+      "default": "#F7F3F3"
+    },
+    {
+      "type": "color",
+      "id": "inventory_instock_color",
+      "label": "In stock",
+      "default": "#2E982C"
+    },
+    {
+      "type": "color",
+      "id": "inventory_lowstock_color",
+      "label": "Low in stock",
+      "default": "#FF0000"
+    },
+    {
+      "type": "color",
+      "id": "inventory_outofstock_color",
+      "label": "Out of stock",
+      "default": "#787878"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inventory status",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

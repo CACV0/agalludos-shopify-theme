@@ -1,0 +1,53 @@
+{% comment %} Render product rating {% endcomment %}
+{% assign product = closest.product %}
+{% render "product-rating" with product, product: product, element_type: block, show_if_no_reviews: block.settings.show_if_no_reviews %}
+
+{% schema %}
+{
+  "name": "Rating",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#product-rating-block)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_if_no_reviews",
+      "label": "Show if no reviews",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rating",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%
+      render "product-rating" with product: product
+      , element_type: block
+      , show_if_no_reviews: block.settings.show_if_no_reviews
+    %}
+  to: '{% render "product-rating" with product, product: product, element_type: block,
+    show_if_no_reviews: block.settings.show_if_no_reviews %}'
+  position: 92..228
+{% endcomment %}

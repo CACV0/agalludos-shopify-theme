@@ -1,0 +1,514 @@
+{% render 'quiz-slide', block: block, block_type: 'list' %}
+
+{% schema %}
+{
+  "name": "List options",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "label": "Multiple choice",
+      "id": "multiple_choice",
+      "default": false,
+      "info": "Allow multiple selections. With AND logic. applied, only products containing every chosen tag will be shown."
+    },
+    {
+      "type": "checkbox",
+      "label": "Skip",
+      "id": "skip_question",
+      "default": false,
+      "info": "If a question isn’t mandatory, users can skip it"
+    },
+    {
+      "type": "header",
+      "content": "Option"
+    },
+    {
+      "type": "select",
+      "id": "options_style",
+      "label": "Layout",
+      "info": "Style is set to vertical by default on mobile layout ",
+      "options": [
+        {
+          "label": "Horizontal stack",
+          "value": "row"
+        },
+        {
+          "label": "Vertical stack",
+          "value": "column"
+        }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "Style",
+      "default": "image",
+      "options": [
+        {
+          "label": "Image",
+          "value": "image"
+        },
+        {
+          "label": "Counter",
+          "value": "counter"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "label": "Counter/image position",
+      "id": "image_type",
+      "default": "top",
+      "visible_if": "{{ block.settings.layout_type == 'image' or block.settings.layout_type == 'counter' }}",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Inside",
+          "value": "inside"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "label": "Counter style",
+      "id": "counter_style",
+      "default": "alphabet",
+      "visible_if": "{{ block.settings.layout_type == 'counter' }}",
+      "options": [
+        {
+          "label": "Alphabet",
+          "value": "alphabet"
+        },
+        {
+          "label": "Number",
+          "value": "number"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_width",
+      "label": "Desktop counter/image width",
+      "visible_if": "{{ block.settings.layout_type != 'none' }}",
+      "min": 40,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_width",
+      "label": "Mobile counter/image width",
+      "visible_if": "{{ block.settings.layout_type != 'none' }}",
+      "min": 30,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question",
+      "default": "Ask your question here?"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Heading size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "select",
+      "id": "option_style",
+      "label": "Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h4"
+    },
+    {
+      "type": "header",
+      "content": "Options 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_1_enabled",
+      "label": "Enable option 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "option_1",
+      "label": "Option 1",
+      "default": "Option 1",
+      "visible_if": "{{ block.settings.option_1_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_1",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_1_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_1_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Options 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_2_enabled",
+      "label": "Enable option 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "option_2",
+      "label": "Option 2",
+      "default": "Option 2",
+      "visible_if": "{{ block.settings.option_2_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_2",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_2_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_2_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Options 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_3_enabled",
+      "label": "Enable option 3",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "option_3",
+      "label": "Option 3",
+      "default": "Option 3",
+      "visible_if": "{{ block.settings.option_3_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_3",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_3_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_3_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Options 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_4_enabled",
+      "label": "Enable option 4",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "option_4",
+      "label": "Option 4",
+      "default": "Option 4",
+      "visible_if": "{{ block.settings.option_4_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_4",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_4_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_4_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Options 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_5_enabled",
+      "label": "Enable option 5",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "option_5",
+      "label": "Option 5",
+      "default": "Option 5",
+      "visible_if": "{{ block.settings.option_5_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_5",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_5_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_5_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Options 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "option_6_enabled",
+      "label": "Enable option 6",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "option_6",
+      "label": "Option 6",
+      "default": "Option 6",
+      "visible_if": "{{ block.settings.option_6_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "tag_6",
+      "label": "Tags",
+      "info": "Use commas to combine multiple tags (case sensitive)",
+      "default": "Add a tag",
+      "visible_if": "{{ block.settings.option_6_enabled }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image",
+      "visible_if": "{{ block.settings.layout_type == 'image' and block.settings.option_6_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Option appearance"
+    },
+    {
+      "type": "color",
+      "id": "counter_text_color",
+      "label": "Counter text color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.layout_type == 'counter'  }}"
+    },
+    {
+      "type": "color",
+      "id": "counter_background_color",
+      "label": "Counter background color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.layout_type == 'image' or block.settings.layout_type == 'counter' }}"
+    },
+    {
+      "type": "color",
+      "id": "counter_border_color",
+      "label": "Border color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.layout_type == 'counter' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Option background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "option_hover_active_bg_color",
+      "label": "Option background hover color",
+      "default": "#DF3B3A"
+    },
+    {
+      "type": "color",
+      "id": "option_text_color",
+      "label": "Option text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "option_hover_active_text_color",
+      "label": "Option hover/active text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text_alignment",
+      "id": "option_content_alignment",
+      "label": "Option content alignment",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Pop up"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_popup",
+      "label": "Enable pop up",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "popup_link_text",
+      "label": "Link text",
+      "default": "Access support and guidance here",
+      "visible_if": "{{ block.settings.enable_popup }}"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Pop up heading",
+      "default": "Heading",
+      "visible_if": "{{ block.settings.enable_popup }}"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Pop up content",
+      "visible_if": "{{ block.settings.enable_popup }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "guide_content_alignment",
+      "label": "Content alignment",
+      "default": "left",
+      "visible_if": "{{ block.settings.enable_popup }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "List options",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

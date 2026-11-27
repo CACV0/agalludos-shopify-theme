@@ -1,0 +1,361 @@
+<drawer-component
+  aria-hidden="true"
+  class="d-block drawer hamberger-drawer color-{{ settings.drawer_color_scheme }}"
+  drawer-type="header"
+  data-header-layout="{{ section.settings.logo_position }}"
+>
+  <div class="drawer__container">
+    <div class="drawer__overlay" drawer-overlay></div>
+
+    <div class="drawer__wrapper drawer__wrapper--animation-position-left">
+      {% comment %} Drawer Header Area {% endcomment %}
+      <div class="drawer__header">
+        <button
+          aria-label="{{ 'accessibility.close_drawer' | t }}"
+          class="drawer__close__btn"
+          close-drawer
+        >
+          {% render 'icon' with 'drawerclose-icon' %}
+        </button>
+      </div>
+
+      {% comment %} Drawer Content/Body area {% endcomment %}
+      <div
+        aria-label="{{ 'accessibility.hamburger.menu_navigation' | t | escape }}"
+        class="drawer__body"
+        role="region"
+      >
+        <div class="drawer__body__wrappe h-100">
+          <hamburger-menu>
+            <div
+              aria-label="{{ 'accessibility.hamburger.header_menu_navigation' | t | escape }}"
+              class="header__links h-100"
+              drawer-transparent
+              id="navbarSupportedContent"
+              role="region"
+            >
+              <div class="header__menu-wrp h-100" role="navigation">
+                {% comment %}
+                  Menu source resolution per scenario:
+                  - Mobile drawer: uses `hamberger_menu` when set, otherwise falls back to main `menu`.
+                    Mega menus only render when `hamberger_menu` is blank (the fallback case).
+                  - Desktop drawer layout (logo_position == 'drawer'): always uses main `menu` with mega menus.
+                  When drawer layout is active OR a different mobile menu is selected, two lists are rendered:
+                  mobile-only (standard accordion, no mega menus) and desktop-only (mega menus enabled).
+                  When both menus are the same in drawer layout, the same menu is used for both lists —
+                  mobile sees standard accordion, desktop sees mega menus.
+                {% endcomment %}
+                {% liquid
+                  assign has_separate_mobile_menu = false
+                  if section.settings.hamberger_menu != blank
+                    if section.settings.hamberger_menu != section.settings.menu or section.settings.logo_position == 'drawer'
+                      assign has_separate_mobile_menu = true
+                    endif
+                  endif
+
+                  if section.settings.hamberger_menu != blank
+                    assign mobile_menu = section.settings.hamberger_menu
+                    assign mobile_enable_mega_menu = false
+                  else
+                    assign mobile_menu = section.settings.menu
+                    assign mobile_enable_mega_menu = true
+                  endif
+
+                  assign is_drawer_layout = false
+                  if section.settings.logo_position == 'drawer'
+                    assign is_drawer_layout = true
+                  endif
+                %}
+
+                {%- if is_drawer_layout and has_separate_mobile_menu -%}
+                  {% comment %} Mobile-only list (uses the separate hamberger_menu, no mega menus) {% endcomment %}
+                  {% render 'hamberger-menu-list',
+                    section: section,
+                    link_list: mobile_menu,
+                    enable_mega_menu: mobile_enable_mega_menu,
+                    extra_class: 'mobile-only'
+                  %}
+                  {% comment %} Desktop-only list (main menu with mega menus) {% endcomment %}
+                  {% render 'hamberger-menu-list',
+                    section: section,
+                    link_list: section.settings.menu,
+                    enable_mega_menu: true,
+                    extra_class: 'desktop-only'
+                  %}
+                {%- else -%}
+                  {% render 'hamberger-menu-list',
+                    section: section,
+                    link_list: mobile_menu,
+                    enable_mega_menu: mobile_enable_mega_menu
+                  %}
+                {%- endif -%}
+
+              </div>
+            </div>
+          </hamburger-menu>
+        </div>
+      </div>
+
+      <ul
+        aria-label="{{ 'accessibility.hamburger.footer_menu' | t | escape }}"
+        class="drawer__footer"
+        role="list"
+        animate-hamberge-footer
+      >
+
+        {%- assign show_country = section.settings.show_country_selector -%}
+        {%- assign show_language = false -%}
+        {%- if section.settings.show_locale_selector and localization.available_languages.size > 1 -%}
+          {%- assign show_language = true -%}
+        {%- endif -%}
+
+        {% if show_country or show_language %}
+          {% if section.settings.show_country_name %}
+            {% comment %} Stacked Layout - Original Separate Items {% endcomment %}
+            {% if section.settings.show_country_selector %}
+              <li class="{%if section.settings.logo_position != 'drawer' %}mobile-only{% endif %}" role="listitem">
+                <div
+                  aria-label="{{ 'accessibility.hamburger.localization_dropdown' | t | escape }}"
+                  class="localization-dropdown"
+                  role="group"
+                >
+                  <localization-component>
+                    {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+                      <button
+                        aria-label="{{ 'accessibility.hamburger.open_country' | t | escape }}"
+                        class="localization-dropdown__btn"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {%- if section.settings.show_country_flag -%}
+                          <span class="country-flags country-flags--{{ localization.country.iso_code }}"></span>
+                        {%- endif -%}
+                        {% if section.settings.show_country_name %}
+                          <span>{{ localization.country.name }}</span>
+                        {% endif %}
+                        <span class="localization-dropdown__currency"
+                          >({{ localization.country.currency.iso_code }}
+                          {{ localization.country.currency.symbol }})</span
+                        >
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul
+                          aria-label="{{ 'accessibility.hamburger.country_selector' | t | escape }}"
+                          class="localization-dropdown__list"
+                          role="list"
+                        >
+                          {% for country in localization.available_countries %}
+                            <li class="localization-dropdown__item" role="listitem">
+                              <a
+                                class="localization-dropdown__item-link"
+                                data-value="{{ country.iso_code }}"
+                                href="#"
+                                {% if country.iso_code == localization.country.iso_code %}
+                                  active-link
+                                {% endif %}
+                                localization-link
+                              >
+                                {%- if section.settings.show_country_flag -%}
+                                  <span class="country-flags country-flags--{{ country.iso_code }}"></span>
+                                {%- endif -%}
+                                <span class="country-currency-block">
+                                  {{- country.name }} ({{ country.currency.iso_code }}
+                                  {{ country.currency.symbol }})</span
+                                >
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        aria-hidden="true"
+                        name="country_code"
+                        type="hidden"
+                        value="{{ localization.country.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              </li>
+            {% endif %}
+
+            {% if section.settings.show_locale_selector and localization.available_languages.size > 1 %}
+              <li class="{%if section.settings.logo_position != 'drawer' %}mobile-only{% endif %}" role="listitem">
+                <div
+                  aria-label="{{ 'accessibility.hamburger.localization_dropdown' | t | escape }}"
+                  class="localization-dropdown"
+                  role="group"
+                >
+                  <localization-component>
+                    {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+                      <button
+                        aria-label="{{ 'accessibility.hamburger.open_language' | t | escape }}"
+                        class="localization-dropdown__btn"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {{ localization.language.endonym_name | capitalize }}
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul
+                          aria-label="{{ 'accessibility.hamburger.language_selector' | t | escape }}"
+                          class="localization-dropdown__list"
+                          role="list"
+                        >
+                          {% for language in localization.available_languages %}
+                            <li class="localization-dropdown__item" role="listitem">
+                              <a
+                                class="localization-dropdown__item-link"
+                                href="#"
+                                data-value="{{ language.iso_code }}"
+                                {% if language.iso_code == localization.language.iso_code %}
+                                  active-link
+                                {% endif %}
+                                localization-link
+                              >
+                                {{ language.endonym_name | capitalize }}
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        aria-hidden="true"
+                        name="locale_code"
+                        type="hidden"
+                        value="{{ localization.language.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              </li>
+            {% endif %}
+          {% else %}
+            {% comment %} Inline Layout - Combined Row {% endcomment %}
+            <li class="drawer__footer--localization {% if section.settings.logo_position != 'drawer' %}mobile-only{% endif %}" role="listitem">
+              {% if section.settings.show_country_selector %}
+                <div
+                  aria-label="{{ 'accessibility.hamburger.localization_dropdown' | t | escape }}"
+                  class="localization-dropdown"
+                  role="group"
+                >
+                  <localization-component>
+                    {%- form 'localization', id: 'InlineCountryForm', class: 'localization-form' -%}
+                      <button
+                        aria-label="{{ 'accessibility.hamburger.open_country' | t | escape }}"
+                        class="localization-dropdown__btn"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {%- if section.settings.show_country_flag -%}
+                          <span class="country-flags country-flags--{{ localization.country.iso_code }}"></span>
+                        {%- endif -%}
+                        <span class="localization-dropdown__currency"
+                          >({{ localization.country.currency.iso_code }}
+                          {{ localization.country.currency.symbol }})</span
+                        >
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul
+                          aria-label="{{ 'accessibility.hamburger.country_selector' | t | escape }}"
+                          class="localization-dropdown__list"
+                          role="list"
+                        >
+                          {% for country in localization.available_countries %}
+                            <li class="localization-dropdown__item" role="listitem">
+                              <a
+                                class="localization-dropdown__item-link"
+                                data-value="{{ country.iso_code }}"
+                                href="#"
+                                {% if country.iso_code == localization.country.iso_code %}
+                                  active-link
+                                {% endif %}
+                                localization-link
+                              >
+                                {%- if section.settings.show_country_flag -%}
+                                  <span class="country-flags country-flags--{{ country.iso_code }}"></span>
+                                {%- endif -%}
+                                <span class="country-currency-block">
+                                  {{- country.name }} ({{ country.currency.iso_code }}
+                                  {{ country.currency.symbol }})</span
+                                >
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        aria-hidden="true"
+                        name="country_code"
+                        type="hidden"
+                        value="{{ localization.country.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              {% endif %}
+
+              {% if section.settings.show_locale_selector and localization.available_languages.size > 1 %}
+                <div
+                  aria-label="{{ 'accessibility.hamburger.localization_dropdown' | t | escape }}"
+                  class="localization-dropdown"
+                  role="group"
+                >
+                  <localization-component>
+                    {%- form 'localization', id: 'InlineLanguageForm', class: 'localization-form' -%}
+                      <button
+                        aria-label="{{ 'accessibility.hamburger.open_language' | t | escape }}"
+                        class="localization-dropdown__btn"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {{ localization.language.endonym_name | capitalize }}
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul
+                          aria-label="{{ 'accessibility.hamburger.language_selector' | t | escape }}"
+                          class="localization-dropdown__list"
+                          role="list"
+                        >
+                          {% for language in localization.available_languages %}
+                            <li class="localization-dropdown__item" role="listitem">
+                              <a
+                                class="localization-dropdown__item-link"
+                                href="#"
+                                data-value="{{ language.iso_code }}"
+                                {% if language.iso_code == localization.language.iso_code %}
+                                  active-link
+                                {% endif %}
+                                localization-link
+                              >
+                                {{ language.endonym_name | capitalize }}
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        aria-hidden="true"
+                        name="locale_code"
+                        type="hidden"
+                        value="{{ localization.language.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</drawer-component>

@@ -1,0 +1,18 @@
+{% doc %}
+  Renders HTML for button which triggers guide drawer
+
+  @param {object} block - section block settings
+  @param {string} className - class name to hide or show on desktop or in mobile
+  @param {boolean} quick_view_drawer - quick view drawer enaabled or disabled
+  @param {string} triger_guide_drawer_button
+{% enddoc %}
+
+<guide-drawer id="{{ block.id | prepend: 'shopify-section-' }}" target-portal-element="#portal" class="{{ className }}">
+  <button
+    class="link mt-md-0 fnt-body-weight-bold "
+    {{ triger_guide_drawer_button | default: 'triger-guide-popup' }}
+  >
+    <span>{{ block.settings.guide_heading }}</span>
+  </button>
+  {% render 'guide-drawer', block: block, quick_view_drawer: quick_view_drawer, className: className %}
+</guide-drawer>

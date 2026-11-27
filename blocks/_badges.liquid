@@ -1,0 +1,830 @@
+{% render 'product-badges', block: block %}
+{% schema %}
+{
+  "name": "Badges",
+  "settings": [
+    {
+      "type": "select",
+      "id": "badge_stack_style",
+      "label": "Badge stack style",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "wrap",
+          "label": "Wrap"
+        }
+      ],
+      "default": "wrap"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_stack",
+      "label": "Enable badge stack",
+      "default": false,
+      "visible_if": "{{ block.settings.badge_stack_style == 'wrap' }}"
+    },
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_badge_1",
+      "label": "Enable badge",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_style_1",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_1 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_1",
+      "label": "Color scheme",
+      "visible_if": "{{ block.settings.enable_badge_1 }}"
+    },
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_1 }}"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "custom_image_1",
+      "label": "Image",
+      "info": "Replaces the default icon style",
+      "visible_if": "{{ block.settings.enable_badge_1 }}"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading",
+      "default": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_1 }}"
+    },
+    {
+      "type": "richtext",
+      "id": "content_1",
+      "label": "Content",
+      "info": "Content will be shown inside a drawer",
+      "visible_if": "{{ block.settings.enable_badge_1 }}"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_1",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_badge_2",
+      "label": "Enable badge",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_style_2",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_2 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_2",
+      "visible_if": "{{ block.settings.enable_badge_2 }}",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_2 }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_2",
+      "label": "Image",
+      "visible_if": "{{ block.settings.enable_badge_2 }}",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading",
+      "default": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_2 }}"
+    },
+    {
+      "type": "richtext",
+      "id": "content_2",
+      "label": "Content",
+      "visible_if": "{{ block.settings.enable_badge_2 }}",
+      "info": "Content will be shown inside a drawer"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_2",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_badge_3",
+      "label": "Enable badge",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_style_3",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_3 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_3",
+      "visible_if": "{{ block.settings.enable_badge_3 }}",
+      "label": "Color scheme"
+    },
+
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_3 }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_3",
+      "visible_if": "{{ block.settings.enable_badge_3 }}",
+      "label": "Image",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_3 }}",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content_3",
+      "label": "Content",
+      "visible_if": "{{ block.settings.enable_badge_3 }}",
+      "info": "Content will be shown inside a drawer"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_3",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_badge_4",
+      "label": "Enable badge",
+      "default": false
+    },
+
+    {
+      "type": "select",
+      "id": "icon_style_4",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_4 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_4",
+      "visible_if": "{{ block.settings.enable_badge_4 }}",
+      "label": "Color scheme"
+    },
+
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_4 }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_4",
+      "label": "Image",
+      "visible_if": "{{ block.settings.enable_badge_4 }}",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_4 }}",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content_4",
+      "label": "Content",
+      "visible_if": "{{ block.settings.enable_badge_4 }}",
+      "info": "Content will be shown inside a drawer"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_4",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "header",
+      "content": "Badge 5"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "enable_badge_5",
+      "label": "Enable badge",
+      "default": false
+    },
+
+    {
+      "type": "select",
+      "id": "icon_style_5",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_5 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_5",
+      "visible_if": "{{ block.settings.enable_badge_5 }}",
+      "label": "Color scheme"
+    },
+
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_5 }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_5",
+      "label": "Image",
+      "visible_if": "{{ block.settings.enable_badge_5 }}",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_5",
+      "label": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_5 }}",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content_5",
+      "label": "Content",
+      "visible_if": "{{ block.settings.enable_badge_5 }}",
+      "info": "Content will be shown inside a drawer"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_5",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "header",
+      "content": "Badge 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_badge_6",
+      "label": "Enable badge",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "icon_style_6",
+      "label": "Icon style",
+      "visible_if": "{{ block.settings.enable_badge_6 }}",
+      "options": [
+        {
+          "label": "Question",
+          "value": "question"
+        },
+        {
+          "label": "Leaf",
+          "value": "leaf"
+        },
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "gift",
+          "value": "gift"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Thumbs up",
+          "value": "thumb"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Shield",
+          "value": "secure"
+        },
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Tag",
+          "value": "tags"
+        },
+        {
+          "label": "Diamond",
+          "value": "diamond"
+        },
+        {
+          "label": "Tick",
+          "value": "check"
+        },
+        {
+          "label": "Arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Delivery truck",
+          "value": "vehicle"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_badge_6",
+      "visible_if": "{{ block.settings.enable_badge_6 }}",
+      "label": "Color scheme"
+    },
+
+    {
+      "type": "header",
+      "content": "Custom icon",
+      "visible_if": "{{ block.settings.enable_badge_6 }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_6",
+      "label": "Image",
+      "visible_if": "{{ block.settings.enable_badge_6 }}",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_6",
+      "label": "Heading",
+      "visible_if": "{{ block.settings.enable_badge_6 }}",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content_6",
+      "label": "Content",
+      "visible_if": "{{ block.settings.enable_badge_6 }}",
+      "info": "Content will be shown inside a drawer"
+    },
+    {
+      "type": "page",
+      "label": "Select Page",
+      "id": "page_6",
+      "info": "Select a page to show as content"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Badges",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+<animation-reveal aoi-type="fade-up" aoi-delay="0.20">
+  <div class="form-group">
+    <label for="Form-dropdown">
+      {{ block.settings.heading }}
+    </label>
+    <div class="form-control select select-wrapper">
+      <select name="contact[{{ block.settings.heading }}]" id="Form-dropdown">
+        {% content_for 'blocks' %}
+      </select>
+      {% render 'icon' with 'arrow-icon', class: '', color: 'var(--color-text)' %}
+    </div>
+  </div>
+</animation-reveal>
+
+{% schema %}
+{
+  "name": "Dropdown",
+  "blocks": [
+    {
+      "type": "_option"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Label",
+      "default": "Custom field"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dropdown",
+      "blocks": [
+        {
+          "type": "_option"
+        },
+        {
+          "type": "_option"
+        },
+        {
+          "type": "_option"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

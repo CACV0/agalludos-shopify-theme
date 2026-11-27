@@ -1,0 +1,224 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": 600,
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "color_scheme": ""
+      }
+    },
+    "faq-accordion": {
+      "type": "faq-accordion",
+      "blocks": {
+        "category-1": {
+          "type": "category",
+          "settings": {
+            "heading": "🔥 Order & Shipping",
+            "heading_tag": "h2"
+          }
+        },
+        "question-1-1": {
+          "type": "question",
+          "settings": {
+            "heading": "How long does delivery take?",
+            "heading_tag": "h3",
+            "content": "<p>We usually deliver within 2–5 business days, depending on your location.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "question-1-2": {
+          "type": "question",
+          "settings": {
+            "heading": "Can I track my order?",
+            "heading_tag": "h3",
+            "content": "<p>Of course. You’ll get a tracking link once your order is shipped.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "category-2": {
+          "type": "category",
+          "settings": {
+            "heading": "☕ Product & Usage",
+            "heading_tag": "h2"
+          }
+        },
+        "question-2-1": {
+          "type": "question",
+          "settings": {
+            "heading": "What’s the difference between Ready-to-Drink, Brew-It-Yourself, and Concentrates?",
+            "heading_tag": "h3",
+            "content": "<ul><li>Ready-to-Drink → just open and sip<br/></li><li>Brew-It-Yourself → for when you want the full experience<br/></li><li>Concentrates → mix it your way (hot, cold, strong, light)</li></ul>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "category-2-2": {
+          "type": "question",
+          "settings": {
+            "heading": "How do I use the concentrate?",
+            "heading_tag": "h3",
+            "content": "<p>Mix it 1:1 with water or milk. Adjust based on how strong you like it.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "category-2-3": {
+          "type": "question",
+          "settings": {
+            "heading": "Is your coffee sweetened?",
+            "heading_tag": "h3",
+            "content": "<p>No added sugar — just clean, natural flavor.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "category_3Qffct": {
+          "type": "category",
+          "settings": {
+            "heading": "🌿 Quality & Ingredients",
+            "heading_tag": "h2"
+          }
+        },
+        "question_96p3QY": {
+          "type": "question",
+          "settings": {
+            "heading": "Are your beans organic?",
+            "heading_tag": "h3",
+            "content": "<p>Yes, we use carefully sourced, high-quality beans.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "question_JW4HNY": {
+          "type": "question",
+          "settings": {
+            "heading": "Is it low in acidity?",
+            "heading_tag": "h3",
+            "content": "<p>Yes — our slow brewing process helps keep it smooth and easy to drink.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "category_4etHcW": {
+          "type": "category",
+          "settings": {
+            "heading": "🔁 Returns & Support",
+            "heading_tag": "h2"
+          }
+        },
+        "question_T3NyNX": {
+          "type": "question",
+          "settings": {
+            "heading": "Can I return my order?",
+            "heading_tag": "h3",
+            "content": "<p>We offer easy 7-day returns if something isn’t right.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        },
+        "question_cf6yNK": {
+          "type": "question",
+          "settings": {
+            "heading": "What if I receive a damaged product?",
+            "heading_tag": "h3",
+            "content": "<p>Just reach out — we’ll fix it ASAP.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100
+          }
+        }
+      },
+      "block_order": [
+        "category-1",
+        "question-1-1",
+        "question-1-2",
+        "category-2",
+        "question-2-1",
+        "category-2-2",
+        "category-2-3",
+        "category_3Qffct",
+        "question_96p3QY",
+        "question_JW4HNY",
+        "category_4etHcW",
+        "question_T3NyNX",
+        "question_cf6yNK"
+      ],
+      "settings": {
+        "heading": "FAQ",
+        "heading_tag": "h1",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "rich-text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Questions, feedback, or just saying hello. We’re here for it.",
+            "heading_tag": "h2",
+            "style": "h2"
+          }
+        },
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "content": "<p>Don't be shy! Contact us and we'll get back as soon as possible</p>"
+          }
+        },
+        "button-1": {
+          "type": "button",
+          "settings": {
+            "button_text": "CONTACT US",
+            "link_target": "_top",
+            "use_outline_button": false
+          }
+        }
+      },
+      "block_order": [
+        "heading-1",
+        "text-1",
+        "button-1"
+      ],
+      "settings": {
+        "container_size": true,
+        "content_width": 500,
+        "content_alignment": "center",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-3"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faq-accordion",
+    "rich-text"
+  ]
+}

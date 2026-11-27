@@ -1,0 +1,47 @@
+{% assign product = closest.product %}
+<div
+  aria-label="{{ product.title}}"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+  {{ block.shopify_attributes }}
+>
+  {% comment %} Product Share  {% endcomment %}
+  {% render 'product-share-button' with product, product: product %}
+</div>
+
+{% schema %}
+{
+  "name": "Share",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "To improve user experience and performance, native share buttons are used when supported."
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Share",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'product-share-button' with product: product %}"
+  to: "{% render 'product-share-button' with product, product: product %}"
+  position: 246..312
+{% endcomment %}

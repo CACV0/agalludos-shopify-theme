@@ -1,0 +1,146 @@
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+  assign gift_wrap_product = block.settings.gift_wrap_product
+  assign gift_wrap_variant_id = gift_wrap_product.selected_or_first_available_variant.id
+  assign checkbox_label = block.settings.checkbox_label
+  assign for_label = 'products.product.gift_wrap.for_label' | t | default: 'For'
+-%}
+
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- capture gw_border_bg -%}{{ block.settings.border_color }}{%- endcapture -%}
+{%- assign gw_hide_border = false -%}
+{%- if gw_border_bg == 'rgba(0,0,0,0)' or gw_border_bg == 'transparent' or gw_border_bg == blank -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign gw_hide_border = true -%}
+  {%- endif -%}
+{%- elsif section_bg == gw_border_bg -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign gw_hide_border = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+{% if gift_wrap_product != blank and gift_wrap_product.available %}
+  {%- comment -%} Desktop/mobile bottom spacing scoped to this block id {%- endcomment -%}
+  {% style %}
+    .gift-wrap-{{ block.id }} {
+      padding-bottom: {{ block.settings.block_bottom_spacing_mobile | append: 'px' }};
+    }
+    @media screen and (min-width: 750px) {
+      .gift-wrap-{{ block.id }} {
+        padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }};
+      }
+    }
+  {% endstyle %}
+  <div
+    class="line-item-property gift-wrap-{{ block.id }}{% if gw_hide_border %} gift-wrap--borderless{% endif %}"
+    line-item-property
+    gift-wrap
+    gift-wrap-variant-id="{{ gift_wrap_variant_id }}"
+    parent-product-title="{{ product.title | escape }}"
+    parent-product-id="{{ product.id }}"
+    for-label="{{ for_label }}"
+    {% unless gw_hide_border %}style="--gift-wrap-border-color: {{ block.settings.border_color }};"{% endunless %}
+    {{ block.shopify_attributes }}
+  >
+    <div class="line-item-checkbox form-group">
+      <input
+        id="gift_wrap_{{ block.id }}"
+        type="checkbox"
+        class="line-item-checkbox-input visually-hidden js-filter-check"
+        form="{{ product_form_id }}"
+        name="properties[Gift wrap]"
+        value="Yes"
+        gift-wrap-checkbox
+      >
+      <label
+        class="d-flex align-item-center"
+        for="gift_wrap_{{ block.id }}"
+      >
+        <div class="d-flex align-item-center icon-checkbox-wrapper cursor-pointer m-0">
+          <div class="icon-checkbox">
+            <div class="icon-checkbox-inner">
+              {% render 'icon' with 'checkbox-tick' %}
+            </div>
+          </div>
+        </div>
+
+        <span class="gift-wrap-icon d-flex align-item-center" aria-hidden="true" style="--color-icon: {{ block.settings.icon_color }};">
+          {% render 'icon' with 'icon-gift' %}
+        </span>
+
+        <span class="line-item-checkbox-label cursor-pointer">
+          {{ checkbox_label }}
+          {% if gift_wrap_product.price > 0 %}
+            <span class="gift-wrap-price">({{ gift_wrap_product.price | money }})</span>
+          {% endif %}
+        </span>
+      </label>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Gift wrap",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Allow customers to add gift wrapping to their product. The gift wrap product is bundled with the main product in a single add-to-cart request."
+    },
+    {
+      "type": "paragraph",
+      "content": "The gift product should be unlisted and inventory tracking must be disabled."
+    },
+    {
+      "type": "text",
+      "id": "checkbox_label",
+      "label": "Default gift wrapping label",
+      "default": "Gift wrap this product"
+    },
+    {
+      "type": "product",
+      "id": "gift_wrap_product",
+      "label": "Gift wrapping product",
+      "info": "Select the product to use as gift wrapping."
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#131313"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#FAF3F0"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (desktop)",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (mobile)",
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift wrap",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

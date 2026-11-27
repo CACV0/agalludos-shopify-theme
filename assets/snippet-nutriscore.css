@@ -1,0 +1,52 @@
+.nutriscore__wrapper {
+  margin-top: 16px;
+  padding: var(--nutriscore-padding, 32px 18px);
+  border-radius: var(--block-border-radius);
+  background-color: var(--background-color);
+}
+.nutriscore__list {
+  display: flex;
+  height: var(--segments-height);
+}
+.nutriscore__item {
+  background-color: var(--pill-color);
+  margin-bottom: 0;
+  transition: 0.5s ease scale;
+  flex: 1;
+}
+.nutriscore__item.active {
+  position: relative;
+  transform: scaleY(1.2);
+}
+.nutriscore__item .up-triangle-icon,
+.nutriscore__item .down-triangle-icon {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  width: 13px;
+  height: 12px;
+}
+.nutriscore__item .down-triangle-icon {
+  top: -16px;
+}
+.nutriscore__item .up-triangle-icon {
+  bottom: -16px;
+}
+.nutriscore__item:first-child {
+  border-radius: 30px 0 0 30px;
+}
+.nutriscore__item:last-child {
+  border-radius: 0 30px 30px 0;
+}
+.nutriscore__item-inner-text {
+  padding: var(--nutriscore-text-padding, 0 8px);
+}
+.nutriscore__item-inner {
+  padding: 6px;
+}
+@media screen and (max-width: 767px) {
+  .nutriscore__item-inner {
+    padding: 4px;
+  }
+}

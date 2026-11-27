@@ -1,0 +1,25 @@
+{% comment %}
+  Dedicated product card render section.
+  Used by JS for variant-change section renders — fetched as:
+    /products/{handle}?section_id=card-product-render&option_values=X,Y
+  Renders a single product card in the product URL context so `product`
+  is available and `option_values` selects the correct variant.
+{% endcomment %}
+
+{%- if product != blank -%}
+  {%- render 'card-product',
+    product: product,
+    allow_variant_popup: true,
+    show_quick_view: false,
+    use_variant_image: true,
+    variant_render: true
+  -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Card Product Render",
+  "tag": "div",
+  "settings": []
+}
+{% endschema %}

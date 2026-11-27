@@ -1,0 +1,63 @@
+{% comment %}
+  Shared content container — hosts the theme-level Sub heading, Heading, Paragraph and Button
+  blocks so a section's block picker offers one "Content Block" rather than four loose text types.
+
+  Deliberately section-agnostic: it renders a plain .content-block wrapper carrying only the
+  alignment utilities, and no styles of its own. Sections scope their own rules under it
+  (e.g. .gallery-lookbook .content-block) rather than this file growing per-section CSS.
+
+  To use it, add { "type": "_content-block" } to a section's blocks array.
+{% endcomment %}
+
+<div
+  class="content-block text-{{ block.settings.content_alignment }} text-{{ block.settings.mobile_content_alignment }}-md"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Content Block",
+  "tag": null,
+  "blocks": [
+    { "type": "sub-heading" },
+    { "type": "heading" },
+    { "type": "paragraph" },
+    { "type": "button" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content Block",
+      "blocks": [
+        { "type": "sub-heading" },
+        { "type": "heading" },
+        { "type": "paragraph" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

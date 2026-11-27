@@ -1,0 +1,181 @@
+<div
+  class="swiper-slide color-{{ block.settings.color_scheme }} mobile-color-{{ block.settings.color_scheme_mobile }}"
+  data-color-scheme="color-{{ block.settings.color_scheme }} mobile-color-{{ block.settings.color_scheme_mobile }}"
+  {{ block.shopify_attributes }}
+  role="region"
+>
+  <div
+    class="slideshow__slide slideshow__slide--bgColor media-size--{{ section.settings.media_size }} media-size-mobile--{{ section.settings.mobile_media_size }}"
+  >
+    {% if block.settings.enable_image_link and block.settings.slide_link != blank %}
+      <a
+        class="slideshow__slide-link"
+        href="{{ block.settings.slide_link }}"
+        target="{{ block.settings.slide_link_target }}"
+        aria-label="{{ block.settings.slide_link | default: 'Slide link' }}"
+      >
+      </a>
+    {% endif %}
+    <div class="{% if section.settings.section_width %} container {% else %} d-flex flex-1 {% endif %} only-content  content-desktop-alignment-{{ block.settings.desktop_content_position }} content-mobile-alignment-{{ block.settings.mobile_content_position }}">
+      <div
+        class="slideshow__slideBody {% unless section.settings.section_width %} fix-width-container {% endunless %} {% unless section.settings.desktop_navigation == 'arrows' %} arrows-not-at-verticle-center {% endunless %} text-{{ block.settings.desktop_content_alignment }} text-{{ block.settings.mobile_content_alignment }}-md margin-{{ block.settings.desktop_content_alignment }} margin-{{ block.settings.mobile_content_alignment }}-md"
+        style="--slider-content-width: {{ block.settings.content_width | append: "px" }}"
+      >
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text slide",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "range",
+      "label": "Content width",
+      "id": "content_width",
+      "min": 400,
+      "max": 1200,
+      "unit": "px",
+      "step": 20,
+      "default": 420
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_link",
+      "label": "Enable full slideshow click area",
+      "info": "Makes the entire slide clickable",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "slide_link",
+      "label": "Link URL",
+      "visible_if": "{{ block.settings.enable_image_link }}"
+    },
+    {
+      "type": "select",
+      "id": "slide_link_target",
+      "label": "Open link in",
+      "options": [
+        {
+          "label": "Same tab",
+          "value": "_top"
+        },
+        {
+          "label": "New tab",
+          "value": "_blank"
+        }
+      ],
+      "default": "_top",
+      "visible_if": "{{ block.settings.enable_image_link }}"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "text_alignment",
+      "id": "desktop_content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Content position",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Content alignment",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "Content position",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Desktop color scheme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_mobile",
+      "default": "scheme-5",
+      "label": "Mobile color scheme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text slide",
+      "blocks": [
+        {
+          "type": "sub-heading"
+        },
+        {
+          "type": "heading"
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

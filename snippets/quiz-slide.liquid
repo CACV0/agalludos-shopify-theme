@@ -1,0 +1,81 @@
+<div
+  class="swiper-slide d-flex d-flex-dir-c justify-content-space-btw"
+  quiz-block
+  {% if block.settings.skip_question %}
+    data-skip-question="true"
+  {% endif %}
+  {% if block.settings.multiple_choice %}
+    data-multiple-choice="true"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <div class="{% if section.settings.layout_style == 'row' %} quiz__block d-flex justify-content-space-btw {% else %} quiz__block d-flex d-flex-dir-c align-item-center {% endif %} h-100">
+    {% if block.settings.question != blank %}
+      <div class="quiz__blockQuestion ">
+        <{{ block.settings.heading_tag }} class=" {{ block.settings.style }}">{{ block.settings.question }}</{{ block.settings.heading_tag }}>
+      </div>
+    {% endif %}
+    <div
+      class="
+        quiz__blockOptionsWrp-container {% if block.settings.layout_type != 'none' and block.settings.image_type == 'top' %} counter-enabled {% endif %}  layout-style-{{ section.settings.layout_style }} {% if section.settings.layout_style == 'column' %} w-100 {% endif %}
+      "
+    >
+      <div
+        class="quiz__blockOptionsWrp  layout-{{ block.settings.options_style }} {% if block_type == 'list' %} quiz__blockOptionsWrp-list {% endif %}"
+        style="--grid-columns: {% if block_type == 'list' %} {% if block.settings.options_style == 'row' %} 2 {% else %} 1 {% endif %} {% else %} {% if section.settings.layout_style == 'column' %} {{ block.settings.quiz_columns }} {% else %} 3 {% endif %} {% endif %};--grid-gap: {% if block.settings.layout_type == 'none' %} 24px {% else %} {% if block_type == 'list'  and block.settings.image_type == 'top' and block.settings.desktop_image_width > 50 %} 50px {% else %} 24px {% endif %} {% endif %};--hover-active-bg-color: {{ block.settings.option_hover_active_color }}; --hover-active-text-color: {{ block.settings.option_hover_active_text_color }};"
+      >
+        {% for index in (1..6) %}
+          {% assign option = 'option_' | append: index %}
+          {% assign tag = 'tag_' | append: index %}
+          {% assign enabled = option | append: '_enabled' %}
+          {% assign caption = 'caption_' | append: index %}
+          {% assign card_image = 'image_' | append: index %}
+          {% render 'quiz-option',
+            index: index,
+            block_type: block_type,
+            option: option,
+            tag: tag,
+            enabled: enabled,
+            caption: caption,
+            card_image: card_image,
+            media_size: block.settings.image_ratio,
+            block: block
+          %}
+        {% endfor %}
+      </div>
+      {% if block.settings.enable_popup %}
+        <div class="quiz__footer-text d-flex justify-content-center align-item-center mt-16">
+          <button
+            class="quiz__footer-text-button d-flex link justify-content-center align-item-center"
+            type="button"
+            style="gap: 4px ; --color-icon: var(--color-link);"
+            drawer-to-open="quiz-support-guide-drawer"
+            is="open-drawer"
+          >
+            {% render 'icon', icon: 'info-icon' %}
+            <p class="fnt-20 m-0 fnt-body-weight-medium">{{ block.settings.popup_link_text }}</p>
+            <template data-drawer-target="quiz-support-guide-drawer">
+              <div class="quiz__support-guide-drawer d-flex d-flex-dir-c justify-content-space-btw">
+                <div class="drawer-content-wrapper" drawer-content>
+                  <div class="drawer-content-wrapper-inner text-{{ block.settings.guide_content_alignment }}">
+                    <div
+                      class="drawer__header border-0 justify-content-space-btw p-0"
+                      header-drawer-body
+                    >
+                      <p class="h2 m-0">{{ block.settings.heading }}</p>
+                    </div>
+                    <div drawer-scrollable-content>
+                      <div class="RTE-content mt-16">
+                        {{ block.settings.content }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

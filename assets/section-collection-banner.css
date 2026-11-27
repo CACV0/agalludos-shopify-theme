@@ -1,0 +1,81 @@
+.collectionBanner {
+  background: var(--color-background) var(--gradient-background) no-repeat 100% 100%;
+}
+.collectionBanner__wrp {
+  display: flex;
+  width: 100%;
+  padding-inline: 15px;
+  max-width: var(--container-width);
+  margin-inline: auto;
+}
+.collectionBanner .collectionBanner__image-wrp {
+  text-align: center;
+}
+.collectionBanner .collectionBanner__image-wrp svg {
+  height: 100%;
+}
+.collectionBanner .collectionBanner__image-wrp::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+  height: 100%;
+}
+.collectionBanner .container .collectionBanner__container {
+  border-radius: var(--block-border-radius);
+}
+@media screen and (min-width: 750px) {
+  .collectionBanner .container .collectionBanner__container {
+    overflow: hidden;
+  }
+}
+.collectionBanner .content-aligment--center {
+  justify-content: center;
+  text-align: center;
+}
+.collectionBanner .content-aligment--right {
+  justify-content: flex-end;
+  text-align: right;
+}
+.collectionBanner .content-aligment--left {
+  justify-content: flex-start;
+  text-align: left;
+}
+.collectionBanner__container {
+  display: flex;
+  position: relative;
+  padding: 24px 0;
+}
+@media screen and (min-width: 750px) {
+  .collectionBanner__container {
+    overflow: hidden;
+  }
+}
+.collectionBanner__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.collectionBanner__image-wrp {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.collectionBanner__image-wrp .blur-image {
+  object-fit: cover;
+}
+.collectionBanner__description {
+  position: relative;
+  z-index: 2;
+  margin: 36px 0px;
+}
+@media screen and (min-width: 750px) {
+  .collectionBanner__description {
+    margin: 36px 60px;
+    z-index: 1;
+    max-width: var(--content-width, 100%);
+    width: 100%;
+  }
+}
+.collectionBanner__description--full-width {
+  margin: 36px 0px;
+}

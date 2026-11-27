@@ -1,0 +1,287 @@
+{% doc %}
+  Renders a quiz option
+    Accepts:
+    - index: {Number} the index of the option
+    - option: {String} the option name
+    - tag: {String} the tag name
+    - enabled: {Boolean} whether the option is enabled
+    - block: {Object} the block object
+    - caption: {String} the caption
+    - image: {String} the image
+    - media_size: {String} the media size
+    Usage:
+    {% render 'quiz-option', index: index, option: option, tag: tag, enabled: enabled %}
+{% enddoc %}
+
+{% liquid
+  assign ratio = 1
+  if block.settings[card_image] != blank and media_size == 'adapt'
+    assign ratio = block.settings[card_image].aspect_ratio
+  endif
+  assign multiple_choice = block.settings.multiple_choice
+  if multiple_choice
+    assign input_type = 'checkbox'
+  else
+    assign input_type = 'radio'
+  endif
+  assign widths = '200,300,400,500,600,800'
+%}
+
+{% capture icon_class %}
+  color-foreground-{{ settings.accent_icons }} checkmark checkmark--h1  
+{% endcapture %}
+
+{% if block.settings[enabled] == true %}
+  {% unless block_type == 'list' %}
+    <div
+      class="quiz__option text-center position-relative"
+      data-tag="{{ block.settings[tag] }}"
+    >
+      <input
+        type="{{ input_type }}"
+        class="visually-hidden"
+        name="{{ block.id }}"
+        id="{{ option | append: block.id }}"
+        value="{{ block.settings[tag] }}"
+        disabled
+      >
+      <label for="{{ option | append: block.id }}" aria-label="{{ block.settings[option] }}"></label>
+      <div
+        class="quiz__optioncard {% if block.settings.image_type == 'image' %} content-layout-{{ block.settings.content_layout }} {% endif %} image-type-{{ block.settings.image_type }}"
+        style="--color-text: {{ block.settings.text_color }}; --color-background: {% if block.settings.image_type == 'image' and block.settings.content_layout == 'overlay' %} {{ block.settings.background_gradient }} {% else %} {{ block.settings.background_color }}{% endif %}; --option-background-hover-color: {{ block.settings.option_hover_active_color }}; --option-hover-text-color: {{ block.settings.text_color }};"
+      >
+        {% if block.settings.image_type == 'image' %}
+          <div
+            class="quiz__optioncard-image-container aspect-ratio-{{ media_size }}"
+            {% if media_size == 'adapt' %}
+              style="--aspect-ratio: {{ ratio }} "
+            {% endif %}
+          >
+            {% if block.settings[card_image] != blank %}
+              {{
+                block.settings[card_image]
+                | image_url: width: block.settings[card_image].width
+                | image_tag:
+                  class: 'quiz__optioncard-image img-100 object-fit-cover',
+                  alt: block.settings[card_image].alt,
+                  loading: 'lazy',
+                  widths: widths,
+                  sizes: '(min-width: 768px) 240px, calc(100vw - 30px)'
+              }}
+            {% else %}
+              {%- assign placeholder_image = 'product-' | append: index -%}
+              {{ placeholder_image | placeholder_svg_tag: 'quiz__optioncard-image img-100 object-fit-cover' }}
+            {% endif %}
+          </div>
+        {% endif %}
+        <div
+          class="quiz__optioncard-content align-item-{{ block.settings.vertical_content_alignment }} text-{{ block.settings.content_alignment }} {% if block.settings.image_type == 'text' %}aspect-ratio-square{% endif %}"
+        >
+          <div class="quiz__optioncard-content-inner w-100">
+            {% if block.settings[option] != blank %}
+              <div class="quiz__optioncard-option">
+                <h3 class="mb-0 {{ block.settings.option_style }} text-{{ block.settings.option_content_alignment }}">
+                  {{- block.settings[option] -}}
+                </h3>
+              </div>
+            {% endif %}
+            {% if block.settings[caption] != blank %}
+              {% if block.settings.content_layout == 'below' or block.settings.image_type == 'text' %}
+                <div class="quiz__optioncard-caption RTE-content text-{{ block.settings.option_content_alignment }}">
+                  <p class="mb-0 fnt-14 mt-4">{{- block.settings[caption] -}}</p>
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div
+      class="quiz__option text-center position-relative"
+      data-tag="{{ block.settings[tag] }}"
+      style="--desktop-image-width: {{ block.settings.desktop_image_width | append: 'px' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: 'px' }};"
+    >
+      <input
+        type="{{ input_type }}"
+        class="visually-hidden"
+        name="{{ block.id }}"
+        id="{{ option | append: block.id }}"
+        value="{{ block.settings[tag] }}"
+        disabled
+      >
+      <label for="{{ option | append: block.id }}" aria-label="{{ block.settings[option] }}"></label>
+      {% if block.settings.image_type == 'top' and block.settings.layout_type != 'none' %}
+        <div
+          class="quiz__optionSerial {% if block.settings.layout_type == 'counter' %} quiz__optionSerial--counter {% endif %} quiz__optionSerial--top"
+
+          aria-label="{{ block.settings[option] }}"
+          style="
+            --option-text-color: {{ block.settings.counter_text_color }}; --option-style-background-color: {{ block.settings.counter_background_color.rgb }}; --desktop-image-width: {{ block.settings.desktop_image_width | append: 'px' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: 'px' }};--option-border-color: {{ block.settings.counter_border_color }};
+            --option-border-width:{% if block.settings.layout_type == 'counter' %}1px {% else %} 1.5px {% endif %};
+          "
+        >
+          {% if block.settings.layout_type == 'counter' %}
+            <div class=" d-flex align-items-center justify-content-center quiz-counter-container">
+              <div class="h1 m-0">
+                {% case index %}
+                  {% when 1 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'A' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '1' %}
+                    {% endif %}
+                  {% when 2 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'B' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '2' %}
+                    {% endif %}
+                  {% when 3 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'C' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '3' %}
+                    {% endif %}
+                  {% when 4 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'D' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '4' %}
+                    {% endif %}
+                  {% when 5 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'E' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '5' %}
+                    {% endif %}
+                  {% when 6 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'F' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '6' %}
+                    {% endif %}
+                {% endcase %}
+              </div>
+            </div>
+            <div
+              class="checkmark-icon-container d-flex  align-items-center justify-content-center"
+              style="--color-button-text: {{ block.settings.counter_text_color }}"
+            >
+              {%- render 'icon', icon: 'checkmark', class: icon_class -%}
+            </div>
+          {% elsif block.settings.image_type == 'top' and block.settings.layout_type != 'none' %}
+            {% if block.settings[card_image] != blank %}
+              <div class="quiz-custom-image">
+                {{-
+                  block.settings[card_image]
+                  | image_url: width: block.settings[card_image].width
+                  | image_tag: alt: block.settings[card_image].alt, class: 'quiz__optioncard-image img-100 object-fit-cover'
+                -}}
+              </div>
+            {% else %}
+              <div class="quiz-custom-image">
+                {%- assign placeholder_image = 'product-' | append: index -%}
+                {{ placeholder_image | placeholder_svg_tag: 'quiz__optioncard-image img-100 object-fit-cover' }}
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
+      <div
+        class="
+          quiz__optionLabel d-flex  align-item-center
+           {% if block.settings.layout_type != 'none' %}
+          {% if block.settings.layout_type == 'image' and block.settings.image_type != 'top' %} quiz-custom-image-container {% endif %}
+           {% if block.settings.image_type == 'inside' %} quiz-custom-image-container-inside {% endif %} {% else %} quiz-custom-image-container {% endif %}
+            {% if block.settings.layout_type == 'none' %} option-padding {% endif %}
+        "
+        style="--option-text-color: {{ block.settings.option_text_color }};--option-style-background-color: {{ block.settings.counter_background_color.rgb }};--option-background-color: {{ block.settings.background_color.rgb }}; --option-background-hover-color: {{ block.settings.option_hover_active_bg_color }}; --option-hover-text-color: {{ block.settings.option_hover_active_text_color }};"
+      >
+        {% if block.settings.layout_type == 'image'
+          and block.settings.image_type != 'top'
+          and block.settings.layout_type != 'none'
+        %}
+          <div
+            class="quiz-custom-image"
+          >
+            {% if block.settings[card_image] != blank %}
+              {{-
+                block.settings[card_image]
+                | image_url: width: block.settings[card_image].width
+                | image_tag: alt: block.settings[card_image].alt, class: 'quiz__optioncard-image img-100 object-fit-cover'
+              -}}
+            {% else %}
+              {%- assign placeholder_image = 'product-' | append: index -%}
+              {{ placeholder_image | placeholder_svg_tag: 'quiz__optioncard-image img-100 object-fit-cover' }}
+            {% endif %}
+          </div>
+        {% elsif block.settings.image_type == 'inside'
+          and block.settings.layout_type == 'counter'
+          and block.settings.layout_type != 'none'
+        %}
+          <div
+            class="quiz__optionSerial quiz__optionSerial--counter"
+            for="{{ option | append: block.id }}"
+            aria-label="{{ block.settings[option] }}"
+            style="
+              --option-text-color: {{ block.settings.counter_text_color }}; --option-style-background-color: {{ block.settings.counter_background_color.rgb }}; --desktop-image-width: {{ block.settings.desktop_image_width | append: 'px' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: 'px' }};--option-border-color: {{ block.settings.counter_border_color }};
+              --option-border-width:1px;
+            "
+          >
+            <div class=" quiz-counter-container d-flex align-item-center justify-content-center">
+              <div class="h1 m-0">
+                {% case index %}
+                  {% when 1 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'A' %}
+
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '1' %}
+                    {% endif %}
+                  {% when 2 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'B' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '2' %}
+                    {% endif %}
+                  {% when 3 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'C' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '3' %}
+                    {% endif %}
+                  {% when 4 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'D' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '4' %}
+                    {% endif %}
+                  {% when 5 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'E' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '5' %}
+                    {% endif %}
+                  {% when 6 %}
+                    {% if block.settings.counter_style == 'alphabet' %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: 'F' %}
+                    {% else %}
+                      {% render 'icon', icon: 'circle-with-text', class: icon_class, text: '6' %}
+                    {% endif %}
+                {% endcase %}
+              </div>
+            </div>
+            <div class="checkmark-icon-container d-flex  align-items-center justify-content-center">
+              {%- render 'icon', icon: 'checkmark', class: icon_class -%}
+            </div>
+          </div>
+        {% endif %}
+        <h3 class="quiz__optionLabel-text {{ block.settings.option_heading_tag }} mb-0 flex-1 text-{{ block.settings.option_content_alignment }} {{ block.settings.option_style }}">
+          {{- block.settings[option] -}}
+        </h3>
+        
+      </div>
+    </div>
+  {% endunless %}
+{% endif %}

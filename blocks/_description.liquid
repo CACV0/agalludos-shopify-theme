@@ -1,0 +1,188 @@
+{% assign product = closest.product %}
+
+{%- if product == blank -%}
+  <div class="RTE-content" style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}">
+    {{ 'general.on_boarding.product_description' | t }}
+  </div>
+{%- elsif block.settings.collapse_content %}
+  <accordion-tab class="RTE-content" style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}">
+    <details
+      accordionTab
+      aria-expanded="{{ block.settings.open_by_default }}"
+      class="accordion__item d-block{% if block.settings.open_by_default %} active{% endif %}"
+      {% if block.settings.open_by_default %}open{% endif %}
+      {{ block.shopify_attributes }}
+    >
+      <summary aria-label="Toggle content">
+        <div class="accordion__item__head">
+          {% if block.settings.heading != blank %}
+            <{{ block.settings.heading_tag }} class="m-0 fnt-16 fnt-body">
+              {{- block.settings.heading -}}
+            </{{ block.settings.heading_tag }}>
+          {% else %}
+            <{{ block.settings.heading_tag }} class="m-0 fnt-16 fnt-body">
+              {{- 'products.product.description' | t -}}
+            </{{ block.settings.heading_tag }}>
+          {% endif %}
+        </div>
+      </summary>
+      <div accordionBody class="accordion__item__body{% if block.settings.open_by_default %} active{% endif %}">
+        <div class="accordion__item__body-content">
+          {{ product.description }}
+        </div>
+      </div>
+    </details>
+  </accordion-tab>
+
+{% else %}
+  <div class="RTE-content" style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}">
+    {% if block.settings.truncate_description != 'no' %}
+      <truncate-text
+        class="truncate-text-container {% if block.settings.hide_truncate_in_desktop %}mobile-only{% endif %}"
+        data-height="{{ block.settings.truncate_description }}"
+        style="--truncate-height:{{ block.settings.truncate_description | append: 'px'}}"
+      >
+        <div class="truncated-text" text-container>
+          {{ product.description }}
+        </div>
+        <div class="d-v-center d-none" read-button-container>
+          <a
+            href=""
+            class="link"
+            read-more-button
+          >
+            <span>
+              {{ 'products.read_more' | t }}
+            </span>
+          </a>
+          <a
+            href=""
+            class="link visually-hidden"
+            read-less-button
+          >
+            <span>
+              {{ 'products.read_less' | t }}
+            </span>
+          </a>
+        </div>
+      </truncate-text>
+      {% if block.settings.hide_truncate_in_desktop %}
+        <div class="desktop-only">
+          {{ product.description }}
+        </div>
+      {% endif %}
+
+    {% else %}
+      {{ product.description }}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "collapse_content",
+      "label": "Collapse content",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false,
+      "visible_if": "{{ block.settings.collapse_content }}"    
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading",
+      "info": "This heading is displayed only when 'collapse content' is enabled."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h4",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "label": "Truncate description",
+      "id": "truncate_description",
+      "info": "Works only when 'Collapse content' disabled.",
+      "options": [
+        {
+          "label": "Don't truncate",
+          "value": "no"
+        },
+        {
+          "label": "Show a small excerpt",
+          "value": "120",
+          "group": "Truncate"
+        },
+        {
+          "label": "Show a medium excerpt",
+          "value": "200",
+          "group": "Truncate"
+        },
+        {
+          "label": "Show a large excerpt",
+          "value": "280",
+          "group": "Truncate"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_truncate_in_desktop",
+      "label": "Don't truncate in desktop",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Description",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,148 @@
+{% comment %}
+  Hamburger drawer menu list — renders the link loop with optional mega menu support.
+
+  Parameters:
+    - section: the parent section
+    - link_list: the link_list object whose links to render
+    - enable_mega_menu: boolean — render mega menu blocks when a link matches a block trigger
+    - extra_class: optional additional class for the wrapping <ul>
+{% endcomment %}
+
+<ul class="navbar-nav header__nav-list d-flex hamberger-accordion h-100 {{ extra_class }}" role="list">
+  {% for link in link_list.links %}
+    <li
+      class="hamberger-accordion__item"
+      role="listitem"
+      animate-hamberge-item
+    >
+      {% if link.links != blank %}
+        <div class="accordion__item d-block" role="group">
+          <button
+            class="accordion__item__head hamberger-menu-item interactions-enabled"
+            aria-expanded="false"
+            hamberger-menu-item
+          >
+            <p class="hamberger-accordion__head h3 m-0 fnt-body-weight-bold">{{ link.title | escape }}</p>
+            <div class="caret-icon">
+              {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-icon)' %}
+            </div>
+          </button>
+          <div class="accordion__item__body" hamberger-menu-content>
+            <div class="submenu-header">
+              <button
+                aria-label="{{ 'accessibility.hamburger.back_text' | t }} {{ link.title | escape }}"
+                backToMenu
+                class="back-to-menu fnt-16 fnt-body-weight-bold d-flex align-item-center"
+              >
+                <span class="caret-icon d-flex">
+                  {% render 'icon' with 'arrow-icon',
+                    class: 'dropdown-arrow',
+                    color: 'var(--color-icon)'
+                  %}
+                </span>
+                <span class="ml-2 h4 mb-0">
+                  {{ link.title | escape }}
+                </span>
+              </button>
+              <button
+                aria-label="{{ 'accessibility.close_drawer' | t }}"
+                class="drawer__close__btn"
+                close-drawer
+              >
+                {% render 'icon' with 'drawerclose-icon' %}
+              </button>
+            </div>
+            {%- assign mega_menu_type = 'default' -%}
+            {%- assign mega_block = null -%}
+            {%- if enable_mega_menu -%}
+              {%- assign link_text = link.title | strip | capitalize -%}
+              {%- for block in section.blocks -%}
+                {%- assign block_trigger = block.settings.mega_menu_trigger | strip | capitalize -%}
+                {%- if block_trigger contains link_text -%}
+                  {%- assign mega_block = block -%}
+                  {%- if block.type == 'mega_menu_promotion' -%}
+                    {%- assign mega_menu_type = 'promotion' -%}
+                  {%- elsif block.type == 'mega_menu_products' -%}
+                    {%- assign mega_menu_type = 'products' -%}
+                  {%- elsif block.type == 'mega_menu_collections' -%}
+                    {%- assign mega_menu_type = 'collections' -%}
+                  {%- endif -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+            {%- if mega_menu_type != 'default' -%}
+              {% render 'hamberger-mega-menu', link: link, block: mega_block, menu_type: mega_menu_type %}
+            {%- else -%}
+              <ul class="hamberger-accordion--childElement" role="list">
+                <!-- Liquid Code to Generate Submenu Links -->
+                {%- for childlink in link.links -%}
+                  <li role="listitem">
+                    {%- if childlink.links == blank -%}
+                      <div>
+                        <a
+                          href="{{ childlink.url }}"
+                          class="{% if childlink.current %} active{% endif %} hamberger-accordion__link fnt-16"
+                          {% if childlink.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{ childlink.title | escape }}
+                        </a>
+                      </div>
+                    {% else %}
+                      <accordion-tab>
+                        <details accordiontab class="accordion__item d-block hamberger-accordion--innerAccordion" role="group" aria-expanded="false">
+                          <summary class="accordion__item__head">
+                            <span class="hamberger-accordion__link-black m-0 fnt-body-weight-bold fnt-heading">
+                              {{- childlink.title | escape -}}
+                            </span>
+                            <div class="caret-icon innerAccordion--icon d-flex align-item-center">
+                              {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-icon)' %}
+                            </div>
+                          </summary>
+                          <div accordionBody class="promo-details__body">
+                            <ul class="hamberger-accordion--childElement promo-details__list" role="list">
+                              {%- for grandchildlink in childlink.links -%}
+                                <li role="listitem">
+                                  <a
+                                    href="{{ grandchildlink.url }}"
+                                    class="{% if grandchildlink.current %} active{% endif %} hamberger-accordion__link"
+                                    {% if grandchildlink.current %}
+                                      aria-current="page"
+                                    {% endif %}
+                                  >
+                                    {{ grandchildlink.title | escape }}
+                                  </a>
+                                </li>
+                              {%- endfor %}
+                            </ul>
+                          </div>
+                        </details>
+                      </accordion-tab>
+                    {%- endif -%}
+                  </li>
+                {%- endfor %}
+              </ul>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <a class="hamberger-accordion__link-black h3 m-0 fnt-body-weight-bold" href="{{ link.url }}">
+          {{ link.title | escape }}
+        </a>
+      {% endif %}
+    </li>
+  {% endfor %}
+  {% if section.settings.highlight_heading != blank and section.settings.hamberger_menu == blank %}
+    <li class="hamberger-accordion__item hamberger-highlight-btn mobile-only" role="listitem" animate-hamberge-item>
+      <a
+        class="btn btn--{% if section.settings.use_outline_button_style %}border{% else %}fill{% endif %} btn--full-width"
+        href="{{ section.settings.highlight_link }}"
+      >
+        {{ section.settings.highlight_heading | escape }}
+      </a>
+    </li>
+  {% endif %}
+</ul>

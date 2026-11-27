@@ -1,0 +1,173 @@
+<div
+  class="editorial-content__img-wrap position-absolute editorial-img--{{ block.id }}{% if block.settings.hide_on_mobile %} tab-only{% endif %}"
+  {{ block.shopify_attributes }}
+  style="--top:{{ block.settings.vertical }}%; --left:{{ block.settings.horizontal }}%; --width:{{ block.settings.image_width_desktop }}%;
+  --top-mobile:{{ block.settings.vertical_mobile }}%; --left-mobile:{{ block.settings.horizontal_mobile }}%; --width-mobile:{{ block.settings.image_width_mobile }}%;"
+>
+  {% if block.settings.link != blank %}
+    <a href="{{ block.settings.link }}" target="{{ block.settings.link_target }}" class="editorial-content__img-link">
+  {% endif %}
+  <div
+    class="editorial-content__img-frame w-100 overflow-hidden border-radius--block"
+    {% if block.settings.show_border %}
+      style="--border-color: {{ block.settings.border_color }};"
+    {% endif %}
+  >
+    {% if block.settings.image != blank %}
+      <div image-container class="img-100">
+        {{
+          block.settings.image
+          | image_url: width: 600
+          | image_tag:
+            is: 'image-loading',
+            alt: block.settings.image.alt,
+            loading: 'lazy',
+            class: 'editorial-content__img set-100-percentage-size-media d-block',
+            widths: '120,160,200,260,300,400,500,600'
+        }}
+        {{
+          block.settings.image
+          | image_url: width: 20
+          | image_tag: class: 'blur-image', loading: 'lazy', alt: block.settings.image.alt
+        }}
+      </div>
+    {% else %}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'editorial-content__img editorial-content__img--placeholder d-block' }}
+    {% endif %}
+  </div>
+  {% if block.settings.link != blank %}
+    </a>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Images adapt to their natural dimensions to avoid cropping."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide image for mobile",
+      "default": false,
+      "info": "To reduce visual clutter, hide images on mobile for a cleaner and more focused experience"
+    },
+    {
+      "type": "range",
+      "id": "image_width_desktop",
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "label": "Image width (desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "image_width_mobile",
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "label": "Image width (mobile)",
+      "default": 35,
+      "visible_if": "{{ block.settings.hide_on_mobile == false }}"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "link_target",
+      "label": "Open link in",
+      "options": [
+        { "value": "_blank", "label": "New tab" },
+        { "value": "_self", "label": "Same tab" }
+      ],
+      "default": "_self"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000000",
+      "alpha": true,
+      "visible_if": "{{ block.settings.show_border }}"
+    },
+    {
+      "type": "header",
+      "content": "Desktop position"
+    },
+    {
+      "type": "range",
+      "id": "horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal",
+      "default": 4,
+      "info": "Horizontal position of the image"
+    },
+    {
+      "type": "range",
+      "id": "vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical",
+      "default": 3,
+      "info": "Vertical position of the image"
+    },
+    {
+      "type": "header",
+      "content": "Mobile position",
+      "visible_if": "{{ block.settings.hide_on_mobile == false }}"
+    },
+    {
+      "type": "range",
+      "id": "horizontal_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal",
+      "default": 4,
+      "info": "Horizontal position of the image on mobile",
+      "visible_if": "{{ block.settings.hide_on_mobile == false }}"
+    },
+    {
+      "type": "range",
+      "id": "vertical_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical",
+      "default": 2,
+      "info": "Vertical position of the image on mobile",
+      "visible_if": "{{ block.settings.hide_on_mobile == false }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image"
+    }
+  ]
+}
+{% endschema %}

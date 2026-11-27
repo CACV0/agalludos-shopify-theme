@@ -1,0 +1,522 @@
+{{ 'snippet-ugc-reel.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-shoppable-feed.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'scroll-snap.js' | asset_url }}" defer="defer"></script>
+{% assign product = closest.product %}
+<div 
+  id="ugc-reel-{{ block.id }}"
+  class="ugc-reel"
+  style="--padding-bottom-desktop: {{ block.settings.block_bottom_spacing }}px;--padding-bottom-mobile: {{ block.settings.block_bottom_spacing_mobile }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% capture content_for_blocks %} 
+    {% content_for 'blocks', closest.product: product %}
+ {% endcapture %}
+  <ugc-reel
+    {% if block.settings.play_first_video %}
+      first-video-play
+    {% endif %}
+    id="{{ block.id | prepend: 'shopify-section-' }}"
+    target-portal-element="#portal"
+    popup-drawer-type="ugc-reel-pop-{{ block.id }}"
+    {% if block.settings.quick_buy_style == 'button' %}
+      button-label="{{ block.settings.button_label }}"
+    {% endif %}
+  >
+    <carousel-component
+      class="swiper js-element ugc-reel__wrapper"
+      slide-layout-type="carousel"
+      slide-pagination-type="bullets"
+      slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+      slide-speed="{{ settings.slide_duration }}"
+      slide-per-view="auto"
+      space-between="10"
+      slide-no-center
+      disable-accessibility
+    >
+      <div class="ugc-reel__header d-flex align-item-center justify-content-space-btw mb-16">
+        <{{ block.settings.heading_tag }} class="m-0 {{ block.settings.style }}">
+          {{- block.settings.ugc_heading -}}
+        </{{ block.settings.heading_tag }}>
+        <div class="sliderControl m-0">
+          <div class="d-flex sliderPagination">
+            <!-- next / prev arrows -->
+            <div class="" slide-prev role="button" tabindex="0" aria-label="{{ 'accessibility.prev_slide_label' | t }}">
+              <div class="sliderPagination__prev productSlider__prev">
+                {% render 'icon', icon: 'left' %}
+              </div>
+            </div>
+            <div class="" slide-next role="button" tabindex="0" aria-label="{{ 'accessibility.next_slide_label' | t }}">
+              <div class="sliderPagination__next productSlider__next">
+                {% render 'icon', icon: 'right' %}
+              </div>
+            </div>
+            <!-- !next / prev arrows -->
+          </div>
+        </div>
+      </div>
+      <div class="swiper-container" main-slider reel-swiper-container>
+        <animation-reveal
+          aoi-type="fade-up"
+          aoi-amount="0.2"
+          class="swiper-wrapper ugc-reel__video__layout--{{ block.settings.layout_style }} {% if block.settings.show_highlight_border %} ugc-reel__video__layout--highlight {% endif %}"
+          style="
+            --color-button-background: {{ block.settings.play_button_bg }};
+            --color-button-text: {{ block.settings.play_button_color }};
+          "
+        >
+          {{ content_for_blocks }}
+        </animation-reveal>
+      </div>
+    </carousel-component>
+    <drawer-component
+      class="ugc-popup drawer"
+      aria-live="polite"
+      id="ugc-popup-{{ block.id }}"
+      drawer-type="ugc-reel-pop-{{ block.id }}"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="drawer__container">
+        <div class="drawer__overlay" drawer-overlay></div>
+        <div class="drawer__wrapper drawer__wrapper--animation-position-center">
+          <button
+            class="drawer__close--btn ugc-popup__close-btn position-absolute cursor-pointer"
+            aria-label="{{ 'accessibility.close_drawer' | t }}"
+            close-drawer
+          >
+            {% render 'icon', icon: 'icon-cross' %}
+          </button>
+          <div class="drawer__body">
+            <snap-slider {% if block.settings.auto_scroll %}auto-scroll{% endif %}>
+              <shop-feed
+                class="d-block ugc-reel__wrapper--popup{% unless block.settings.show_quick_buy %} ugc-reel__wrapper--hide-product-card{% endunless %}"
+                style="
+                  --button-icon-color: {{ block.settings.button_icon }}; --button-background: {{ block.settings.button_background }};
+                  {% if block.settings.quick_buy_style != 'card' %}
+                    --product-text-color: {{ block.settings.product_text_color }};
+                    --product-background: {{ block.settings.background }}; --product-overlay-color: {{ block.settings.overlay_color }}; --button-label-color: {{ block.settings.button_label_color }};
+                  {% endif %}
+                "
+              >
+                <div
+                  main-snap-slider
+                  class="
+                    ugc-reel__product_layout ugc-reel__product_layout--{{ block.settings.quick_buy_style }}
+                    {% if block.settings.quick_buy_style == 'thumbnail' %}ugc-reel__product_layout--{{ block.settings.quick_buy_style }}--{{ block.settings.thumbnail_position }}{% endif %}
+                    {% if block.settings.quick_buy_style == 'card' %} color-{{ settings.drawer_color_scheme }} {% endif %}
+                  "
+                  style="
+                    --play-button-background: {{ block.settings.play_button_bg }};
+                    --play-button-color: {{ block.settings.play_button_color }};
+                  "
+                >
+                  {{ content_for_blocks }}
+                </div>
+              </shop-feed>
+              <div class="sliderControl m-0" snap-slider-controls>
+                <div
+                  class="d-flex sliderPagination"
+                  style="--color-icon:#FFFFFF;"
+                >
+                  <!-- next / prev arrows -->
+                  <div
+                    class=""
+                    scroll-prev
+                    role="button"
+                    tabindex="0"
+                    aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+                  >
+                    <div class="sliderPagination__prev productSlider__prev">
+                      <div class="sliderPagination__prev--icon sliderPagination__icon">
+                        {% render 'icon', icon: 'caret-right-icon' %}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class=""
+                    scroll-next
+                    role="button"
+                    tabindex="0"
+                    aria-label="{{ 'accessibility.next_slide_label' | t }}"
+                  >
+                    <div class="sliderPagination__next productSlider__next">
+                      <div class="sliderPagination__next--icon sliderPagination__icon">
+                        {% render 'icon', icon: 'caret-right-icon' %}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- !next / prev arrows -->
+                </div>
+              </div>
+            </snap-slider>
+          </div>
+          <div class="drawer__bottom__sheet--overlay element-cover w-100 h-100" bottom-sheet-overlay=""></div>
+          <bottom-sheet
+            bottom-sheet-id="reel-product-variant"
+            clone-props-from="action-button"
+            class="ugc-bottom-sheet color-{{ settings.drawer_color_scheme }}"
+          >
+            <div class="text-center">
+              <div class="d-flex align-item-center justify-content-end ">
+                <button
+                  class="button-rest-styles cursor-pointer "
+                  aria-label="{{ 'accessibility.close_drawer' | t }} {{ 'cart.order.note' | t }}"
+                  is="bottom-sheet-trigger"
+                  type="button"
+                  target-bottom-sheet="reel-product-variant"
+                  action-type="hide"
+                >
+                  {%- render 'icon' with 'closeErrorCircle' -%}
+                </button>
+              </div>
+              <div
+                class="bottom-sheet__product--info"
+                product-info
+                data-update-url="false"
+                data-section-id="{{ section.id }}"
+                data-block-id="{{ block.id }}"
+              >
+                {%- liquid
+                  assign product_form_id = 'product-form-' | append: block.id
+                -%}
+
+                {%- render 'card-variant-sheet-body',
+                  product: product,
+                  product_form_id: product_form_id,
+                  id_suffix: block.id,
+                  hide_badges: section.settings.hide_badges,
+                  block: block,
+                  section: section,
+                  show_custom_badges: true,
+                  use_variant_picker: true,
+                  is_ugc: true
+                -%}
+              </div>
+            </div>
+          </bottom-sheet>
+        </div>
+      </div>
+    </drawer-component>
+  </ugc-reel>
+</div>
+
+{% schema %}
+{
+  "name": "UGC Reel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "ugc_heading",
+      "label": "Heading",
+      "default": "UGC Reel"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout style",
+      "default": "portrait",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_highlight_border",
+      "label": "Show highlight border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "play_first_video",
+      "label": "Play first video",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_scroll",
+      "label": "Enable auto scroll",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Quick buy"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_buy",
+      "label": "Show quick buy",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "quick_buy_style",
+      "label": "Quick buy style",
+      "default": "card",
+      "options": [
+        {
+          "value": "card",
+          "label": "Card"
+        },
+        {
+          "value": "overlay",
+          "label": "Overlay"
+        },
+        {
+          "value": "thumbnail",
+          "label": "Thumbnail"
+        },
+        {
+          "value": "button",
+          "label": "Button"
+        }
+      ],
+      "visible_if": "{{ block.settings.show_quick_buy }}"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Quick buy",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'button' }}"
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_position",
+      "label": "Thumbnail position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'thumbnail' }}"
+    },
+    {
+      "type": "select",
+      "id": "varaint_selector_type",
+      "label": "Variant style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        }
+      ],
+      "default": "dropdown",
+      "visible_if": "{{ block.settings.show_quick_buy }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatches",
+      "label": "Show swatches",
+      "default": true,
+      "visible_if": "{{ block.settings.show_quick_buy }}"
+    },
+    {
+      "type": "select",
+      "id": "variant_swatches_style",
+      "label": "Swatches style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        }
+      ],
+      "default": "pills",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.show_swatches }}"
+    },
+    {
+      "type": "color",
+      "id": "button_label_color",
+      "label": "Button label color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'button' }}"
+    },
+    {
+      "type": "color",
+      "id": "button_icon",
+      "label": "Button icon",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'overlay' or block.settings.quick_buy_style == 'thumbnail' or block.settings.quick_buy_style == 'card' }}"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.show_quick_buy }}"
+    },
+    {
+      "type": "color",
+      "id": "product_text_color",
+      "label": "Product Text",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'overlay' }}"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'thumbnail' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "overlay_color",
+      "label": "Overlay",
+      "visible_if": "{{ block.settings.show_quick_buy and block.settings.quick_buy_style == 'overlay' or block.settings.quick_buy_style == 'thumbnail' or block.settings.quick_buy_style == 'button' }}",
+      "default": "linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.46) 84%)"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "play_button_bg",
+      "label": "Play button background",
+      "alpha": true,
+      "default": "#000000",
+      "info": "The same color will be used for the highlight border"
+    },
+    {
+      "type": "color",
+      "id": "play_button_color",
+      "label": "Play button",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing(desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing_mobile",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing(mobile)",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_reel"
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC Reel",
+      "blocks": [
+        {
+          "type": "_reel"
+        },
+        {
+          "type": "_reel"
+        },
+        {
+          "type": "_reel"
+        },
+        {
+          "type": "_reel"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,137 @@
+{%- comment -%}
+  List of varaibles used
+  block: {{ object }} block related object data
+  form_id: {{string}} Form id
+  product: {{ object }} Product Object
+
+  Product Buy buttons
+  1) Product Quick Checkout
+  2) Product Default Buttons
+  a) Product Options Drawer Trigger
+  b) Prodyct Add to cart Button
+{%- endcomment -%}
+
+{% liquid
+  
+  case settings.cart_type
+    when 'drawer'
+      assign cart_section_type = 'cart-drawer'
+    when 'page'
+      assign cart_section_type = 'main-cart'
+  endcase
+
+  if variant_state != blank
+    assign buy_state = variant_state
+  else
+    assign sel = product.selected_variant
+    if sel != blank
+      if sel.available
+        assign buy_state = 'available'
+      else
+        assign buy_state = 'sold_out'
+      endif
+    else
+      assign sofav = product.selected_or_first_available_variant
+      assign selected_title = ''
+      for opt in product.options_with_values
+        if forloop.first
+          assign selected_title = opt.selected_value
+        else
+          assign selected_title = selected_title | append: ' / ' | append: opt.selected_value
+        endif
+      endfor
+      if sofav.title == selected_title
+        if sofav.available
+          assign buy_state = 'available'
+        else
+          assign buy_state = 'sold_out'
+        endif
+      else
+        assign buy_state = 'unavailable'
+      endif
+    endif
+  endif
+
+  if buy_state == 'available'
+    assign buy_disabled = false
+  else
+    assign buy_disabled = true
+  endif
+%}
+
+<div {{ block.shopify_attributes }}>
+  {%- if product != blank -%}
+    {% liquid
+      assign gift_card_recipient_feature_active = false
+      if block.settings.show_gift_card_recipient and product.gift_card?
+        assign gift_card_recipient_feature_active = true
+      endif
+    %}
+    <product-form
+      class="product-form"
+      data-section-id="{{ section.id }}"
+      {% if show_cart_popup  -%} show-cart-popup {%- endif  %}
+      data-cart-type="{{ cart_section_type }}"
+    >
+      {%- form 'product', product, id: form_id, class: 'form', novalidate: 'novalidate'-%}
+        {% render 'custom-message', customClassName: 'product-ajax__message mb-2', custom_id: form_id %}
+        <input
+          disabled
+          name="id"
+          type="hidden"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+
+        {%- if gift_card_recipient_feature_active -%}
+          {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+        {%- endif -%}
+        <div class="product-form__buttons  button-fill-buy-now ">
+          {% comment %} Add to cart Button {% endcomment %}
+          <button
+      class="btn {% if block.settings.use_outline_button %} btn--border {% else %} btn--fill  {% endif %} w-100 {% if block.settings.show_dynamic_checkout %} mb-16 {% endif %}"
+            {% if buy_disabled %}
+              disabled
+            {% endif %}
+            type="submit"
+            name="add"
+            data-buy-state="{{ buy_state }}"
+          >
+            <div class="btn--preloader">
+              <div class="btn--preloader--circular">
+                <div class="checkmark draw"></div>
+              </div>
+            </div>
+            <div class="btn--text">
+              {%- case buy_state -%}
+                {%- when 'unavailable' -%}
+                  {{ 'products.product.unavailable' | t }}
+                {%- when 'sold_out' -%}
+                  {{ 'products.product.button_out_of_stock' | t }}
+                {%- else -%}
+                  {{ 'products.product.button_add_to_cart' | t }}
+              {%- endcase -%}
+            </div>
+          </button>
+          {%- if block.settings.show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+    </product-form>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          class="
+            btn
+            {% if block.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} w-100
+          "
+          disabled
+          type="submit"
+        >
+          {{ 'products.product.button_add_to_cart' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+</div>

@@ -1,0 +1,85 @@
+{%- if settings.cart_type == 'drawer' and template.name != 'cart' -%}
+  {%- capture cart_offer_content -%}
+    {% content_for 'blocks' %}
+  {%- endcapture -%}
+  {%- render 'cart-drawer', section: section, cart_offer_content: cart_offer_content -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Cart drawer won't appear to your customers if you have set the cart type to page in the [global theme settings](/editor?context=theme&category=Cart)."
+    },
+    {
+      "type": "checkbox",
+      "id": "view_cart_link",
+      "label": "t:settings_schema.global.cart.settings.view_cart_link.label",
+      "default": false,
+      "info": "Won’t work if recently viewed is enabled."
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.global.cart.settings.cart_product_recommendations_head.content",
+      "info": "t:settings_schema.global.cart.settings.cart_product_recommendations_head.info"
+    },
+    {
+      "type": "text",
+      "id": "cart_recommendation_title",
+      "label": "t:settings_schema.global.cart.settings.cart_product_recommendation_title.label",
+      "default": "Trending this month",
+      "placeholder": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout_style",
+      "label": "Desktop layout style",
+      "options": [
+        {
+          "value": "stack_inside",
+          "label": "Stack Inside"
+        },
+        {
+          "value": "stack_outside",
+          "label": "Stack Outside"
+        }
+      ],
+      "default": "stack_outside"
+    },
+    {
+      "type": "product_list",
+      "id": "recommendation_product_list",
+      "label": "Products",
+      "limit": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_recently_viewed_tab",
+      "label": "Show recently viewed tab",
+      "default": false,
+      "info": "Recently viewed tab won't show if there are no products viewed."
+    },
+    {
+      "type": "range",
+      "id": "recently_viewed_limit",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "default": 6,
+      "label": "Maximum products to show",
+      "visible_if": "{{ section.settings.enable_recently_viewed_tab }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_cart-offer-card"
+    }
+  ],
+  "max_blocks": 1,
+  "enabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

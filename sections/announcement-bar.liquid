@@ -1,0 +1,1392 @@
+<script defer src="{{ 'countdown-timer.js' | asset_url }}"></script>
+{% style %}
+  :root  {
+    --sticky-announcement-enabled: {%- if section.settings.enable_sticky -%}
+      1{% else %}
+      0{% endif %};
+  }
+
+  #shopify-section-{{ section.id }}{
+    position: {%- if section.settings.enable_sticky -%}
+      sticky{% else %}
+      relative{% endif %};
+    top: 0;
+    z-index: 7;
+  }
+
+  {%- if section.settings.enable_sticky -%}
+    .section-header-header-group ~ #shopify-section-{{ section.id }}{
+      top: calc(var(--sticky-header-enabled, 0) * var(--header-height, 0px));
+      z-index: 8;
+    }
+  {%- else -%}
+    .section-header-header-group ~ #shopify-section-{{ section.id }}{
+      z-index: 5;
+    }
+  {%- endif -%}
+{% endstyle %}
+{% liquid
+  assign hasGradient = false
+  if section.settings.color_scheme.settings.background_gradient != blank
+    assign hasGradient = true
+  endif
+  assign nav_links_and_country_selector_languate_selector_enable = false
+  if section.settings.show_country_selector and localization.available_countries.size > 1
+    assign nav_links_and_country_selector_languate_selector_enable = true
+  elsif section.settings.show_locale_selector and localization.available_languages.size > 1
+    assign nav_links_and_country_selector_languate_selector_enable = true
+  elsif section.settings.enable_sublinks
+    assign nav_links_and_country_selector_languate_selector_enable = true
+  endif
+%}
+<height-calc class="d-block" variable="announcement">
+  <div
+    aria-label="Announcement Bar"
+    class="announcement-bar color-{{ section.settings.color_scheme }}"
+    role="region"
+  >
+    {% unless section.settings.layout_width == 'full' %}
+      <div class="container">
+    {% endunless %}
+    <div
+      class="announcement-bar__container {% if section.settings.layout_width == 'full' %} full-width {% else %} fixed-width {% endif %}"
+      style="{% unless nav_links_and_country_selector_languate_selector_enable %}  grid-template-columns: 100%  ; {% endunless %} --carousel-width: {{ section.settings.carousel_width | append: "%" }} "
+    >
+      {% if nav_links_and_country_selector_languate_selector_enable and section.settings.layout_width != 'full' %}
+        <div class="announcement-bar__leftContainer desktop-only">
+          {% if section.settings.enable_sublinks %}
+            {% case section.settings.sublink %}
+              {% when 'social' %}
+                <div class="announcement-bar__social-media-icons">
+                  {% render 'social-media-icons' %}
+                </div>
+              {% when 'custom_links' %}
+                <ul class="announcement-bar__custom-link fnt-18">
+                  {% if section.settings.custom_link_heading_1 != blank %}
+                    <li>
+                      <a
+                        href="{{ section.settings.custom_link_url_1 }}"
+                        class="link"
+                      >
+                        {{ section.settings.custom_link_heading_1 }}
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% if section.settings.custom_link_heading_2 != blank %}
+                    <li>
+                      <a
+                        href="{{ section.settings.custom_link_url_2 }}"
+                        class="link"
+                      >
+                        {{ section.settings.custom_link_heading_2 }}
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% if section.settings.custom_link_heading_3 != blank %}
+                    <li>
+                      <a
+                        href="{{ section.settings.custom_link_url_3 }}"
+                        class="link"
+                      >
+                        {{ section.settings.custom_link_heading_3 }}
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+            {% endcase %}
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="announcement-bar__content {% if hasGradient %} hasGradient {% endif %} ">
+        <div class="announcement-bar-slider-container">
+          {% if section.settings.navigation == 'slider' %}
+            <carousel-component
+              class="swiper announcement-carousel js-element"
+              role="region"
+              slide-animation="fade"
+              slide-layout-type="carousel"
+              slide-no-center
+              slide-per-view="1"
+              slide-autoplay-delay="{{ section.settings.autoplay_delay }}"
+              slide-autoplay="{{ section.settings.slider_autoplay }}"
+              slide-responsive-breakpoints='{"480":{"slidesPerView": "1"}}'
+              slide-speed="{{ settings.slide_duration }}"
+              slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+            >
+              <div class="swiper" main-slider>
+                <div class="swiper-wrapper">
+                  {% for block in section.blocks %}
+                    {% if block.type == 'countdown_timer' %}
+                      {% assign hide_timer = false %}
+                      {% if block.settings.hide_timer_on_ending == 'hide_on_completion' %}
+                        {% assign hide_timer = true %}
+                      {% endif %}
+                      <div
+                        {% if hide_timer %}
+                          hide-on-expiry
+                        {% endif %}
+                        class="swiper-slide countdown-timer__wrapper countdown-timer__wrapper--carousel {{ block.settings.timer_font_family }} "
+                        style="
+                          --flex-direction: {{ section.settings.content_stack }};
+                          --gap: {{ block.settings.countdown_timer_gap }}px;
+                          {% if section.settings.content_stack == 'row' %}
+                            --horizontal-alignment:{{ block.settings.desktop_content_alignment }}
+                          {% endif %}
+                        "
+                      >
+                        <div class="countdown-timer__text">
+                          <p class="text-size-xs fnt-body m-0">{{ block.settings.countdown_text }}</p>
+                        </div>
+                        {% render 'countdown-timer', block: block, notIntersected: true %}
+                      </div>
+                    {% else %}
+                      <div
+                        aria-label="{{ block.settings.text }}"
+                        class="swiper-slide"
+                        role="listitem"
+                        {{ block.shopify_attributes }}
+                      >
+                        <div class="announcement-bar__text text-center">
+                          {% if block.settings.announcement_link != blank %}
+                            <a href="{{ block.settings.announcement_link }}">
+                          {% endif %}
+                          <p class="text-size-xs fnt-body">{{ block.settings.text }}</p>
+                          {% if block.settings.announcement_link != blank %}
+                            </a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="announcement-controls">
+                <div class="d-flex sliderPagination">
+                  <!-- next / prev arrows -->
+                  <div
+                    aria-label="Previous Slide"
+                    class=""
+                    role="button"
+                    slide-prev
+                  >
+                    <div class="sliderPagination__prev ">
+                      {% render 'icon', icon: 'arrow-icon', color: 'var(--color-navigation-arrow)' %}
+                    </div>
+                  </div>
+                  <div
+                    aria-label="Next Slide"
+                    class=""
+                    role="button"
+                    slide-next
+                  >
+                    <div class="sliderPagination__next ">
+                      {% render 'icon', icon: 'arrow-icon', color: 'var(--color-navigation-arrow)' %}
+                    </div>
+                  </div>
+
+                  <!-- !next / prev arrows -->
+                </div>
+              </div>
+            </carousel-component>
+
+            <noscript>
+              <div
+                aria-label="Announcement Carousel"
+                class="swiper announcement-carousel"
+                role="region"
+              >
+                <div class="swiper-wrapper">
+                  {% assign firstBlockData = section.blocks | first %}
+                  {% if firstBlockData.type == 'countdown_timer' %}
+                    {% assign hide_timer = false %}
+                    {% if firstBlockData.settings.hide_timer_on_ending == 'hide_on_completion' %}
+                      {% assign hide_timer = true %}
+                    {% endif %}
+                    <div
+                      {% if hide_timer %}
+                        hide-on-expiry
+                      {% endif %}
+                      class="swiper-slide countdown-timer__wrapper countdown-timer__wrapper--carousel {{ firstBlockData.settings.timer_font_family }}"
+                      style="
+                        --flex-direction: {{ section.settings.content_stack }};
+                        --gap: {{ firstBlockData.settings.countdown_timer_gap }}px;
+                        {% if section.settings.content_stack == 'row' %}
+                          --horizontal-alignment:{{ firstBlockData.settings.desktop_content_alignment }}
+                        {% endif %}
+                      "
+                    >
+                      <div class="countdown-timer__text">
+                        <p class="text-size-xs fnt-body m-0">{{ firstBlockData.settings.countdown_text }}</p>
+                      </div>
+                      {% render 'countdown-timer', block: firstBlockData, notIntersected: true %}
+                    </div>
+                  {% else %}
+                    <div
+                      aria-label="{{ firstBlockData.settings.text }}"
+                      class="swiper-slide"
+                      role="listitem"
+                      {{ firstBlockData.shopify_attributes }}
+                    >
+                      <div class="announcement-bar__text text-center">
+                        {% if firstBlockData.settings.announcement_link != blank %}
+                          <a href="{{ firstBlockData.settings.announcement_link }}">
+                        {% endif %}
+                        <p class="text-size-xs fnt-body">
+                          {{ firstBlockData.settings.text }}
+                        </p>
+                        {% if firstBlockData.settings.announcement_link != blank %}
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </noscript>
+
+          {% else %}
+            {{ 'section-marquee.css' | asset_url | stylesheet_tag }}
+            {% style %}
+              /* Enable animation */
+              .enable-animation .marquee__content-{{ section.id }}{
+                animation: {{ section.settings.scroll_speed | append: 's linear infinite scroll;' }}
+              }
+            {% endstyle %}
+            <div
+              aria-label="Marquee"
+              class="marquee  enable-animation"
+              role="region"
+            >
+              <div class="marquee__content marquee__content-{{ section.id }}" role="list">
+                {% for block in section.blocks %}
+                  {% if block.type == 'countdown_timer' %}
+                    {% assign hide_timer = false %}
+                    {% if block.settings.hide_timer_on_ending == 'hide_on_completion' %}
+                      {% assign hide_timer = true %}
+                    {% endif %}
+                    <div
+                      {% if hide_timer %}
+                        hide-on-expiry
+                      {% endif %}
+                      class="Marquee-tag marquee__text-color countdown-timer__wrapper {{ block.settings.timer_font_family }}"
+                      style="--gap:{{ block.settings.countdown_timer_gap }}px;"
+                    >
+                      <div class="countdown-timer__text">
+                        <p class="text-size-xs fnt-body">{{ block.settings.countdown_text }}</p>
+                      </div>
+                      {% render 'countdown-timer', block: block, notIntersected: true %}
+                    </div>
+                    <span
+                      {% if hide_timer %}
+                        hide-on-expiry
+                      {% endif %}
+                      class="circle-dot"
+                    >
+                    </span>
+                  {%- else -%}
+                    <div
+                      aria-label="{{ block.settings.text }}"
+                      class="Marquee-tag marquee__text-color"
+                      role="listitem"
+                      {{ block.shopify_attributes }}
+                    >
+                      {% if block.settings.announcement_link != blank %}
+                        <a href="{{ block.settings.announcement_link }}">
+                      {% endif %}
+                      <p class="text-size-xs fnt-body">{{ block.settings.text }}</p>
+                      {% if block.settings.announcement_link != blank %}
+                        </a>
+                      {% endif %}
+                    </div>
+                    <span class="circle-dot"> </span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% for i in (1..9) %}
+                <div
+                  aria-hidden="true"
+                  class="marquee__content marquee__content-{{ section.id }}"
+                  role="list"
+                >
+                  {% for block in section.blocks %}
+                    {% if block.type == 'countdown_timer' %}
+                      {% assign hide_timer = false %}
+                      {% if block.settings.hide_timer_on_ending == 'hide_on_completion' %}
+                        {% assign hide_timer = true %}
+                      {% endif %}
+                      <div
+                        {% if hide_timer %}
+                          hide-on-expiry
+                        {% endif %}
+                        class="Marquee-tag marquee__text-color countdown-timer__wrapper {{ block.settings.timer_font_family }}"
+                        style="--gap:{{ block.settings.countdown_timer_gap }}px;"
+                      >
+                        <div class="countdown-timer__text">
+                          <p class="text-size-xs fnt-body">{{ block.settings.countdown_text }}</p>
+                        </div>
+                        {% render 'countdown-timer', block: block, notIntersected: true %}
+                      </div>
+                      <span
+                        {% if hide_timer %}
+                          hide-on-expiry
+                        {% endif %}
+                        class="circle-dot"
+                      ></span>
+                    {%- else -%}
+                      <div
+                        aria-label="{{ block.settings.text }}"
+                        class="Marquee-tag marquee__text-color"
+                        role="listitem"
+                        {{ block.shopify_attributes }}
+                      >
+                        {% if block.settings.announcement_link != blank %}
+                          <a href="{{ block.settings.announcement_link }}">
+                        {% endif %}
+                        <p class="text-size-xs fnt-body">{{ block.settings.text }}</p>
+                        {% if block.settings.announcement_link != blank %}
+                          </a>
+                        {% endif %}
+                      </div>
+                      <span class="circle-dot"></span>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if nav_links_and_country_selector_languate_selector_enable and section.settings.layout_width != 'full' %}
+        <div class="announcement-bar__localization">
+          <ul class="d-flex desktop-only">
+            {% if section.settings.show_country_selector and localization.available_countries.size > 1 %}
+              <li class="desktop-only">
+                <div class="localization-dropdown country-selector">
+                  <localization-component>
+                    {%- form 'localization', id: 'FooterCountryFormAnnouncementBar', class: 'localization-form' -%}
+                      <button
+                        class="localization-dropdown__btn text-size-xs"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {%- if section.settings.show_country_flag -%}
+                          <link
+                            href="{{ 'section-country-selector.css' | asset_url }}"
+                            rel="stylesheet"
+                            media="print"
+                            onload="this.media='all'"
+                          >
+
+                          <span class="country-flags country-flags--{{ localization.country.iso_code }} "></span>
+                        {%- endif -%}
+                        {% if section.settings.show_country_name %}
+                          <span>{{ localization.country.name }} </span>
+                        {% endif %}
+                        <span class="localization-dropdown__currency text-size-xs"
+                          >({{ localization.country.currency.iso_code }}
+                          {{ localization.country.currency.symbol }})</span
+                        >
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul class="localization-dropdown__list">
+                          {% for country in localization.available_countries %}
+                            <li class="localization-dropdown__item">
+                              <a
+                                class="localization-dropdown__item-link text-size-xs"
+                                data-value="{{ country.iso_code }}"
+                                href="#"
+                                {% if country.iso_code == localization.country.iso_code %}
+                                  active-link
+                                {% endif %}
+                                localization-link
+                              >
+                                {%- if section.settings.show_country_flag -%}
+                                  <span class="country-flags country-flags--{{ country.iso_code }} "></span>
+                                {%- endif -%}
+                                <span>
+                                  {{- country.name }} ({{ country.currency.iso_code }}
+                                  {{ country.currency.symbol }})</span
+                                >
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        name="country_code"
+                        type="hidden"
+                        value="{{ localization.country.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              </li>
+            {% endif %}
+
+            {% if section.settings.show_locale_selector and localization.available_languages.size > 1 %}
+              <li class="desktop-only">
+                <div class="localization-dropdown">
+                  <localization-component>
+                    {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+                      <button
+                        class="localization-dropdown__btn text-size-xs"
+                        localization-btn-label
+                        aria-expanded="false"
+                        type="button"
+                      >
+                        {{ localization.language.endonym_name | capitalize }}
+                        {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-text)' %}
+                      </button>
+                      <div class="localization-dropdown__panel-wrapper" hidden localization-dropdown-panel>
+                        <ul class="localization-dropdown__list">
+                          {% for language in localization.available_languages %}
+                            <li class="localization-dropdown__item">
+                              <a
+                                class="localization-dropdown__item-link text-size-xs"
+                                data-value="{{ language.iso_code }}"
+                                {% if language.iso_code == localization.language.iso_code %}
+                                  active-link
+                                {% endif %}
+                                href="#"
+                                localization-link
+                              >
+                                {{ language.endonym_name | capitalize -}}
+                              </a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <input
+                        name="locale_code"
+                        type="hidden"
+                        value="{{ localization.language.iso_code }}"
+                      >
+                    {%- endform -%}
+                  </localization-component>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+    {% unless section.settings.layout_width == 'full' %}
+      </div>
+    {% endunless %}
+  </div>
+</height-calc>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": "aside",
+  "limit": 1,
+  "class": "section-annoucement-bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable sticky bar",
+      "default": true
+    },
+    {
+      "type": "select",
+      "label": "Layout width",
+      "id": "layout_width",
+      "info": "Full width disables 'Language selector','Country/region selector' and 'Sublinks'",
+      "options": [
+        {
+          "label": "Full",
+          "value": "full"
+        },
+        {
+          "label": "Fixed",
+          "value": "fixed"
+        }
+      ],
+      "default": "fixed"
+    },
+    {
+      "type": "select",
+      "label": "Layout",
+      "id": "navigation",
+      "options": [
+        {
+          "label": "Slider",
+          "value": "slider"
+        },
+        {
+          "label": "Scrolling text",
+          "value": "auto-scroll"
+        }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "select",
+      "id": "content_stack",
+      "default": "column",
+      "label": "Stack timer and content (Desktop)",
+      "options": [
+        {
+          "label": "Vertical",
+          "value": "column"
+        },
+        {
+          "label": "Horizontal",
+          "value": "row"
+        }
+      ],
+      "info": "This setting only works when a Timer block is added.",
+      "visible_if": "{{ section.settings.navigation == 'slider' }}"
+    },
+    {
+      "type": "range",
+      "id": "carousel_width",
+      "label": "Desktop carousel width",
+      "min": 40,
+      "max": 100,
+      "unit": "%",
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed",
+      "min": 3,
+      "max": 30,
+      "unit": "s",
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_autoplay",
+      "label": "Carousel animation"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Change slides every",
+      "min": 1,
+      "max": 15,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "header",
+      "content": "Language selector",
+      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Show language selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Country/region selector",
+      "info": "To add a country/region, go to your [markets settings.](/admin/settings/markets)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Enable country/region selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_flag",
+      "label": "Show country flag",
+      "default": false,
+      "visible_if": "{{ section.settings.show_country_selector }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_name",
+      "label": "Show country name",
+      "default": false,
+      "visible_if": "{{ section.settings.show_country_selector }}"
+    },
+    {
+      "type": "header",
+      "content": "Sublinks"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sublinks",
+      "label": "Enable sublinks"
+    },
+    {
+      "type": "select",
+      "label": "Sublinks",
+      "id": "sublink",
+      "options": [
+        {
+          "label": "Socials",
+          "value": "social"
+        },
+        {
+          "label": "Custom links",
+          "value": "custom_links"
+        }
+      ],
+      "default": "custom_links"
+    },
+    {
+      "type": "header",
+      "content": "Custom link 1"
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "custom_link_heading_1",
+      "default": "Link 1"
+    },
+    {
+      "type": "url",
+      "label": "Link",
+      "id": "custom_link_url_1"
+    },
+    {
+      "type": "header",
+      "content": "Custom link 2"
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "custom_link_heading_2",
+      "default": "Link 2"
+    },
+    {
+      "type": "url",
+      "label": "Link",
+      "id": "custom_link_url_2"
+    },
+    {
+      "type": "header",
+      "content": "Custom link 3"
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "custom_link_heading_3",
+      "default": "Link 3"
+    },
+    {
+      "type": "url",
+      "label": "Link",
+      "id": "custom_link_url_3"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-4",
+      "label": "Color scheme"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Announcement",
+      "type": "announcement",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Announce something here"
+        },
+        {
+          "type": "url",
+          "id": "announcement_link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "name": "Countdown timer",
+      "type": "countdown_timer",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "countdown_text",
+          "label": "Content",
+          "default": "Super sale Up to 40%"
+        },
+        {
+          "type": "header",
+          "content": "Timer"
+        },
+        {
+          "type": "number",
+          "id": "start_year",
+          "label": "Year",
+          "default": 2024
+        },
+        {
+          "type": "select",
+          "id": "start_month",
+          "label": "Month",
+          "options": [
+            {
+              "value": "1",
+              "label": "January"
+            },
+            {
+              "value": "2",
+              "label": "February"
+            },
+            {
+              "value": "3",
+              "label": "March"
+            },
+            {
+              "value": "4",
+              "label": "April"
+            },
+            {
+              "value": "5",
+              "label": "May"
+            },
+            {
+              "value": "6",
+              "label": "June"
+            },
+            {
+              "value": "7",
+              "label": "July"
+            },
+            {
+              "value": "8",
+              "label": "August"
+            },
+            {
+              "value": "9",
+              "label": "September"
+            },
+            {
+              "value": "10",
+              "label": "October"
+            },
+            {
+              "value": "11",
+              "label": "November"
+            },
+            {
+              "value": "12",
+              "label": "December"
+            }
+          ],
+          "default": "7"
+        },
+        {
+          "type": "select",
+          "id": "start_day",
+          "label": "Day",
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            },
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "9",
+              "label": "9"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            },
+            {
+              "value": "13",
+              "label": "13"
+            },
+            {
+              "value": "14",
+              "label": "14"
+            },
+            {
+              "value": "15",
+              "label": "15"
+            },
+            {
+              "value": "16",
+              "label": "16"
+            },
+            {
+              "value": "17",
+              "label": "17"
+            },
+            {
+              "value": "18",
+              "label": "18"
+            },
+            {
+              "value": "19",
+              "label": "19"
+            },
+            {
+              "value": "20",
+              "label": "20"
+            },
+            {
+              "value": "21",
+              "label": "21"
+            },
+            {
+              "value": "22",
+              "label": "22"
+            },
+            {
+              "value": "23",
+              "label": "23"
+            },
+            {
+              "value": "24",
+              "label": "24"
+            },
+            {
+              "value": "25",
+              "label": "25"
+            },
+            {
+              "value": "26",
+              "label": "26"
+            },
+            {
+              "value": "27",
+              "label": "27"
+            },
+            {
+              "value": "28",
+              "label": "28"
+            },
+            {
+              "value": "29",
+              "label": "29"
+            },
+            {
+              "value": "30",
+              "label": "30"
+            },
+            {
+              "value": "31",
+              "label": "31"
+            }
+          ],
+          "default": "27"
+        },
+        {
+          "type": "select",
+          "id": "start_hours",
+          "label": "Hours",
+          "options": [
+            {
+              "label": "12 AM (Midnight)",
+              "value": "0"
+            },
+            {
+              "label": "1 AM",
+              "value": "1"
+            },
+            {
+              "label": "2 AM",
+              "value": "2"
+            },
+            {
+              "label": "3 AM",
+              "value": "3"
+            },
+            {
+              "label": "4 AM",
+              "value": "4"
+            },
+            {
+              "label": "5 AM",
+              "value": "5"
+            },
+            {
+              "label": "6 AM",
+              "value": "6"
+            },
+            {
+              "label": "7 AM",
+              "value": "7"
+            },
+            {
+              "label": "8 AM",
+              "value": "8"
+            },
+            {
+              "label": "9 AM",
+              "value": "9"
+            },
+            {
+              "label": "10 AM",
+              "value": "10"
+            },
+            {
+              "label": "11 AM",
+              "value": "11"
+            },
+            {
+              "label": "12 PM (Noon)",
+              "value": "12"
+            },
+            {
+              "label": "1 PM",
+              "value": "13"
+            },
+            {
+              "label": "2 PM",
+              "value": "14"
+            },
+            {
+              "label": "3 PM",
+              "value": "15"
+            },
+            {
+              "label": "4 PM",
+              "value": "16"
+            },
+            {
+              "label": "5 PM",
+              "value": "17"
+            },
+            {
+              "label": "6 PM",
+              "value": "18"
+            },
+            {
+              "label": "7 PM",
+              "value": "19"
+            },
+            {
+              "label": "8 PM",
+              "value": "20"
+            },
+            {
+              "label": "9 PM",
+              "value": "21"
+            },
+            {
+              "label": "10 PM",
+              "value": "22"
+            },
+            {
+              "label": "11 PM",
+              "value": "23"
+            }
+          ],
+          "default": "16"
+        },
+        {
+          "type": "select",
+          "id": "start_minute",
+          "label": "Minute",
+          "options": [
+            {
+              "value": "0",
+              "label": "00"
+            },
+            {
+              "value": "1",
+              "label": "01"
+            },
+            {
+              "value": "2",
+              "label": "02"
+            },
+            {
+              "value": "3",
+              "label": "03"
+            },
+            {
+              "value": "4",
+              "label": "04"
+            },
+            {
+              "value": "5",
+              "label": "05"
+            },
+            {
+              "value": "6",
+              "label": "06"
+            },
+            {
+              "value": "7",
+              "label": "07"
+            },
+            {
+              "value": "8",
+              "label": "08"
+            },
+            {
+              "value": "9",
+              "label": "09"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            },
+            {
+              "value": "13",
+              "label": "13"
+            },
+            {
+              "value": "14",
+              "label": "14"
+            },
+            {
+              "value": "15",
+              "label": "15"
+            },
+            {
+              "value": "16",
+              "label": "16"
+            },
+            {
+              "value": "17",
+              "label": "17"
+            },
+            {
+              "value": "18",
+              "label": "18"
+            },
+            {
+              "value": "19",
+              "label": "19"
+            },
+            {
+              "value": "20",
+              "label": "20"
+            },
+            {
+              "value": "21",
+              "label": "21"
+            },
+            {
+              "value": "22",
+              "label": "22"
+            },
+            {
+              "value": "23",
+              "label": "23"
+            },
+            {
+              "value": "24",
+              "label": "24"
+            },
+            {
+              "value": "25",
+              "label": "25"
+            },
+            {
+              "value": "26",
+              "label": "26"
+            },
+            {
+              "value": "27",
+              "label": "27"
+            },
+            {
+              "value": "28",
+              "label": "28"
+            },
+            {
+              "value": "29",
+              "label": "29"
+            },
+            {
+              "value": "30",
+              "label": "30"
+            },
+            {
+              "value": "31",
+              "label": "31"
+            },
+            {
+              "value": "32",
+              "label": "32"
+            },
+            {
+              "value": "33",
+              "label": "33"
+            },
+            {
+              "value": "34",
+              "label": "34"
+            },
+            {
+              "value": "35",
+              "label": "35"
+            },
+            {
+              "value": "36",
+              "label": "36"
+            },
+            {
+              "value": "37",
+              "label": "37"
+            },
+            {
+              "value": "38",
+              "label": "38"
+            },
+            {
+              "value": "39",
+              "label": "39"
+            },
+            {
+              "value": "40",
+              "label": "40"
+            },
+            {
+              "value": "41",
+              "label": "41"
+            },
+            {
+              "value": "42",
+              "label": "42"
+            },
+            {
+              "value": "43",
+              "label": "43"
+            },
+            {
+              "value": "44",
+              "label": "44"
+            },
+            {
+              "value": "45",
+              "label": "45"
+            },
+            {
+              "value": "46",
+              "label": "46"
+            },
+            {
+              "value": "47",
+              "label": "47"
+            },
+            {
+              "value": "48",
+              "label": "48"
+            },
+            {
+              "value": "49",
+              "label": "49"
+            },
+            {
+              "value": "50",
+              "label": "50"
+            },
+            {
+              "value": "51",
+              "label": "51"
+            },
+            {
+              "value": "52",
+              "label": "52"
+            },
+            {
+              "value": "53",
+              "label": "53"
+            },
+            {
+              "value": "54",
+              "label": "54"
+            },
+            {
+              "value": "55",
+              "label": "55"
+            },
+            {
+              "value": "56",
+              "label": "56"
+            },
+            {
+              "value": "57",
+              "label": "57"
+            },
+            {
+              "value": "58",
+              "label": "58"
+            },
+            {
+              "value": "59",
+              "label": "59"
+            }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "select",
+          "id": "hide_timer_on_ending",
+          "label": "When timer expires...",
+          "options": [
+            {
+              "value": "hide_on_completion",
+              "label": "Hide Block"
+            },
+            {
+              "value": "set_timer_to_zero",
+              "label": "Set timer to zero"
+            }
+          ],
+          "default": "set_timer_to_zero"
+        },
+        {
+          "type": "select",
+          "id": "time_zone",
+          "label": "Time zone",
+          "options": [
+            {
+              "value": "shop_time_zone",
+              "label": "Shop time zone"
+            },
+            {
+              "value": "usr_local_time_zone",
+              "label": "Users local time zone"
+            }
+          ],
+          "default": "shop_time_zone",
+          "info": "Select the time zone you want the countdown to be displayed in"
+        },
+        {
+          "type": "select",
+          "id": "timer_font_family",
+          "label": "Timer font",
+          "default": "timer_font_body",
+          "options": [
+            {
+              "value": "timer_font_body",
+              "label": "Body font"
+            },
+            {
+              "value": "timer_font_heading",
+              "label": "Heading font"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Appearance"
+        },
+        {
+          "type": "color",
+          "id": "text",
+          "label": "Text",
+          "default": "#DF3B3A"
+        },
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Background",
+          "default": "#EDE9A0",
+          "alpha": true
+        },
+        {
+          "type": "select",
+          "id": "desktop_content_alignment",
+          "label": "Spacing (desktop)",
+          "options": [
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "space-between",
+              "label": "Space between"
+            },
+            {
+              "value": "space-evenly",
+              "label": "Space Even"
+            }
+          ],
+          "visible_if": "{{ section.settings.navigation == 'slider' and section.settings.content_stack == 'row' }}"
+        },
+        {
+          "type": "range",
+          "id": "countdown_timer_gap",
+          "label": "Gap",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

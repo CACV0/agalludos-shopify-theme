@@ -1,0 +1,354 @@
+{{ 'section-collection-tabs.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign loading = 'eager'
+  assign fetchpriority = 'auto'
+  assign intersection = ''
+  if section.index == 1
+    assign fetchpriority = 'high'
+  elsif section.index > 2
+    assign loading = 'lazy'
+    unless request.design_mode
+      assign intersection = 'intersection-element'
+    endunless
+  endif
+  assign display_style = section.settings.display_style
+  assign highlight_titles = section.settings.highlight_collection_titles | downcase
+
+  assign highlight_array = highlight_titles | split: ','
+  assign current_handle = collection.handle
+  assign nav_collections = null
+
+  assign metafield_value = collection.metafields.flawless.collection_names.value
+  if metafield_value != blank and metafield_value.size > 0
+    assign nav_collections = metafield_value
+  elsif section.settings.collection_list.size > 0
+    assign nav_collections = section.settings.collection_list
+  endif
+
+  assign active_slide_index = -1
+  if nav_collections != null
+    for nav_collection in nav_collections
+      if nav_collection.handle == current_handle
+        assign active_slide_index = forloop.index0
+        break
+      endif
+    endfor
+  endif
+%}
+
+{%- liquid
+  assign space_gap = '16'
+  if display_style == 'card'
+    assign space_gap = '24'
+  endif
+-%}
+
+<div
+  class="collection-tabs collection-tabs--{{ display_style }} color-{{ section.settings.color_scheme }}"
+  aoi-container
+  style="
+    --padding-top: {{ section.settings.padding_top | append: 'px' }};
+    --padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    --collection-tabs-highlight-color: {{ section.settings.highlight_text_color }};
+    --corner-radius: {{ section.settings.border_radius | append: 'px' }};
+  "
+>
+  <collection-carousel-component
+    {{ intersection }}
+    class="collection-tabs__wrapper container d-block"
+    slide-layout-type="carousel"
+    slide-per-view="auto"
+    space-between="{{ space_gap }}"
+    slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+    {% if section.settings.content_position == 'left' -%}
+      slide-no-center
+    {% endif %}
+    slide-speed="{{ settings.slide_duration }}"
+    {% if active_slide_index > 0 -%}
+      initial-slide="{{ active_slide_index }}"
+      centered-slides
+    {%- endif %}
+  >
+    <div class="swiper-container collection-tabs__slider" main-slider>
+      <animation-reveal aoi-type="fade-up" aoi-amount="0.2" class="swiper-wrapper">
+        {% if nav_collections != null and nav_collections.size > 0 %}
+          {% comment %} Real collections {% endcomment %}
+          {% for nav_collection in nav_collections %}
+            {% liquid
+              assign is_active = false
+              if nav_collection.handle == current_handle
+                assign is_active = true
+              endif
+
+              assign is_highlighted = false
+              assign collection_title_lower = nav_collection.title | strip | downcase
+              assign collection_handle = nav_collection.handle
+              for hl_title in highlight_array
+                assign hl_trimmed = hl_title | strip | downcase
+                assign hl_as_handle = hl_trimmed | handleize
+                if hl_trimmed != blank
+                  if hl_trimmed == collection_title_lower or hl_as_handle == collection_handle
+                    assign is_highlighted = true
+                    break
+                  endif
+                endif
+              endfor
+
+              # Intentional per-iteration query: products.first.featured_image is used as a fallback when the collection has no image. This N+1 is accepted because the fallback is a product requirement.
+              assign fallback_image = null
+              unless nav_collection.image
+                assign fallback_image = nav_collection.products.first.featured_image
+              endunless
+            %}
+            <div class="swiper-slide collection-tabs__slide{% if is_active %} collection-tabs__slide--active{% endif %}">
+              <a
+                href="{{ nav_collection.url }}"
+                class="collection-tabs__link collection-tabs__link--{{ display_style }}{% if is_active %} collection-tabs__link--{{ display_style }}--active{% endif %}{% if is_highlighted %} collection-tabs__link--highlighted{% endif %}"
+                {% if is_active %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {% if display_style == 'card' or display_style == 'image_text' %}
+                  <div class="collection-tabs__image-wrapper" image-container>
+                    {%- capture img_class -%}collection-tabs__image set-100-percentage-size-media object-fit-{{ section.settings.image_fit }} aspect-ratio-square{%- endcapture -%}
+                    {%- capture blur_img_class -%}blur-image object-fit-{{ section.settings.image_fit }}{%- endcapture -%}
+                    {% if nav_collection.image %}
+                      {{
+                        nav_collection.image
+                        | image_url: width: nav_collection.image.width
+                        | image_tag:
+                          widths: '80, 120, 160, 240',
+                          sizes: '160px',
+                          alt: nav_collection.image.alt,
+                          loading: loading,
+                          fetchpriority: fetchpriority,
+                          class: img_class,
+                          is: 'image-loading'
+                      }}
+                      {{
+                        nav_collection.image
+                        | image_url: width: 20
+                        | image_tag:
+                          alt: nav_collection.image.alt,
+                          loading: loading,
+                          fetchpriority: fetchpriority,
+                          class: blur_img_class
+                      }}
+                    {% elsif fallback_image %}
+                      {{
+                        fallback_image
+                        | image_url: width: fallback_image.width
+                        | image_tag:
+                          widths: '80, 120, 160, 240',
+                          sizes: '160px',
+                          alt: fallback_image.alt,
+                          loading: loading,
+                          fetchpriority: fetchpriority,
+                          class: img_class,
+                          is: 'image-loading'
+                      }}
+                      {{
+                        fallback_image
+                        | image_url: width: 20
+                        | image_tag:
+                          alt: fallback_image.alt,
+                          loading: loading,
+                          fetchpriority: fetchpriority,
+                          class: blur_img_class
+                      }}
+                    {% else %}
+                      <div class="collection-tabs__image-placeholder">
+                        {{ 'collection-1' | placeholder_svg_tag: 'set-100-percentage-size-media' }}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                <span class="collection-tabs__title fnt-body fnt-14 text-color text-center">
+                  {{- nav_collection.title -}}
+                </span>
+              </a>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Placeholder slides shown in editor when no collections are configured {% endcomment %}
+          {% for i in (1..5) %}
+            <div class="swiper-slide collection-tabs__slide">
+              <div class="collection-tabs__link collection-tabs__link--{{ display_style }}">
+                {% if display_style == 'card' or display_style == 'image_text' %}
+                  <div class="collection-tabs__image-wrapper" image-container>
+                    <div class="collection-tabs__image-placeholder">
+                      {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                      {{ 'collection-' | append: current | placeholder_svg_tag: 'set-100-percentage-size-media' }}
+                    </div>
+                  </div>
+                {% endif %}
+                <span class="collection-tabs__title fnt-body fnt-14 text-color text-center">
+                  Collection {{ i }}
+                </span>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </animation-reveal>
+    </div>
+
+    <div class="sliderControl">
+      <div class="d-flex sliderPagination">
+        <!-- next / prev arrows -->
+        <div
+          aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+          class="pagination-button"
+          role="button"
+          slide-prev
+          tabindex="0"
+        >
+          <div class="sliderPagination__prev productSlider__prev">
+            {% render 'icon', icon: 'left' %}
+          </div>
+        </div>
+        <div
+          aria-label="{{ 'accessibility.next_slide_label' | t }}"
+          class="pagination-button"
+          role="button"
+          slide-next
+          tabindex="0"
+        >
+          <div class="sliderPagination__next productSlider__next">
+            {% render 'icon', icon: 'right' %}
+          </div>
+        </div>
+        <!-- !next / prev arrows -->
+      </div>
+    </div>
+  </collection-carousel-component>
+</div>
+
+{% schema %}
+{
+  "name": "Collection tabs",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "display_style",
+      "label": "Display style",
+      "options": [
+        {
+          "label": "Card",
+          "value": "card"
+        },
+        {
+          "label": "Image with text",
+          "value": "image_text"
+        },
+        {
+          "label": "Text",
+          "value": "text"
+        }
+      ],
+      "default": "card"
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_list",
+      "label": "Collections"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "t:settings_schema.global.collection_card.image_fit.label",
+      "options": [
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.contain",
+          "value": "contain"
+        },
+        {
+          "label": "t:settings_schema.global.collection_card.image_fit.option.cover",
+          "value": "cover"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.display_style != 'text' }}"
+    },
+    {
+      "type": "textarea",
+      "id": "highlight_collection_titles",
+      "label": "Highlight collection titles",
+      "info": "To apply a different color to the specific collection title, enter the collection name in the input field and it should be comma separated."
+    },
+    {
+      "type": "color",
+      "id": "highlight_text_color",
+      "label": "Highlight text color",
+      "default": "#F52222"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_top.label",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:settings_schema.global.section.padding.settings.padding_bottom.label",
+      "default": 20
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection tabs",
+      "category": "Collections"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

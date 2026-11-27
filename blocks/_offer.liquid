@@ -1,0 +1,97 @@
+<style>
+      .offer--{{ block.id }} {
+          padding-bottom: {{ block.settings.bottom_mobile | append: 'px' }};
+      }
+
+      @media (min-width: 750px) {
+      .offer--{{ block.id }} {
+      padding-bottom: {{ block.settings.bottom_desktop | append: 'px' }};
+    }
+
+  }
+</style>
+
+<div class="offer offer--{{ block.id }}">
+  <div
+    class="offer__container content-alignment-{{ block.settings.alignment }} content-alignment-vertical-{{ block.settings.icon_position }}"
+  >
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Offer",
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "Content alignment"
+    },
+
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "Icon position",
+      "options": [
+        {
+          "value": "row",
+          "label": "Aligned horizontally"
+        },
+        {
+          "value": "column",
+          "label": "Aligned vertically"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "bottom_desktop",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing(desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "bottom_mobile",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing(mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "group",
+          "blocks": [
+            {
+              "type": "offer-block"
+            },
+            {
+              "type": "offer-block"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

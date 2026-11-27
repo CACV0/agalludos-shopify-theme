@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand": {
+          "type": "brand",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "footer_logo": "shopify://shop_images/horizontal_blanco.png",
+            "image_width": 150,
+            "heading": "",
+            "heading_tag": "h2",
+            "content": "<p>Traemos los tesoros del mar y el río directo a tu cocina.</p>",
+            "brand_social_media_icons": true
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "width": "custom",
+            "custom_width": 100,
+            "show_menu_title": true,
+            "heading": "Tienda",
+            "heading_tag": "h2",
+            "menu": "main-menu"
+          }
+        },
+        "menu_RhtKxP": {
+          "type": "menu",
+          "settings": {
+            "width": "custom",
+            "custom_width": 100,
+            "show_menu_title": true,
+            "heading": "Servicio",
+            "heading_tag": "h2",
+            "menu": "servicio"
+          }
+        },
+        "menu_pfVyUR": {
+          "type": "menu",
+          "settings": {
+            "width": "custom",
+            "custom_width": 100,
+            "show_menu_title": true,
+            "heading": "Contacto",
+            "heading_tag": "h2",
+            "menu": "contacto"
+          }
+        }
+      },
+      "block_order": [
+        "brand",
+        "menu-3",
+        "menu_RhtKxP",
+        "menu_pfVyUR"
+      ],
+      "settings": {
+        "show_locale_selector": true,
+        "show_country_selector": true,
+        "show_country_flag": true,
+        "show_country_name": false,
+        "payment_enable": true,
+        "enable_follow_on_shop": true,
+        "padding_top": 72,
+        "padding_bottom": 0,
+        "color_scheme": "scheme-1",
+        "pno_info_tag": "+573112344413",
+        "email_info_tag": "somos@agalludos.com",
+        "use_outline_button_styles": true,
+        "enable_sublinks": true,
+        "custom_link_1_heading": "Privacy policy",
+        "custom_link_1_url": "",
+        "custom_link_2_heading": "Terms of service",
+        "custom_link_2_url": "",
+        "custom_link_3_heading": "Shipping & Returns",
+        "custom_link_3_url": "",
+        "bottom_image": "",
+        "bottom_image_width": 100,
+        "bottom_image_margin_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

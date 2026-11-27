@@ -1,0 +1,321 @@
+{% liquid
+  if block.settings.icon_enable
+    case block.settings.icon_style
+      when 'truck'
+        assign icon = 'icon-vehicle'
+      when 'globe'
+        assign icon = 'icon-globe'
+      when 'box'
+        assign icon = 'icon-box'
+      when 'heart'
+        assign icon = 'icon-heart'
+      when 'gift'
+        assign icon = 'icon-gift'
+      when 'smile'
+        assign icon = 'icon-smile'
+      when 'back'
+        assign icon = 'icon-back'
+      when 'star'
+        assign icon = 'icon-star-sm'
+      when 'building'
+        assign icon = 'building-icon'
+      when 'timer'
+        assign icon = 'timer-strok'
+      when 'plane'
+        assign icon = 'plane-icon'
+      when 'credit-card'
+        assign icon = 'credit-card'
+      when 'lock'
+        assign icon = 'lock-icon'
+      when 'shield-strok'
+        assign icon = 'shield-strok'
+      when 'money'
+        assign icon = 'money'
+    endcase
+  endif
+%}
+
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- capture block_bg -%}{{ block.settings.background_color }}{%- endcapture -%}
+{%- assign same_bg = false -%}
+{%- assign no_padding = false -%}
+{%- if block_bg == 'rgba(0,0,0,0)' or block_bg == 'transparent' or block_bg == blank -%}
+  {%- assign no_padding = true -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign same_bg = true -%}
+  {%- endif -%}
+{%- elsif section_bg == block_bg -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign no_padding = true -%}
+    {%- assign same_bg = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+<div class="offer__card" {% if same_bg %}style="border-radius: 0;"{% endif %}>
+  <div class="offer__card-body" style="--offer-card-background-color: {{ block.settings.background_color }} ; --offer-card-padding: {% if no_padding %} 0 {% else %} 16px {% endif %} ;">
+    <div class="offer__card-wrapper column-gap-8 row-gap-8">
+      {% if block.settings.custom_image != blank %}
+        <div
+          class="offer__card-icon"
+          style="--color-icon: {{ block.settings.icon_color }} ; --icon-width: {{ block.settings.icon_width | append: 'px' }} "
+        >
+          {% capture sizes %} 
+           {{ block.settings.icon_width |  append: 'px' }} 
+        {% endcapture %}
+          <div image-container>
+            {{
+              block.settings.custom_image
+              | image_url: width: block.settings.custom_image.width
+              | image_tag: is: 'image-loading', class: 'img-100', sizes: sizes, alt: block.settings.custom_image.alt, widths: '100,200,300'
+            }}
+            {{
+              block.settings.custom_image
+              | image_url: width: 10
+              | image_tag:
+                class: 'blur-image',
+                loading: 'eager',
+                alt: block.settings.custom_image.alt
+            }}
+          </div>
+        </div>
+      {% else %}
+        {% if block.settings.icon_enable %}
+          <div
+            class="offer__card-icon"
+            style="--color-icon: {{ block.settings.icon_color }}; --icon-width: {{ block.settings.icon_width | append: 'px' }}"
+          >
+            {% render 'icon' with icon %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="offer__card-content">
+        <h3 class="h4 mb-0 " style="--color-text: {{ block.settings.text_color }}">
+          {% render 'copy-code', content: block.settings.heading, icon_color: block.settings.text_color %}
+        </h3>
+      </div>
+    </div>
+
+    {%- assign full_text = block.settings.text -%}
+    {%- assign short_text = full_text | truncatewords: block.settings.truncate_words_desktop, ' ' -%}
+    {%- assign remaining_text = full_text | remove: short_text -%}
+    {%- assign short_text_mobile = full_text | truncatewords: block.settings.truncate_words_mobile, ' ' -%}
+    {%- assign remaining_text_mobile = full_text | remove: short_text_mobile -%}
+
+    {% assign words = full_text | split: ' ' | size %}
+    {% if full_text != blank %}
+      <div class="offer__card-text RTE-content mt-8 fnt-14" style="--color-text: {{ block.settings.text_color }}">
+        <show-button class="desktop-only">
+          <div class="RTE-content" text-content animation-card-content>
+            {% if words <= block.settings.truncate_words_desktop or block.settings.truncate_words_desktop == 0 %}
+              {% render 'copy-code', content: full_text, icon_color: block.settings.text_color %}
+
+            {% elsif words > block.settings.truncate_words_desktop %}
+              <span>
+                {%- capture truncated_desktop_content -%}
+                  <span class="short-text"> {{ short_text }}</span>
+                  <span class="readmore-extra" read-more-extra>{{ remaining_text }}</span>
+                {%- endcapture -%}
+                {% render 'copy-code', content: truncated_desktop_content, icon_color: block.settings.text_color %}
+
+                <button
+                  class="link fnt-14"
+                  toggle-text-button
+                  style="--color-link: {{ block.settings.Link_text_color }}"
+                >
+                  <span show-more class="show-more-text"> {{ 'section.benefits.read_more' | t }} </span>
+                  <span show-less class="show-less-text"> {{ 'section.benefits.read_less' | t }} </span>
+                </button>
+              </span>
+            {% endif %}
+          </div>
+        </show-button>
+        <show-button class="mobile-only">
+          <div class="RTE-content" text-content animation-card-content>
+            {% if words <= block.settings.truncate_words_mobile or block.settings.truncate_words_mobile == 0 %}
+              {% render 'copy-code', content: full_text, icon_color: block.settings.text_color %}
+
+            {% elsif words > block.settings.truncate_words_mobile %}
+              <span>
+                {%- capture truncated_mobile_content -%}
+                  {{ short_text_mobile }}
+                  <span class="readmore-extra" read-more-extra>{{ remaining_text_mobile }}</span>
+                {%- endcapture -%}
+                {% render 'copy-code', content: truncated_mobile_content, icon_color: block.settings.text_color %}
+
+                <button class=" link" toggle-text-button style="--color-link: {{ block.settings.Link_text_color }}">
+                  <span show-more class="show-more-text"> {{ 'section.benefits.read_more' | t }} </span>
+                  <span show-less class="show-less-text"> {{ 'section.benefits.read_less' | t }} </span>
+                </button>
+              </span>
+            {% endif %}
+          </div>
+        </show-button>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Offer Block",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading",
+      "info": "Wrap your discount code in {} to enable the copy button. Example: {FLAT20}"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Text</p>",
+      "info": "Wrap your discount code in {} to enable the copy button. Example: {FLAT20}"
+    },
+    {
+      "type": "number",
+      "id": "truncate_words_desktop",
+      "label": "Truncate words on desktop",
+      "default": 15,
+      "info": "Set it to 0 to disable"
+    },
+    {
+      "type": "number",
+      "id": "truncate_words_mobile",
+      "label": "Truncate words on mobile",
+      "default": 10,
+      "info": "Set it to 0 to disable"
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_enable",
+      "label": "Show icon",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "icon_style",
+      "label": "Style",
+      "options": [
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "gift",
+          "label": "Gift"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "Building",
+          "value": "building"
+        },
+        {
+          "label": "Timer",
+          "value": "timer"
+        },
+        {
+          "label": "Plane",
+          "value": "plane"
+        },
+        {
+          "label": "credit",
+          "value": "credit-card"
+        },
+        {
+          "label": "lock",
+          "value": "lock"
+        },
+        {
+          "label": "shield",
+          "value": "shield-strok"
+        },
+        {
+          "label": "money",
+          "value": "money"
+        }
+      ],
+      "default": "box",
+      "visible_if": "{{ block.settings.icon_enable == true }}"
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "min": 20,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon width",
+      "default": 20,
+      "visible_if": "{{ block.settings.icon_enable == true }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style",
+      "visible_if": "{{ block.settings.icon_enable == true }}"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.icon_enable == true }}"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F8F6EA"
+    },
+    {
+      "type": "color",
+      "id": "Link_text_color",
+      "label": "Link text color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer Block"
+    }
+  ]
+}
+{% endschema %}

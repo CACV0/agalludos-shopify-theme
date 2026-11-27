@@ -1,0 +1,176 @@
+{% liquid
+  assign option_name = block.settings.option_name
+  assign option_value_metafield = block.settings.option_value_metafield
+  assign option_value_metafield_namespace = option_value_metafield | split: '.' | first | strip
+  assign option_value_metafield_key = option_value_metafield | split: '.' | last | strip
+  assign closest_product_option_value = closest.product.metafields[option_value_metafield_namespace][option_value_metafield_key].value
+  assign products = block.settings.products
+  assign selector_style = block.settings.selector_style
+  assign block_bottom_spacing = block.settings.block_bottom_spacing
+
+  assign products_list = products | map: 'id'
+
+  for products_item in products_list
+    if products_item == closest.product.id
+      assign is_active = true
+      break
+    endif
+  endfor
+%}
+
+{% if is_active and products.size > 0 and closest_product_option_value %}
+  <div class="product-variations" style="padding-bottom: {{ block_bottom_spacing | append: 'px' }};{% if selector_style == 'swatch' %} --swatch-size-desktop: {{ block.settings.swatch_size_desktop | append: 'px' }}; --swatch-size-mobile: {{ block.settings.swatch_size_mobile | append: 'px' }};{% endif %}">
+    <div class="product-variant__head mb-2">
+      <div class="product-variant__label-container mb-2">
+        {% if option_name != blank %}
+          <span class="select__label">{{- option_name }}:</span>
+        {%- endif %}
+        <span product-variant-option-value class="fnt-14">
+          {{ closest_product_option_value | capitalize }}
+        </span>
+      </div>
+      {% if selector_style == 'dropdown' %}
+        <div class="product-variant__products ">
+          <div class="select-wrapper">
+            <select
+              class="select"
+              aria-label="Select {{ option_name }}"
+              onchange="if(this.value) window.location.href = this.value;"
+            >
+              {% for product in products %}
+                {% liquid
+                  assign product_option_value = product.metafields[option_value_metafield_namespace][option_value_metafield_key].value
+                %}
+                {% if product_option_value != blank %}
+                  <option
+                    value="{{ product.url }}"
+                    {% if product == closest.product %}
+                      selected
+                    {% endif %}
+                    {% unless product.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    {% unless product.available -%}
+                      {{ 'products.product.value_unavailable' | t: option_value: product_option_value | capitalize }}
+                    {%- else -%}
+                      {{ product_option_value | capitalize }}
+                    {%- endunless %}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            {% render 'icon' with 'arrow-icon', class: '', color: 'var(--color-text)' %}
+          </div>
+        </div>
+      {% else %}
+        <ul class="product-variant__products {% if selector_style == 'swatch' %} swatch-wrapper{% endif %}">
+          {% for product in products %}
+            {% liquid
+              assign product_option_value = product.metafields[option_value_metafield_namespace][option_value_metafield_key].value
+            %}
+            {% if product_option_value != blank %}
+              {% if selector_style == 'swatch' %}
+                <li class="swatch-input__label {% if product == closest.product %} active{% endif %} {% unless product.available %} disabled{% endunless %}">
+                  <a href="{{ product.url }}" class="d-block" title="{{ product_option_value }}">
+                    {% render 'swatch', featured_image_product: product.featured_media, shape: settings.swatch_style %}
+                  </a>
+                </li>
+
+              {% elsif selector_style == 'pills' %}
+                <li class="product-variant__products-pill product-variant__pill__item {% if product == closest.product %} active{% endif %} {% unless product.available %} disabled{% endunless %}">
+                  <a href="{{ product.url }}" class="d-block product-variant__product-pill text-decoration-none">
+                    {{ product_option_value | capitalize }}
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+{% schema %}
+{
+  "name": "Product variations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "option_name",
+      "label": "Option name",
+      "info": "Color, Size, etc."
+    },
+    {
+      "type": "text",
+      "id": "option_value_metafield",
+      "label": "Option value metafield ",
+      "info": "Enter namespace and key of the metafield holding the value. Eg: custom.color"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "Select all the variations (including the current product itself)"
+    },
+    {
+      "type": "select",
+      "id": "selector_style",
+      "label": "Selector style",
+      "options": [
+        {
+          "value": "swatch",
+          "label": "Swatch"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        },
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        }
+      ],
+      "default": "swatch"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size_desktop",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Swatch size desktop",
+      "default": 50,
+      "visible_if": "{{ block.settings.selector_style == 'swatch' }}"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size_mobile",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Swatch size mobile",
+      "default": 50,
+      "visible_if": "{{ block.settings.selector_style == 'swatch' }}"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product variations",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,227 @@
+{% comment %} drawer css  {% endcomment %}
+{% capture results_drawer_content %}
+   <div class="d-flex justify-content-{{ block.settings.content_alignment }} text-{{ block.settings.content_alignment }}">
+                <div
+                  class="quiz__results-page-header  mb-24 "
+                >
+                 
+                {% if request.design_mode %}
+              <div class="design__mode__layout">
+                <p class="h6 layout__message fnt-body">{{ 'section.quiz.design_mode_message' | t }}</p>
+              </div>
+              {% endif %}
+                  
+                  <ul class="badges m-0 p-0 d-flex gap-8 justify-content-{{ block.settings.content_alignment }}">
+                    {% for i in (1..4) %}
+                      {% assign heading = 'heading_' | append: i %}
+                      {% assign icon_style = 'icon_style_' | append: i %}
+                      {% assign color_scheme = 'color_scheme_' | append: i %}
+                      {% assign custom_icon = 'custom_icon_' | append: i %}
+                      {% liquid
+                        case block.settings[icon_style]
+                          when 'truck'
+                            assign icon = 'icon-vehicle'
+                          when 'globe'
+                            assign icon = 'icon-globe'
+                          when 'box'
+                            assign icon = 'icon-box'
+                          when 'heart'
+                            assign icon = 'icon-heart'
+                          when 'gift'
+                            assign icon = 'icon-gift'
+                          when 'smile'
+                            assign icon = 'icon-smile'
+                          when 'back'
+                            assign icon = 'icon-back'
+                          when 'star'
+                            assign icon = 'icon-star-sm'
+                          when 'building'
+                            assign icon = 'building-icon'
+                          when 'timer'
+                            assign icon = 'timer-strok'
+                          when 'plane'
+                            assign icon = 'plane-icon'
+                          when 'credit-card'
+                            assign icon = 'credit-card'
+                          when 'lock'
+                            assign icon = 'lock-icon'
+                          when 'shield-strok'
+                            assign icon = 'shield-strok'
+                          when 'money'
+                            assign icon = 'money'
+                        endcase
+                      %}
+                      {% if block.settings[heading] != blank %}
+                        <li class="badge-item color-{{ block.settings[color_scheme] }}">
+                          <span class="badge">
+                            {% if block.settings[custom_icon] != blank %}
+                              <span class="badge-icon d-flex align-items-center justify-content-center">
+                                {{
+                                  block.settings[custom_icon]
+                                  | image_url: width: 24
+                                  | image_tag: widths: '24,48', sizes: '24px', alt: block.settings[custom_icon].alt, class: 'badge-icon-image'
+                                }}
+                              </span>
+                            {% else %}
+                              {% render 'icon' with icon %}
+                            {% endif %}
+                            <span class="badge-icon-text">
+                              {{ block.settings[heading] }}
+                            </span>
+                          </span>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+ {% endcapture %}
+{% capture no_results_content %}
+    <div class="quiz__noResultsContentWrapper">
+                <div class="quiz__noResultsContentContainer d-flex justify-content-{{ block.settings.no_results_content_alignment }} text-{{ block.settings.no_results_content_alignment }}">
+                  <div class="quiz__noResultsContent">
+                      {% if request.design_mode  %}
+                      <div class="design__mode__layout">
+                        <p class="h6 layout__message fnt-body">{{ 'section.quiz.design_mode_message_no_results' | t }}</p>
+                      </div>
+                    {% endif %}
+                    {% if block.settings.heading_no_results != blank %}
+                      <p class="{{ block.settings.style_size }}">{{ block.settings.heading_no_results }}</p>
+                    {% endif %}
+                    {% if block.settings.content_no_results != blank %}
+                      <div class="quiz__noResultsContent RTE-content mb-1">
+                        {{ block.settings.content_no_results }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.retry_button_text != blank %}
+                      <div class="btn-group-container mt-12">
+                        <button class="btn btn--fill quiz__retry text-upper btn--sm" quiz-retry>
+                          <span> {{ block.settings.retry_button_text }}</span>
+                        </button>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+                 {% if block.settings.product_recommendations_products != blank
+                      or block.settings.product_recommendations_collections != blank
+                    %}
+                  <div class="product-recommendations">
+                    <p class="h3 mb-16 text-{{ block.settings.product_recommendations_content_alignment }}">
+                      {{ block.settings.product_recommendations_heading }}
+                    </p>
+                      <div class="product-recommendations-wrapper">
+                        <div class="product-recommendations-items">
+                          <div class="grid-layout grid-layout--2-desktop">
+                            {% if block.settings.product_recommendations_products != blank %}
+                              {% for product in block.settings.product_recommendations_products %}
+                                <div class="product-recommendations-item ">
+                                  {% render 'card-product-view-all', product: product %}
+                                </div>
+                              {% endfor %}
+                            {% elsif block.settings.product_recommendations_collections != blank %}
+                              {% assign products = block.settings.product_recommendations_collections.products %}
+                              {% for product in products limit: 10 %}
+                                <div class="product-recommendations-item ">
+                                  {% render 'card-product-view-all', product: product %}
+                                </div>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div> 
+                  </div>
+                {% endif %}
+              </div>
+{% endcapture %}
+<drawer-component
+  aria-live="polite"
+  aria-modal="true"
+  aria-label="{{ 'general.drawer.option.drawer_text' | t }}"
+  class="d-block drawer color-{{ settings.drawer_color_scheme }} view-all-product-drawer"
+  drawer-type="quiz-drawer-{{ section.id }}"
+  role="dialog"
+  aria-hidden="true"
+  animate-drawer
+  {{ block.shopify_attributes }}
+>
+  <div class="drawer__container">
+    <div class="drawer__overlay" drawer-overlay></div>
+    <div class="drawer__wrapper drawer__wrapper--animation-position-right">
+      {% comment %} Drawer Header Area {% endcomment %}
+      <div class="drawer__header align-item-center" animation-fade-effect>
+        <button
+          aria-label="{{ 'accessibility.close_drawer' | t }} {{ 'section.quiz.drawer_text' | t }}"
+          class="drawer__close__btn"
+          close-drawer
+          tabindex="0"
+        >
+          {%- render 'icon' with 'drawerclose-icon' -%}
+        </button>
+
+        <p class="drawer__head h3">{{ 'section.quiz.drawer_text' | t }}</p>
+        <button class="link quiz__retry text-upper" quiz-retry>
+          <span>
+            {{- 'section.quiz.retry' | t }}
+          </span>
+        </button>
+      </div>
+
+      {% comment %} Drawer Content/Body area {% endcomment %}
+      <div class="drawer__body">
+        <div class="drawer__body__wrapper {% if block.settings.enable_add_all_products_to_cart %} drawer__wrapper--has-action {% endif %}">
+          <add-all-products-to-cart
+            class="product_collection"
+            dont-remove-products-on-close
+            hide-empty-results
+            drawer-type="quiz-results-drawer-{{ section.id }}"
+          >
+            {{ results_drawer_content }}
+            <div class="grid-layout grid-layout--2-desktop" drawer-items-container></div>
+            {% if block.settings.enable_add_all_products_to_cart %}
+              <div class="drawer__action__btn" animation-fade-up>
+                <button
+                  aria-label="{{ 'general.drawer.view_all_products.add_all_to_cart' | t }}"
+                  class="btn {% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} w-100 text-upper"
+                  add-to-cart
+                  type="button"
+                >
+                  <div aria-hidden="true" class="btn--preloader">
+                    <div aria-hidden="true" class="btn--preloader--circular">
+                      <div aria-hidden="true" class="checkmark draw"></div>
+                    </div>
+                  </div>
+                  <div aria-hidden="true" class="btn--text">
+                    {{ block.settings.button_text }}
+                  </div>
+                </button>
+              </div>
+            {% endif %}
+          </add-all-products-to-cart>
+          {% if request.design_mode %}
+            <div class="design__mode__layout">
+              {{ results_drawer_content }}
+            </div>
+          {% endif %}
+          <div class=" quiz__noResults d-none" no-results>
+            {{ no_results_content }}
+          </div>
+
+          {% comment %}
+            <div class="quiz__loadMoreWrp" load-more watch-element animation-fade-up>
+              <button class="quiz__loadMore btn{% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %}">
+                <div class="btn--preloader">
+                  <div class="btn--preloader--circular">
+                    <div class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div class="btn--text">
+                  {{ 'section.quiz.button.load-more' | t }}
+                </div>
+              </button>
+            </div>
+          {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</drawer-component>

@@ -1,0 +1,104 @@
+{% comment %}
+  Card variant selector. Renders either:
+   - inline popup (desktop) — <product-card-variant-popup>
+   - mobile bottom-sheet (is_bottom_sheet: true) — same popup wrapped in <bottom-sheet>
+
+  Accepts:
+    product : {object}
+    product_form_id : {string}
+    is_bottom_sheet : {boolean, optional}
+    layout_block : {string, optional} — 'carousel' or 'grid'; used to
+      make input IDs unique when both layouts are in the DOM simultaneously
+      (e.g. featured-collection with different desktop/mobile layouts).
+      Without this, duplicate IDs across the two layout cards cause label
+      clicks to forward to the wrong input, closing the open popup.
+    on_sale, has_no_varaint, hide_percentage_off : forwarded to price snippet
+{% endcomment %}
+
+{%- liquid
+  assign id_base = product.id
+  if section_id != blank
+    assign id_base = id_base | append: '-' | append: section_id
+  endif
+  if layout_block != blank
+    assign id_base = id_base | append: '-' | append: layout_block
+  endif
+  assign bottom_sheet_id = 'card-variant-' | append: id_base
+  assign id_suffix = id_base
+  if is_bottom_sheet
+    assign id_suffix = id_suffix | append: '-mobile'
+  endif
+-%}
+
+{%- if is_bottom_sheet -%}
+<bottom-sheet
+  bottom-sheet-id="{{ bottom_sheet_id }}"
+  class="card-variant-bottom-sheet color-{{ settings.drawer_color_scheme }}"
+  aria-hidden="true"
+  outside-click-close
+>
+  <div class="d-flex align-item-center justify-content-end">
+    <button
+      type="button"
+      is="bottom-sheet-trigger"
+      target-bottom-sheet="{{ bottom_sheet_id }}"
+      action-type="hide"
+      class="button-rest-styles cursor-pointer"
+      aria-label="{{ 'accessibility.close_popup' | t }}"
+    >
+      {%- render 'icon' with 'drawerclose-icon' -%}
+    </button>
+  </div>
+
+{%- endif -%}
+
+<div
+  product-card-variant-popup
+  class="card-variant-popup d-flex d-flex-dir-c text-color overflow-hidden h-100{% if is_bottom_sheet %} card-variant-popup--in-sheet product-card-item border-0 p-0{% else %} color-{{ settings.drawer_color_scheme }}{% endif %}"
+  {%- unless is_bottom_sheet %} mobile-bottom-sheet-id="{{ bottom_sheet_id }}"{% endunless %}
+  product-form-id="{{ product_form_id }}"
+  data-url="{{ product.url }}"
+  aria-hidden="{% if is_bottom_sheet %}false{% else %}true{% endif %}"
+>
+  {%- unless is_bottom_sheet -%}
+    <div class="card-variant-popup__head d-flex align-item-center justify-content-end border-bottom d-flex-shrink-0">
+      <button
+        type="button"
+        class="card-variant-popup__close d-inline-flex align-item-center justify-content-center d-flex-shrink-0 p-0 cursor-pointer border-0 bg-transparent"
+        aria-label="{{ 'accessibility.close_popup' | t }}"
+        close-variant-popup
+      >
+        {%- render 'icon' with 'drawerclose-icon' -%}
+      </button>
+    </div>
+  {%- endunless -%}
+
+  <div class="card-variant-popup__body d-flex d-flex-dir-c flex-1 overflow-hidden">
+    <div class="card-variant-popup__scroll d-flex d-flex-dir-c flex-1">
+      {%- liquid
+        assign hide_image = true
+        if is_bottom_sheet
+          assign hide_image = false
+        endif
+        assign popup_form_id = product_form_id | append: '-popup'
+      -%}
+      {%- render 'card-variant-sheet-body',
+        product: product,
+        product_form_id: popup_form_id,
+        id_suffix: id_suffix,
+        hide_percentage_off: hide_percentage_off,
+        block: block,
+        section: section,
+        hide_badges: false,
+        show_custom_badges: false,
+        is_bottom_sheet: is_bottom_sheet,
+        hide_image: hide_image,
+        variant_render: variant_render
+      -%}
+    </div>
+  </div>
+</div>
+
+{%- if is_bottom_sheet -%}
+</bottom-sheet>
+{%- endif -%}

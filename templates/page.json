@@ -1,0 +1,673 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": 600,
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "color_scheme": ""
+      }
+    },
+    "feature_list_ifJTpG": {
+      "type": "feature-list",
+      "blocks": {
+        "feature_4wdXVm": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/chef-manos-m-vil.webp",
+            "heading": "ESTANDARIZACIÓN",
+            "heading_tag": "h3",
+            "style": "h5",
+            "content": "<p>Porciones y cortes según las necesidades específicas de tu cocina.</p>"
+          }
+        },
+        "feature_DYUwiw": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/Pura_Agalla_-_Empresas_-_Variedad.webp",
+            "heading": "VARIEDAD",
+            "heading_tag": "h3",
+            "style": "h5",
+            "content": "<p>Más de 40 especies de río y mar disponibles para tu operación.</p>"
+          }
+        },
+        "feature_AkqjzN": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/Empresas_-_Pura_Agalla_1.webp",
+            "heading": "ACOMPAÑAMIENTO",
+            "heading_tag": "h3",
+            "style": "h5",
+            "content": "<p>Identificamos qué productos generan más rentabilidad para tu negocio.</p>"
+          }
+        },
+        "feature_AcHLLk": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/Pura_Agalla_-_Mercadeo_1.webp",
+            "heading": "CO-MARKETING",
+            "heading_tag": "h3",
+            "style": "h5",
+            "content": "<p>Recibe asesoría y herramientas de marketing digital para posicionar tus nuevos platos y negocio.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_4wdXVm",
+        "feature_DYUwiw",
+        "feature_AkqjzN",
+        "feature_AcHLLk"
+      ],
+      "name": "Feature list",
+      "settings": {
+        "full_width": false,
+        "icon_style": "tick",
+        "icon_width": 32,
+        "icon_width_mobile": 32,
+        "icon_bg_color": "#ffffff",
+        "icon_line_color": "#000000",
+        "slider_autoplay": true,
+        "autoplay_delay": 3,
+        "change_slide_on": "click",
+        "heading": "Nuestra oferta de valor",
+        "heading_tag": "h2",
+        "style": "h5",
+        "text_aligment": "left",
+        "content_desktop_style": "collapsable",
+        "content_mobile_style": "collapsable",
+        "button_text": "QUIERO SER ALIADO",
+        "link": "https://wa.me/573132400380?text=Hola%20Pura%20Agalla%2C%20quiero%20hacer%20un%20pedido%20para%20mi%20empresa",
+        "link_target": "_blank",
+        "button_aligment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "benefits_6nhNwE": {
+      "type": "Benefits",
+      "blocks": {
+        "benefit_r8TpKV": {
+          "type": "_benefit",
+          "settings": {
+            "counter": "1",
+            "custom_image": "shopify://shop_images/cono-estandarizaci-n.png",
+            "heading": "Estandarización",
+            "text": "<p>Porciones y cortes según las necesidades específicas de tu cocina.</p>",
+            "truncate_words_desktop": 15,
+            "truncate_words_mobile": 10,
+            "underline_color": "#000000",
+            "color_scheme": ""
+          },
+          "blocks": {}
+        },
+        "benefit_Q4Nq4z": {
+          "type": "_benefit",
+          "settings": {
+            "counter": "1",
+            "custom_image": "shopify://shop_images/cono-variedad-pez.png",
+            "heading": "Variedad",
+            "text": "<p>Más de 20 especies de río y mar disponibles para tu operación.</p>",
+            "truncate_words_desktop": 15,
+            "truncate_words_mobile": 10,
+            "underline_color": "#000000",
+            "color_scheme": "scheme-1"
+          },
+          "blocks": {}
+        },
+        "benefit_QrLtX8": {
+          "type": "_benefit",
+          "settings": {
+            "counter": "1",
+            "custom_image": "shopify://shop_images/cono-acompa-amiento.png",
+            "heading": "Acompañamiento",
+            "text": "<p>Identificamos qué productos generan más rentabilidad para tu negocio.</p>",
+            "truncate_words_desktop": 15,
+            "truncate_words_mobile": 10,
+            "underline_color": "#000000",
+            "color_scheme": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "benefit_r8TpKV",
+        "benefit_Q4Nq4z",
+        "benefit_QrLtX8"
+      ],
+      "disabled": true,
+      "name": "Benefit",
+      "settings": {
+        "Heading": "",
+        "heading_tag": "h2",
+        "style": "h1",
+        "paragraph": "<h2><strong>Somos tu mejor aliado en Bogotá</strong></h2><p>Proveedores para tu <strong>negocio o iniciativa gastronómica</strong>.</p>",
+        "heading_description_inside": false,
+        "content_width": 500,
+        "text_alignment": "center",
+        "mobile_text_alignment": "left",
+        "desktop_image": "shopify://shop_images/chef-manos-m-vil.png",
+        "mobile_image": "shopify://shop_images/chef-manos-desktop.png",
+        "image_fit": "contain",
+        "image_width": 100,
+        "background_color": "#0000005c",
+        "circle_text_color": "#000000",
+        "show_border_circle": true,
+        "border_circle_color": "#000",
+        "show_counter": false,
+        "text_color": "#000000",
+        "counter_bg_color": "#0000005c",
+        "counter_border_color": "rgba(0,0,0,0)",
+        "icon_label_size": "h4",
+        "block_heading_tag": "h3",
+        "image_width_on_desktop": 50,
+        "image_width_on_mobile": 50,
+        "image_fit_block": "contain",
+        "collapsible": "open",
+        "card_layout_in_mobile": "grid",
+        "padding_top": 32,
+        "padding_bottom": 48,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "slideshow_mrbRRK": {
+      "type": "slideshow",
+      "blocks": {
+        "image_slide_GRqPgV": {
+          "type": "_image-slide",
+          "name": "Image slide",
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/camar-n-jumbo-desktop.webp",
+            "mobile_slide_image": "shopify://shop_images/camar-n-jumbo-mobile.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 480,
+            "desktop_content_alignment": "left",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "left",
+            "mobile_content_position": "top",
+            "hide_on_desktop": true,
+            "overlay_color": "#00000070",
+            "color_scheme": "",
+            "color_scheme_mobile": ""
+          },
+          "blocks": {
+            "sub_heading_DgdMFy": {
+              "type": "sub-heading",
+              "settings": {
+                "subheading": "El toque premium que eleva tu carta",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_h4Yadb": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "Camarón Jumbo, calidad que se nota en el plato",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_HjpGEF": {
+              "type": "paragraph",
+              "settings": {
+                "slide_sub_text": "<p>Crudo o precocido, en el tamaño que necesitas.Ideal para paellas, cócteles y platos de autor.</p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_KHNQMV": {
+              "type": "button",
+              "name": "Button",
+              "settings": {
+                "button_label": "CONTÁCTANOS",
+                "button_link": "https://wa.me/573132400380?text=Hola%20Pura%20Agalla%2C%20quisiera%20hacer%20un%20pedido%20de%20camar%C3%B3n%20para%20mi%20negocio",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_DgdMFy",
+            "heading_h4Yadb",
+            "paragraph_HjpGEF",
+            "button_KHNQMV"
+          ]
+        },
+        "image_slide_QpXPBH": {
+          "type": "_image-slide",
+          "name": "Image slide",
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/mojarra-desktop.webp",
+            "mobile_slide_image": "shopify://shop_images/mojarra-mobile.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 480,
+            "desktop_content_alignment": "left",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "left",
+            "mobile_content_position": "top",
+            "hide_on_desktop": true,
+            "overlay_color": "#00000070",
+            "color_scheme": "",
+            "color_scheme_mobile": ""
+          },
+          "blocks": {
+            "sub_heading_gYXwhP": {
+              "type": "sub-heading",
+              "settings": {
+                "subheading": "Volumen sin sacrificar frescura",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_mHxKgT": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "Mojarra Fresca, la más pedida en Bogotá",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_zhJVec": {
+              "type": "paragraph",
+              "settings": {
+                "slide_sub_text": "<p>Entera o en lomito, con cadena de frío de principio a fin.Entregas programadas para que tu cocina nunca pare.</p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_GFktTL": {
+              "type": "button",
+              "name": "Button",
+              "settings": {
+                "button_label": "CONTÁCTANOS",
+                "button_link": "https://wa.me/573132400380?text=Hola%20Pura%20Agalla%2C%20quisiera%20hacer%20un%20pedido%20de%20mojarra%20para%20mi%20negocio",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_gYXwhP",
+            "heading_mHxKgT",
+            "paragraph_zhJVec",
+            "button_GFktTL"
+          ]
+        },
+        "image_slide_X9x9Ph": {
+          "type": "_image-slide",
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/bagre-rayado-posta-desktop.webp",
+            "mobile_slide_image": "shopify://shop_images/bagre-rayado-mobile-corregido.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 480,
+            "desktop_content_alignment": "left",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "left",
+            "mobile_content_position": "top",
+            "hide_on_desktop": true,
+            "overlay_color": "#00000070",
+            "color_scheme": "scheme-5",
+            "color_scheme_mobile": ""
+          },
+          "blocks": {
+            "sub_heading_WRjC9g": {
+              "type": "sub-heading",
+              "settings": {
+                "subheading": "Proteína de río para tu operación",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_9NQid3": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "Bagre Rayado, el favorito de las cocinas",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_9zDi9K": {
+              "type": "paragraph",
+              "settings": {
+                "slide_sub_text": "<p>Posta firme y sabor profundo.Rendimiento para sancochos, frituras y platos de alto volumen.</p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_FdnMPM": {
+              "type": "button",
+              "name": "Button",
+              "settings": {
+                "button_label": "CONTÁCTANOS",
+                "button_link": "https://wa.me/573132400380?text=Hola%20Pura%20Agalla%2C%20quisiera%20hacer%20un%20pedido%20de%20bagre%20para%20mi%20negocio",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_WRjC9g",
+            "heading_9NQid3",
+            "paragraph_9zDi9K",
+            "button_FdnMPM"
+          ]
+        }
+      },
+      "block_order": [
+        "image_slide_GRqPgV",
+        "image_slide_QpXPBH",
+        "image_slide_X9x9Ph"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "section_width": true,
+        "media_size": "fill-screen",
+        "mobile_media_size": "fill-screen",
+        "slider_autoplay": true,
+        "autoplay_delay": 3,
+        "desktop_navigation": "dash_arrows",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "border_color": "#000000",
+        "section_background_color": "#ffffff"
+      }
+    },
+    "multicolumn_P3mFk4": {
+      "type": "multicolumn",
+      "blocks": {
+        "card_P3gmYR": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/dark-kitchen.webp",
+            "media_autoplay": false,
+            "title": "",
+            "heading": "Dark Kitchens",
+            "heading_tag": "h3",
+            "style": "h3",
+            "card_content": "<p>Cortes exactos, porciones consistentes y entregas programadas para tu operación</p>"
+          }
+        },
+        "card_tazrjD": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/restaurantes-y-gastrobares.webp",
+            "media_autoplay": false,
+            "title": "",
+            "heading": "Restaurantes y Gastrobares",
+            "heading_tag": "h3",
+            "style": "h3",
+            "card_content": "<p>Productos premium que elevan tu carta y sorprenden a tus comensales</p>"
+          }
+        },
+        "card_8Bty7z": {
+          "type": "card",
+          "settings": {
+            "card_image": "shopify://shop_images/catering-y-hoteles.webp",
+            "media_autoplay": false,
+            "title": "",
+            "heading": "Catering y Hoteles",
+            "heading_tag": "h3",
+            "style": "h3",
+            "card_content": "<p>Volumen, variedad y puntualidad para eventos y servicios de alto nivel</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_P3gmYR",
+        "card_tazrjD",
+        "card_8Bty7z"
+      ],
+      "name": "Multi-column",
+      "settings": {
+        "layout_style": "grid",
+        "mobile_layout_style": "carousel",
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "heading_content_alignment": "left",
+        "subheading": "",
+        "heading": "Soluciones para tu operación",
+        "heading_tag": "h2",
+        "style": "h3",
+        "content": "",
+        "content_alignment": "left",
+        "caption_align": "center",
+        "image_aspect_ratio": "adapt",
+        "play_button_bg": "#000000",
+        "play_button_color": "#ffffff",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "contact_form_VwBBRk": {
+      "type": "contact-form",
+      "blocks": {
+        "map_KnRGQN": {
+          "type": "_map",
+          "settings": {
+            "lat": "",
+            "lng": "",
+            "address": "Carrera 24 a 57 - Samper Mendoza",
+            "api_key": "",
+            "shop_name": false,
+            "map_image": "shopify://shop_images/isotipo-06_04532a1b-975e-4abe-9670-c66990a5ca4c.png"
+          },
+          "blocks": {}
+        },
+        "form_8GgFzP": {
+          "type": "_form",
+          "settings": {},
+          "blocks": {
+            "input_field_UFNMG9": {
+              "type": "_input-field",
+              "settings": {
+                "input": "name",
+                "heading": "Nombre",
+                "placeholder_text": "Tu nombre completo",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_FdXQiQ": {
+              "type": "_input-field",
+              "settings": {
+                "input": "email",
+                "heading": "Correo electrónico",
+                "placeholder_text": "Tu correo electrónico",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_HDep9E": {
+              "type": "_input-field",
+              "name": "Input",
+              "settings": {
+                "input": "text-field",
+                "heading": "Teléfono / WhatsApp",
+                "placeholder_text": "Tu número de contacto",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_MhMd88": {
+              "type": "_input-field",
+              "settings": {
+                "input": "message",
+                "heading": "Cuéntanos de tu negocio",
+                "placeholder_text": "¿Qué tipo de negocio tienes? (Dark Kitchen, Restaurante, Gastrobar, Catering, Hotel, Otro) ¿Qué productos te interesan?",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "input_field_UFNMG9",
+            "input_field_FdXQiQ",
+            "input_field_HDep9E",
+            "input_field_MhMd88"
+          ]
+        }
+      },
+      "block_order": [
+        "map_KnRGQN",
+        "form_8GgFzP"
+      ],
+      "name": "Contact Form",
+      "settings": {
+        "heading": "¿Listo para ser nuestro aliado?",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "<p>Déjanos tus datos y un asesor te contactará en menos de 24 horas</p>",
+        "content_alignment": "center",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "testimonials_z8miTM": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_wqamjj": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": false,
+            "rating": 5,
+            "author": "Chef Andrés M.",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "Dark Kitchen, Bogotá",
+            "content": "Pura Agalla transformó nuestra operación. Frescura garantizada y entregas puntuales.",
+            "product": "",
+            "show_product_image": false
+          }
+        },
+        "testimonial_NL3xYE": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "Author Name",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Write a review about a product, collection or a brand. Describe what the user liked  about it and the reason behind liking it",
+            "product": "",
+            "show_product_image": false
+          }
+        },
+        "testimonial_39WWtQ": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "Author Name",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Write a review about a product, collection or a brand. Describe what the user liked  about it and the reason behind liking it",
+            "product": "",
+            "show_product_image": false
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_wqamjj",
+        "testimonial_NL3xYE",
+        "testimonial_39WWtQ"
+      ],
+      "disabled": true,
+      "name": "Testimonials",
+      "settings": {
+        "image_aspect_ratio": "square",
+        "subheading": "",
+        "heading": "Lo que dicen nuestros aliados",
+        "heading_tag": "h2",
+        "style": "h3",
+        "content": "",
+        "content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "feature_list_ifJTpG",
+    "benefits_6nhNwE",
+    "slideshow_mrbRRK",
+    "multicolumn_P3mFk4",
+    "contact_form_VwBBRk",
+    "testimonials_z8miTM"
+  ]
+}

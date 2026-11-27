@@ -1,0 +1,58 @@
+{% comment %}
+  Variable used:
+  block : {{Object}} Block object
+{% endcomment %}
+{% liquid
+  case section.settings.icon_style
+    when 'tick'
+      assign icon = 'icon-circle-tick'
+    when 'arrow'
+      assign icon = 'circle-with-arrow'
+    when 'star'
+      assign icon = 'icon-star'
+    when 'counter'
+      assign icon = 'icon-counter'
+    when 'star-2'
+      assign icon = 'icon-star-2'
+  endcase
+%}
+{% capture sizes %}
+  (min-width: 768px) {{ section.settings.icon_width | append: "px" }}, {{ section.settings.icon_width_mobile | append: "px" }}
+  {% endcapture %}
+<main-thumb-accordion breakpoint_match="768px" class="d-block">
+  <details
+    accordionTab
+    aria-expanded="false"
+    class="accordion__item d-block {% if block.settings.content == blank %} hide-collape-icon {% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    <summary aria-label="{{ block.settings.heading }}">
+      <div class="accordion__item__head">
+        {% if block.settings.custom_image == blank %}
+          <span
+            class="accordion-icon"
+            style="--icon-line-color: {{ section.settings.icon_line_color }}; --icon-bg-color: {{ section.settings.icon_bg_color }}"
+          >
+            {%- render 'icon' with icon, index: index , width:"32" , height:"32" , fillColor:"var(--icon-bg-color)" , circleColor:"var(--icon-line-color)" , pathColor:"var(--icon-line-color)" -%}
+          </span>
+        {% else %}
+          {{
+            block.settings.custom_image
+            | image_url: width: section.settings.icon_width, height: section.settings.icon_width
+            | image_tag: widths: '90,120', sizes: sizes, alt: block.settings.custom_image.alt, class: 'accordion-icon'
+          }}
+        {% endif %}
+        <{{block.settings.heading_tag}} class="m-0 fnt-16 fnt-body {{ block.settings.style }}">{{ block.settings.heading }}</{{block.settings.heading_tag}}>
+      </div>
+    </summary>
+    {% if block.settings.content != blank %}
+      <div accordionBody class="accordion__item__body">
+        <div class="accordion__item__body-content">
+          <div class="RTE-content">
+            {{ block.settings.content }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </details>
+</main-thumb-accordion>

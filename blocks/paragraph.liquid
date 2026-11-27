@@ -1,0 +1,84 @@
+<style>
+  .subtext-paragraph--{{ block.id }} {
+
+    margin-bottom: {{ block.settings.bottom_mobile | append: 'px' }};
+  }
+
+  @media (min-width: 750px) {
+    .subtext-paragraph--{{ block.id }} {
+      margin-bottom: {{ block.settings.bottom_desktop | append: 'px' }};
+    }
+  }
+</style>
+
+{% if block.settings.slide_sub_text != blank %}
+  {% assign delay = 0.03 %}
+  <animation-reveal
+    class="paragraph-block__animation"
+    aoi-type="fade-up"
+    aoi-fade-delay="{{ delay }}"
+    aoi-duration="0.6"
+  >
+    <div
+      class="fnt-16 subtext subtext-paragraph--{{ block.id }} RTE-content"
+      {% if block.settings.enable_custom_color and block.settings.text_color != blank %}
+        style="--color-text: {{ block.settings.text_color }};"
+      {% endif %}
+    >
+      {{ block.settings.slide_sub_text }}
+    </div>
+  </animation-reveal>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Paragraph",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "slide_sub_text",
+      "label": "Content",
+      "default": "<p>Briefly describe what this slide is about.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_color",
+      "label": "Enable custom color",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.enable_custom_color }}"
+    },
+    {
+      "type": "range",
+      "id": "bottom_desktop",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "bottom_mobile",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Paragraph"
+    }
+  ]
+}
+{% endschema %}

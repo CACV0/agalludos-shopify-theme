@@ -1,0 +1,57 @@
+<script defer src="{{ 'cart-notifications.js' | asset_url }}"></script>
+{{ 'snippet-cart-notification.css' | asset_url | stylesheet_tag: preload: true }}
+
+{% comment %}
+  This snippet is used to render the cart notification popup.
+  It is used in the cart drawer and cart page.
+{% endcomment %}
+
+<cart-notification-popup class="cart__notification-popup  w-100 color-{{ settings.drawer_color_scheme }}">
+  <div
+    class="cart__notification__indicator-icon position-absolute show-only--from-tab"
+    style="--pill-color: var(--color-background)"
+  >
+    {% comment %} {% render 'icon', icon:'up-triangle-icon' %} {% endcomment %}
+  </div>
+  <div class="cart__notification__top-content" style="--success-text-color: {{ settings.popup_success_message_color }}">
+    <div class="d-flex align-item-center">
+      <div class="cart__notification__icon">
+        {% render 'icon' with 'icon-circle-tick',
+          width: 24,
+          height: 24,
+          pathColor: 'var(--success-text-color)',
+          circleColor: 'var(--success-text-color)'
+        %}
+      </div>
+      <p class="cart__notification__title success-text fnt-14 fnt-body-weight-bold mb-0">
+        {{ 'general.drawer.cart_notification_popup.product_add_to_cart_text' | t }}
+      </p>
+      <div class="cart__notification__close-icon cursor-pointer" close-cart-notification-popup>
+        {% render 'icon', icon: 'icon-cross', width: '14', height: '14' %}
+      </div>
+    </div>
+  </div>
+  <div class="d-flex align-item-center mt-8">
+    <div cart-notification-content class="cart__notification__dynamic-content w-100"></div>
+    <div class="cart__notification__right-content d-flex d-flex-dir-c align-item-center flex-1">
+      {%- unless settings.cart_type == 'page' -%}
+        <button is="open-drawer" drawer-to-open="cart-drawer" class="button-rest-styles cursor-pointer link">
+          <span class="fnt-14">
+            {{- 'general.drawer.cart_notification_popup.view_cart_text' | t -}}
+          </span>
+        </button>
+      {% else %}
+        <a href="{{ routes.cart_url }}" class="cursor-pointer link">
+          <span class="fnt-14">
+            {{- 'general.drawer.cart_notification_popup.view_cart_text' | t -}}
+          </span>
+        </a>
+      {%- endunless -%}
+      <form action="{{ routes.cart_url }}" method="post" class="mt-8 w-100">
+        <button type="submit" name="checkout" class="btn btn--fill w-100">
+          {{ 'cart.checkout' | t }}
+        </button>
+      </form>
+    </div>
+  </div>
+</cart-notification-popup>

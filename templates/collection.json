@@ -1,0 +1,261 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "full-width": true,
+        "show_collection_title": true,
+        "show_collection_description": true,
+        "show_collection_image": true,
+        "heading_tag": "h1",
+        "heading_size": "h2",
+        "content_width": 30,
+        "content_alignment": "center",
+        "content_position": "center",
+        "image_size": "sm",
+        "overlay_color": "rgba(0,0,0,0)",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "collection_tabs_X6rp3g": {
+      "type": "collection-tabs",
+      "name": "Collection tabs",
+      "settings": {
+        "display_style": "text",
+        "collection_list": [
+          "riquezas-del-rio",
+          "tesoros-del-mar",
+          "cortes-despensa",
+          "combos"
+        ],
+        "image_fit": "cover",
+        "highlight_collection_titles": "",
+        "highlight_text_color": "#f52222",
+        "border_radius": 8,
+        "content_position": "left",
+        "padding_top": 8,
+        "padding_bottom": 8,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "blocks": {
+        "promo_PgiDgd": {
+          "type": "promo",
+          "settings": {
+            "promo_card_position": 1,
+            "promo_card_first_page_only": false,
+            "promo_image": "shopify://shop_images/promo-mujer.webp",
+            "image_fit": "cover",
+            "image_height": 50,
+            "promo_overlay_style": "gradient",
+            "promo_background_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0) 37%, rgba(0, 0, 0, 0.7) 100%)",
+            "promo_background_solid": "rgba(0,0,0,0)",
+            "promo_heading": "¡No te lo pierdas!",
+            "promo_heading_tag": "h3",
+            "promo_content": "<p>Envío gratis en pedidos iguales o mayores a $150.000</p>",
+            "promo_text_color": "#ffffff",
+            "promo_link": "",
+            "promo_link_tab": "_top",
+            "promo_content_alignment": "center",
+            "promo_content_position": "flex-end",
+            "promo_content_alignment_mobile": "center",
+            "promo_content_position_mobile": "flex-end"
+          }
+        }
+      },
+      "block_order": [
+        "promo_PgiDgd"
+      ],
+      "custom_css": [
+        "[aria-label=\"Frame Type\"] + .accordion__item__body .filter-swatch-label {width: 50px;}"
+      ],
+      "settings": {
+        "products_per_page": 10,
+        "columns_desktop": "3",
+        "columns_mobile": "2",
+        "pagination_type": "number",
+        "show_sort_by": true,
+        "show_filters": true,
+        "show_filter_group_name": false,
+        "show_product_tags_to_filter": false,
+        "desktop_filter_type": "drawer",
+        "filter_accordion": "open",
+        "enable_product_card_background": false,
+        "product_card_color_scheme": "",
+        "padding_top": 20,
+        "padding_bottom": 36,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "slideshow_WFy9E3": {
+      "type": "slideshow",
+      "settings": {
+        "section_width": true,
+        "media_size": "lg",
+        "mobile_media_size": "lg",
+        "slider_autoplay": true,
+        "autoplay_delay": 4,
+        "desktop_navigation": "dash",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "border_color": "#000000",
+        "section_background_color": "#ffffff"
+      }
+    },
+    "featured_collection_CTzWYK": {
+      "type": "featured-collection",
+      "blocks": {
+        "featured_collection_rP9AAT": {
+          "type": "featured_collection",
+          "settings": {
+            "tab_heading": "Collection 1",
+            "heading_tag": "h3",
+            "style": "h4",
+            "collection": "tesoros-del-mar",
+            "link_url": "shopify://collections/todos-los-productos",
+            "promo_card": false,
+            "promo_card_position": 1,
+            "image_fit": "cover",
+            "image_height": 50,
+            "promo_overlay_style": "gradient",
+            "promo_background_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%)",
+            "promo_background_solid": "rgba(0,0,0,0)",
+            "promo_heading": "Promotion heading",
+            "promo_heading_tag": "h3",
+            "promo_heading_style": "h4",
+            "promo_content": "<p>Promotion description</p>",
+            "promo_text_color": "#ffffff",
+            "promo_link": "",
+            "promo_link_tab": "_top",
+            "promo_content_alignment": "center",
+            "promo_content_position": "center",
+            "promo_content_alignment_mobile": "center",
+            "promo_content_position_mobile": "center"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_rP9AAT"
+      ],
+      "name": "Featured collection",
+      "settings": {
+        "max_product_show": 10,
+        "layout_style": "grid",
+        "layout_style_mobile": "carousel",
+        "columns_desktop": "5",
+        "columns_mobile": "1",
+        "subheading": "",
+        "heading": "También te puede interesar",
+        "heading_tag": "h2",
+        "style": "h3",
+        "content": "",
+        "use_outline_button": false,
+        "show_view_all_button": false,
+        "view_all_link_style": "text",
+        "view_all_link_text": "Ver todos los productos",
+        "link_target": "_top",
+        "view_all_link_position": "start",
+        "content_style": "stack",
+        "content_alignment": "left",
+        "enable_product_card_background": false,
+        "product_card_color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-4"
+      }
+    },
+    "media_and_text_HQjmQE": {
+      "type": "media-and-text",
+      "blocks": {
+        "image_xdeRXn": {
+          "type": "image",
+          "settings": {}
+        },
+        "text_content_aHiTkb": {
+          "type": "text-content",
+          "settings": {
+            "heading": "SET SAIL IN STYLE",
+            "heading_tag": "h2",
+            "style": "h1",
+            "subheading": "",
+            "content": "<p>Navigate life’s adventures with eyewear crafted for those who crave style and functionality in every moment with nautica.</p>",
+            "content_alignment": "left",
+            "button_label": "",
+            "button_link": "",
+            "link_target": "_top",
+            "use_outline_button": false
+          }
+        }
+      },
+      "block_order": [
+        "image_xdeRXn",
+        "text_content_aHiTkb"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "media_width": 50,
+        "media_size": "md",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2",
+        "background_color": "#ffffff"
+      }
+    },
+    "rich_text_pcHh8p": {
+      "type": "rich-text",
+      "blocks": {
+        "button_xxBxLB": {
+          "type": "button",
+          "settings": {
+            "button_text": "Ver todos los productos",
+            "link": "shopify://collections/todos-los-productos",
+            "link_target": "_top",
+            "use_outline_button": true
+          }
+        }
+      },
+      "block_order": [
+        "button_xxBxLB"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "container_size": true,
+        "content_width": 500,
+        "content_alignment": "center",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "collection_tabs_X6rp3g",
+    "product-grid",
+    "slideshow_WFy9E3",
+    "featured_collection_CTzWYK",
+    "media_and_text_HQjmQE",
+    "rich_text_pcHh8p"
+  ]
+}

@@ -1,0 +1,38 @@
+{% assign product = closest.product %}
+<variant-sku
+  {% if product.selected_or_first_available_variant.sku == blank %}
+    hidden
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <div
+    style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+    class="product-info__sku fnt-14"
+  >
+    <span>{{- 'products.product.sku' | t }}</span>
+    <span sku-code>{{ product.selected_or_first_available_variant.sku -}}</span>
+  </div>
+</variant-sku>
+{% schema %}
+{
+  "name": "SKU",
+  "settings": [
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "SKU",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

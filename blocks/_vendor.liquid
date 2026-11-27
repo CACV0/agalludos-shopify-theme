@@ -1,0 +1,32 @@
+{% assign product = closest.product %}
+<p
+  class="fnt-14 main-product__vendor"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+  {{ block.shopify_attributes }}
+>
+  {{ product.vendor }}
+</p>
+
+{% schema %}
+{
+  "name": "Vendor",
+  "settings": [
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vendor",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

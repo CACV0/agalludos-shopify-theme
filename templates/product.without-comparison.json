@@ -1,0 +1,572 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "_title",
+          "settings": {
+            "block_bottom_spacing": 16,
+            "heading_tag": "h1"
+          },
+          "blocks": {}
+        },
+        "rating": {
+          "type": "_rating",
+          "settings": {
+            "show_if_no_reviews": false,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_price",
+          "settings": {
+            "show_taxes_notice": false,
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "count_down_sales_banner_YR64XG": {
+          "type": "_count-down-sales-banner",
+          "name": "Count down sales banner",
+          "settings": {
+            "background_color": "#1e1e1e",
+            "bottom_desktop": 16,
+            "bottom_mobile": 16
+          },
+          "blocks": {
+            "group_hBGn4Q": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": true,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 16,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "content_z6YeDa": {
+                  "type": "content",
+                  "settings": {
+                    "show_sale_badge": true,
+                    "black_friday_sale": "Exclusive Offer!",
+                    "background_color_sale": "#dbff00",
+                    "text_color_sale": "#131313",
+                    "content": "<p>Use Coupon - <strong>FLAT20</strong></p>",
+                    "text_color_content": "#ffffff",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                },
+                "timer_dETKUQ": {
+                  "type": "timer",
+                  "settings": {
+                    "custom_time": "",
+                    "start_year": 2025,
+                    "start_month": "11",
+                    "start_day": "28",
+                    "start_hours": "0",
+                    "start_minute": "0",
+                    "hide_timer_on_ending": "set_timer_to_zero",
+                    "time_zone": "shop_time_zone",
+                    "text": "#ffffff",
+                    "background": "#383838",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "content_z6YeDa",
+                "timer_dETKUQ"
+              ]
+            }
+          },
+          "block_order": [
+            "group_hBGn4Q"
+          ]
+        },
+        "variant-picker": {
+          "type": "_variant-picker",
+          "settings": {
+            "varaint_selector_type": "pills",
+            "show_swatches": true,
+            "block_bottom_spacing": 5,
+            "guide_heading": "",
+            "guide_option": "",
+            "guide_content": ""
+          },
+          "blocks": {}
+        },
+        "quantity-selector": {
+          "type": "_quantity-selector",
+          "settings": {
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "inventory_heyY46": {
+          "type": "_inventory-status",
+          "settings": {
+            "show_status": "always",
+            "inventory_threshold": 31,
+            "inventory_base_quantity": 60,
+            "show_inventory_quantity": true,
+            "show_inventory_progress": true,
+            "inventory_background_color": "#fff5f5",
+            "inventory_instock_color": "#2e982c",
+            "inventory_lowstock_color": "#ff0000",
+            "inventory_outofstock_color": "#787878",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "buy-buttons": {
+          "type": "_buy-button",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false,
+            "use_outline_button": false,
+            "show_payment_icon": false,
+            "desktop_image_width": 70,
+            "mobile_image_width": 50,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "badges_pYhfkF": {
+          "type": "_badges",
+          "settings": {
+            "badge_stack_style": "wrap",
+            "enable_stack": false,
+            "icon_style_1": "star",
+            "color_scheme_badge_1": "",
+            "heading_1": "ACETATE FRAME",
+            "content_1": "",
+            "page_1": "",
+            "icon_style_2": "star",
+            "color_scheme_badge_2": "",
+            "heading_2": "SPRING HINGES",
+            "content_2": "",
+            "page_2": "",
+            "icon_style_3": "star",
+            "color_scheme_badge_3": "",
+            "heading_3": "POLARIZED LENS",
+            "content_3": "",
+            "page_3": "",
+            "icon_style_4": "star",
+            "color_scheme_badge_4": "",
+            "heading_4": "LOW BRIDGE",
+            "content_4": "",
+            "page_4": "",
+            "icon_style_5": "star",
+            "color_scheme_badge_5": "",
+            "heading_5": "",
+            "content_5": "",
+            "page_5": "",
+            "icon_style_6": "star",
+            "color_scheme_badge_6": "",
+            "heading_6": "",
+            "content_6": "",
+            "page_6": "",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "pickup_NEQCnz": {
+          "type": "_pickup",
+          "name": "Pickup availability",
+          "settings": {
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "description_aMeBfi": {
+          "type": "_description",
+          "settings": {
+            "collapse_content": false,
+            "heading": "",
+            "heading_tag": "h4",
+            "truncate_description": "no",
+            "hide_truncate_in_desktop": false,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "offer_FbNTgk": {
+          "type": "_offer",
+          "name": "Offer",
+          "settings": {
+            "alignment": "left",
+            "icon_position": "column",
+            "bottom_desktop": 16,
+            "bottom_mobile": 16
+          },
+          "blocks": {
+            "group_qEf49U": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": true,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 5,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "offer_block_iXT7aq": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "Free shipping above 500$",
+                    "text": "<p>Enjoy seamless shopping, we’ll cover the shipping on orders over $500.</p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 0,
+                    "icon_enable": false,
+                    "icon_style": "truck",
+                    "icon_width": 24,
+                    "icon_color": "#000000",
+                    "text_color": "#000000",
+                    "background_color": "#faf3f0",
+                    "Link_text_color": "#000000"
+                  },
+                  "blocks": {}
+                },
+                "offer_block_LfRPmy": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "Buy 2 Products, Get 1 Free",
+                    "text": "<p>Add any 3 to your cart — the lowest-priced item is on us.</p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 10,
+                    "icon_enable": false,
+                    "icon_style": "gift",
+                    "icon_width": 20,
+                    "icon_color": "#000000",
+                    "text_color": "#000000",
+                    "background_color": "#f8f6ea",
+                    "Link_text_color": "#000000"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "offer_block_iXT7aq",
+                "offer_block_LfRPmy"
+              ]
+            }
+          },
+          "block_order": [
+            "group_qEf49U"
+          ]
+        },
+        "accordion_RWhLBt": {
+          "type": "_collapsible-text",
+          "settings": {
+            "heading": "DESCRIPTION",
+            "heading_tag": "h3",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100,
+            "block_bottom_spacing": 5
+          },
+          "blocks": {}
+        },
+        "accordion_jhNtti": {
+          "type": "_collapsible-text",
+          "settings": {
+            "heading": "WHAT'S INCLUDED",
+            "heading_tag": "h3",
+            "content": "<ul><li>Smart Glass </li><li>USB Charger </li><li>Cleaning Cloth Pouch </li><li>Soft Case </li><li>Power Bank<br/><br/></li></ul>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100,
+            "block_bottom_spacing": 5
+          },
+          "blocks": {}
+        },
+        "accordion_NqTPPA": {
+          "type": "_collapsible-text",
+          "disabled": true,
+          "settings": {
+            "heading": "SHIPPING & RETURNS",
+            "heading_tag": "h3",
+            "content": "<p>Effortless Shipping and Easy Returns for Your Convenience.</p>",
+            "page": "",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100,
+            "block_bottom_spacing": 5
+          },
+          "blocks": {}
+        },
+        "accordion_qR4twJ": {
+          "type": "_collapsible-text",
+          "settings": {
+            "heading": "FIND IT IN NEARBY STORE",
+            "heading_tag": "h3",
+            "content": "",
+            "page": "product-page-store-loacater",
+            "desktop_image_width": 100,
+            "mobile_image_width": 100,
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "complementary-products": {
+          "type": "_complementary-products",
+          "settings": {
+            "heading": "Customers Also Bought",
+            "heading_tag": "h3",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "price",
+        "count_down_sales_banner_YR64XG",
+        "variant-picker",
+        "quantity-selector",
+        "inventory_heyY46",
+        "buy-buttons",
+        "badges_pYhfkF",
+        "pickup_NEQCnz",
+        "description_aMeBfi",
+        "offer_FbNTgk",
+        "accordion_RWhLBt",
+        "accordion_jhNtti",
+        "accordion_NqTPPA",
+        "accordion_qR4twJ",
+        "complementary-products"
+      ],
+      "settings": {
+        "hide_badges": false,
+        "media_autoplay": false,
+        "slider_hide_arrows": false,
+        "enable_media_zoom": true,
+        "image_fit_zoom": "cover",
+        "display_options_layout": "thumbnail-left",
+        "desktop_media_position": "left",
+        "desktop_media_size": "large",
+        "image_aspect_ratio_desktop": "square",
+        "image_aspect_ratio_mobile": "square",
+        "enable_swipe_on_mobile": true,
+        "enable_sticky_add_to_cart": true,
+        "sticky_add_to_cart_style": "bar",
+        "show_only_for_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product-recommendation": {
+      "type": "product-recommendation",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_tag": "h2",
+        "products_to_show": 4,
+        "display_options": "grid",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "media_and_text_yGNiMH": {
+      "type": "media-and-text",
+      "blocks": {
+        "video_y4hnGW": {
+          "type": "video",
+          "settings": {
+            "media_autoplay": true,
+            "enable_mobile_video": false,
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_content_pDcdYX": {
+          "type": "text-content",
+          "settings": {
+            "heading": "12 HOURS",
+            "heading_tag": "h2",
+            "subheading": "UNINTERRUPTED POWER",
+            "content": "<p>Experience freedom with a 12-hour battery life that powers you through work, play, and everything in between. Whether you're making calls, streaming music, or accessing smart features</p>",
+            "content_alignment": "left",
+            "button_label": "",
+            "button_link": "",
+            "link_target": "_top",
+            "use_outline_button": false
+          }
+        }
+      },
+      "block_order": [
+        "video_y4hnGW",
+        "text_content_pDcdYX"
+      ],
+      "settings": {
+        "full_width": true,
+        "media_width": 50,
+        "media_size": "md",
+        "padding_top": 36,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "",
+        "background_color": "#ffffff"
+      }
+    },
+    "media_and_text_fnFUWW": {
+      "type": "media-and-text",
+      "blocks": {
+        "text_content_QtHW4L": {
+          "type": "text-content",
+          "settings": {
+            "heading": "BUILT-IN OPEN-EAR AUDIO",
+            "heading_tag": "h2",
+            "subheading": "CRYSTAL-CLEAR",
+            "content": "<p>Whether you're taking calls, streaming your favorite playlists, or navigating with voice assistance, the directional sound technology delivers a seamless, immersive experience.</p>",
+            "content_alignment": "left",
+            "button_label": "",
+            "button_link": "",
+            "link_target": "_top",
+            "use_outline_button": false
+          }
+        },
+        "video_TxaQ4z": {
+          "type": "video",
+          "settings": {
+            "media_autoplay": true,
+            "enable_mobile_video": false,
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        }
+      },
+      "block_order": [
+        "text_content_QtHW4L",
+        "video_TxaQ4z"
+      ],
+      "settings": {
+        "full_width": true,
+        "media_width": 50,
+        "media_size": "md",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2",
+        "background_color": "#ffffff"
+      }
+    },
+    "feature_list_D8TtPb": {
+      "type": "feature-list",
+      "blocks": {
+        "feature_Hw7cVM": {
+          "type": "feature",
+          "settings": {
+            "heading": "TAKE CALLS",
+            "heading_tag": "h3",
+            "content": "<p>Stay connected anytime, anywhere.</p>"
+          }
+        },
+        "feature_CfbFfM": {
+          "type": "feature",
+          "settings": {
+            "heading": "PLAY MUSIC",
+            "heading_tag": "h3",
+            "content": "<p>4 quadrasonic speakers for high quality sound.</p>"
+          }
+        },
+        "feature_tQJLyk": {
+          "type": "feature",
+          "settings": {
+            "heading": "TALK TO AI",
+            "heading_tag": "h3",
+            "content": "<p>Get real-time directions & answers.</p>"
+          }
+        },
+        "feature_Ep9UVD": {
+          "type": "feature",
+          "settings": {
+            "heading": "SEND VOICE MEMOS",
+            "heading_tag": "h3",
+            "content": "<p>Get your thoughts out without skipping a beat.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_Hw7cVM",
+        "feature_CfbFfM",
+        "feature_tQJLyk",
+        "feature_Ep9UVD"
+      ],
+      "settings": {
+        "full_width": true,
+        "icon_style": "tick",
+        "icon_width": 32,
+        "icon_width_mobile": 32,
+        "icon_bg_color": "#ffffff",
+        "icon_line_color": "#000000",
+        "slider_autoplay": true,
+        "autoplay_delay": 3,
+        "change_slide_on": "click",
+        "heading": "LOADED WITH SMART FEATURES",
+        "heading_tag": "h2",
+        "text_aligment": "left",
+        "content_desktop_style": "collapsable",
+        "content_mobile_style": "collapsable",
+        "button_text": "",
+        "link": "",
+        "link_target": "_blank",
+        "button_aligment": "left",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": ""
+      }
+    },
+    "recently_viewed_products_hFjrdd": {
+      "type": "recently-viewed-products",
+      "settings": {
+        "heading": "RECENTLY VIEWED",
+        "heading_tag": "h2",
+        "products_to_show": 5,
+        "display_options": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "1",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": ""
+      }
+    }
+  },
+  "order": [
+    "main-product",
+    "product-recommendation",
+    "media_and_text_yGNiMH",
+    "media_and_text_fnFUWW",
+    "feature_list_D8TtPb",
+    "recently_viewed_products_hFjrdd"
+  ]
+}

@@ -1,0 +1,292 @@
+{% render 'announcement-popup', section: section %}
+{% schema %}
+{
+  "name": "Announcement popup",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Behaviour"
+    },
+    {
+      "type": "select",
+      "id": "popup_placement",
+      "label": "Placement",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "popup_position_desktop",
+      "label": "Desktop vertical position",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "popup_position_mobile",
+      "label": "Mobile vertical position",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
+      "type": "text",
+      "id": "popup_subheading",
+      "label": "Subheading",
+      "default": "Announcement subheading"
+    },
+    {
+      "type": "text",
+      "id": "popup_heading",
+      "label": "Heading",
+      "default": "Announcement Heading"
+    },
+    {
+      "type": "text_alignment",
+      "id": "popup_text_alignment",
+      "label": "Content alignment",
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "popup_heading_color",
+      "label": "Content color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "popup_heading_background",
+      "label": "Highlight background",
+      "default": "#DF3B3A"
+    },
+    {
+      "type": "header",
+      "content": "Popup button"
+    },
+    {
+      "type": "select",
+      "id": "popup_icon_style",
+      "label": "Icon style",
+      "options": [
+        {
+          "value": "percentage-icon",
+          "label": "Percentage"
+        },
+        {
+          "value": "notification-icon",
+          "label": "Notification"
+        },
+        {
+          "value": "gift-icon",
+          "label": "Gift"
+        },
+        {
+          "value": "bolt-icon",
+          "label": "Bolt"
+        },
+        {
+          "value": "dollar-icon",
+          "label": "Dollar"
+        }
+      ],
+      "default": "gift-icon"
+    },
+    {
+      "type": "image_picker",
+      "id": "popup_button_image",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style. Recommended size of 28 x 28"
+    },
+    {
+      "type": "color",
+      "id": "popup_icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "popup_button_label",
+      "label": "Button label",
+      "default": "Offers"
+    },
+    {
+      "type": "color",
+      "id": "popup_button_label_color",
+      "label": "Button label color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "popup_button_background_color",
+      "label": "Button background",
+      "default": "#DF3B3A"
+    },
+    {
+      "type": "range",
+      "id": "popup_button_corner_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 50,
+      "default": 30,
+      "unit": "px",
+      "step": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement_counter",
+      "label": "Show announcement counter",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "counter_color",
+      "label": "Counter color",
+      "default": "#DF3B3A",
+      "visible_if": "{{ section.settings.show_announcement_counter }}"
+    },
+    {
+      "type": "color",
+      "id": "counter_background",
+      "label": "Counter background",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.show_announcement_counter }}"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "popup_body_background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Announcement",
+      "type": "announcement",
+      "limit": 15,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "announcement_image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "announcement_image_shape",
+          "label": "Image shape",
+          "options": [
+            {
+              "value": "square",
+              "label": "Square"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            }
+          ],
+          "default": "circle"
+        },
+        {
+          "type": "range",
+          "id": "announcement_image_radius",
+          "label": "Image corner radius",
+          "min": 0,
+          "max": 8,
+          "default": 0,
+          "unit": "px",
+          "step": 1,
+          "visible_if": "{{ block.settings.announcement_image_shape == 'square' }}"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "announcement_text",
+          "label": "Text",
+          "default": "Grab the latest Offers!"
+        },
+        {
+          "type": "url",
+          "id": "announcement_link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "announcement_link_target",
+          "label": "Open link in",
+          "options": [
+            {
+              "label": "New tab",
+              "value": "_blank"
+            },
+            {
+              "label": "Same tab",
+              "value": "_top"
+            }
+          ],
+          "default": "_top"
+        },
+        {
+          "type": "header",
+          "content": "Appearance"
+        },
+        {
+          "type": "color_scheme",
+          "id": "announcement_color_scheme",
+          "label": "Color scheme",
+          "default": "scheme_1"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Announcement popup",
+      "blocks": [
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

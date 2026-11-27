@@ -1,0 +1,20 @@
+.age-verification-popup .drawer__body__wrapper {
+  overflow-y: auto;
+  padding: 24px;
+}
+.age-verification-popup .age-verification {
+  padding: 10px 51px 0;
+}
+@media screen and (max-width: 767px) {
+  .age-verification-popup .age-verification {
+    padding: 10px 24px 0;
+  }
+}
+.age-verification-popup .age-verification .age-title {
+  font-size: calc(var(--font-body-scale) * 24px);
+  line-height: calc(var(--font-body-scale) * 24px * var(--body-line-height));
+}
+.age-verification-popup .age-verification .age-approve {
+  margin-top: 24px;
+  margin-bottom: 18px;
+}

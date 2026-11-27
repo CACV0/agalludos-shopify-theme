@@ -1,0 +1,43 @@
+<link
+  rel="stylesheet"
+  media="all"
+  href="{{ 'age-verification.css' | asset_url }}"
+>
+<script defer="defer" src="{{ 'age-verification.js' | asset_url }}"></script>
+<age-verification
+  aria-live="polite"
+  aria-modal="true"
+  class="d-block drawer   age-verification-popup  color-{{ settings.drawer_color_scheme }} "
+  drawer-type="age-popup"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="drawer__container">
+    <div class="drawer__overlay" ></div>
+
+    <div class="drawer__wrapper drawer__wrapper--animation-position-center">
+      {% comment %} Drawer Header Area {% endcomment %}
+
+      {% comment %} Drawer Content/Body area {% endcomment %}
+      <div class="drawer__body">
+        <div class="drawer__body__wrapper ">
+          
+            <div class="age-verification">
+              <p class="text-center h3 mb-16">
+                {{ section.settings.text_title }}
+              </p>
+              <p class="fnt-14 mb-2  text-center">
+                {{ section.settings.subtext }}
+              </p>
+              <div class="age-approve text-center" yes-button>
+                <button class="btn  btn--{{ section.settings.approve_style }} btn--small w-100  ">{{ section.settings.approve_text }}</button>
+              </div>
+              <div class=" age-reject  text-center " no-button>
+                <a href="{{ section.settings.rejection_url }}" class="btn  btn--{{ section.settings.reject_style }}  btn--small w-100  ">{{ section.settings.reject_button }}</a>
+              </div>
+            </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</age-verification>

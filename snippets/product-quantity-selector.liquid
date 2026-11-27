@@ -1,0 +1,50 @@
+{% comment %}
+  List of variables used:
+  form_id : {{ string   }} Reference form id
+  block: {{ object }} block related object data
+{% endcomment %}
+
+{% assign presentacion = closest.product.metafields.custom.presentacion.value %}
+
+{% if presentacion contains 'ibra' %}
+  {% assign label_cantidad = 'Cantidad (lbs)' %}
+{% elsif presentacion contains 'nidad' %}
+  {% assign label_cantidad = 'Cantidad (und)' %}
+{% else %}
+  {% assign label_cantidad = 'Cantidad' %}
+{% endif %}
+
+<div class="product-quantity__selector-wrapper {{ class | default: '' }}" {{ block.shopify_attributes }}>
+  <label class="mb-2 text-color" for="quantity-{{ form_id }}">
+    {{ label_cantidad }}
+  </label>
+  <quantity-selector class="product-quantity__selector">
+    <button aria-label="{{ 'products.product.quantity.decrease' | t: product: product_title }}" decrease-value>
+      {%- render 'icon' with 'minus'
+        , color_var: 'rgba(var(--color-input-color-rgba))' -%}
+    </button>
+    <label class="visually-hidden" for="quantity-{{ form_id }}">
+      {{ label_cantidad }}
+    </label>
+    <input
+      id="quantity-{{ form_id }}"
+      form="{{ form_id }}"
+      max="{%- unless product.quantity_rule.max == nil -%}{{ product.quantity_rule.max }}{%- else -%} null {%- endunless -%}"
+      min="{%- unless product.quantity_rule.min == nil -%}{{ product.quantity_rule.min }}{%- else -%} 1 {%- endunless -%}"
+      name="quantity"
+      role="spinbutton"
+      step="{{ product.quantity_rule.increment }}"
+      type="number"
+      aria-label="{{ 'products.product.quantity.quantity_title' | t: product: product_title }}"
+      value="{%- unless product.quantity_rule.min == nil -%}{{ product.quantity_rule.min }}{%- else -%} 1 {%- endunless -%}">
+    <button aria-label="{{ 'products.product.quantity.increase' | t: product: product_title }}" increase-value>
+      {%- render 'icon' with 'plus'
+        , color_var: 'rgba(var(--color-input-color-rgba))' -%}
+    </button>
+  </quantity-selector>
+  {% if presentacion != blank %}
+    <p style="font-size: 0.75rem; color: #9ca3af; margin-top: 6px; line-height: 1.4;">
+      {{ presentacion }}
+    </p>
+  {% endif %}
+</div>

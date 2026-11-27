@@ -1,0 +1,107 @@
+<link
+  rel="stylesheet"
+  media="all"
+  href="{{ 'section-pickup-availability.css' | asset_url }}"
+>
+{% assign product = closest.product %}
+<div {{ block.shopify_attributes }}>
+  {%- liquid
+    assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities | where: 'pick_up_enabled', true
+    assign is_pickup_available = false
+    if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0
+      assign is_pickup_available = true
+    endif
+  -%}
+
+  {%- liquid
+    assign border_color = block.settings.border_color
+    assign section_bg = section.settings.color_scheme.settings.background
+    assign no_padding = false
+
+    if border_color == blank or border_color == 'transparent' or border_color == 'rgba(0,0,0,0)'
+      assign no_padding = true
+    else
+      assign border_rgb = border_color | color_to_rgb
+      assign bg_rgb = section_bg | color_to_rgb
+      if border_rgb == bg_rgb and section.settings.color_scheme.settings.background_gradient == blank
+        assign no_padding = true
+      endif
+    endif
+  -%}
+
+  <pickup-availability
+    role="region"
+    class="pickup__availability d-block d-none"
+    data-section-id="{{ section.id }}"
+    {% if is_pickup_available %}
+      available
+      style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }};
+      --color-text: {{ block.settings.text_color }};
+      --color-link: {{ block.settings.text_link_color }};
+      --border-color: {{ block.settings.border_color }};
+      --pickup-container-padding: {% if no_padding %}0{% else %}16px{% endif %};"
+    {% endif %}
+    data-root-url="{{ routes.root_url }}"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    data-has-only-default-variant="{{ product.has_only_default_variant }}"
+    aria-label="{{ 'products.product.pickup_availability.drawer_head' | t }}"
+  >
+    <template>
+      <pickup-availability-preview class="pickup__availability-container d-flex">
+        <div class="pickup__availability-icon">
+          {%- render 'icon' with 'closeErrorCircle', color: 'var(--error-text-color)', width: '24', height: '24' -%}
+        </div>
+        <div class="pickup-availability-info">
+          <p class="text-color fnt-16">
+            {{ 'products.product.pickup_availability.unavailable' | t }}
+          </p>
+          <button class="pickup-availability-button link link--green">
+            {{ 'products.product.pickup_availability.refresh' | t }}
+          </button>
+        </div>
+      </pickup-availability-preview>
+    </template>
+  </pickup-availability>
+</div>
+
+{% schema %}
+{
+  "name": "Pickup availability",
+  "settings": [
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_link_color",
+      "label": "Text link color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pickup availability",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

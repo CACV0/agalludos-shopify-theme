@@ -1,0 +1,58 @@
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- capture block_bg -%}{{ block.settings.background_color }}{%- endcapture -%}
+{%- assign no_padding = false -%}
+{%- if block_bg == 'rgba(0,0,0,0)' or block_bg == 'transparent' or block_bg == blank -%}
+  {%- assign no_padding = true -%}
+{%- elsif section_bg == block_bg -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign no_padding = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+<div
+  class="nutriscore__wrapper"
+  style="--background-color:{{ block.settings.background_color }};--color-text: {{ block.settings.text_color }}; --nutriscore-padding: {% if no_padding %}24px 0{% else %}32px 18px{% endif %} ;"
+>
+  <ul class="nutriscore__list" style="--segments-height:{{ block.settings.segment_height |  append: 'px'}}">
+    {% for i in (1..5) %}
+      {% liquid
+        assign input_item_id = 'value_' | append: i
+        assign color_id = 'value_' | append: i | append: '_color'
+        assign active = false
+        assign highlight = block.settings.custom_highlight_item | default: block.settings.highlight_value
+        assign highlight_number = highlight | plus: 0
+        if highlight_number == forloop.index
+          assign active = true
+        endif
+      %}
+      {% if block.settings[input_item_id] != blank %}
+        <li
+          class="nutriscore__item {%- if active %} active {%- endif %}"
+          style="--pill-color: {{ block.settings[color_id] }}"
+        >
+          {% if active %}
+            <span class="up-triangle-icon">
+              {% render 'icon' with 'up-triangle-icon' %}
+            </span>
+            <span class="down-triangle-icon">
+              {% render 'icon' with 'down-triangle-icon' %}
+            </span>
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
+<ul class="nutriscore__item-inner-text d-flex" style=" --nutriscore-text-padding: {% if no_padding %}0 {% else %} 0 8px{% endif %};">
+  {% for i in (1..5) %}
+    {% liquid
+      assign input_item_id = 'value_' | append: i
+    %}
+    {% if block.settings[input_item_id] != blank %}
+      <li class="nutriscore__item-inner fnt-16 fnt-body-weight-bold flex-1 text-center ">
+        {{ block.settings[input_item_id] }}
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

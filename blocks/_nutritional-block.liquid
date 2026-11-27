@@ -1,0 +1,257 @@
+{{ 'section-nutritional-information.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Card inset — same rule the other product-page blocks use (see blocks/_bar-chart.liquid):
+  a transparent/blank card colour, or one that matches a non-gradient section background,
+  means there is no visible card to inset from, so the rows sit flush with the block edges.
+  Horizontal only: the top and bottom inset is the gap between the paragraph above and the
+  table heading, and there is no card edge for it to be redundant with.
+{%- endcomment -%}
+{%- capture section_bg -%}{{ section.settings.color_scheme.settings.background }}{%- endcapture -%}
+{%- capture block_bg -%}{{ block.settings.background_color }}{%- endcapture -%}
+{%- assign no_padding = false -%}
+{%- if block_bg == 'rgba(0,0,0,0)' or block_bg == 'transparent' or block_bg == blank -%}
+  {%- assign no_padding = true -%}
+{%- elsif section_bg == block_bg -%}
+  {%- if section.settings.color_scheme.settings.background_gradient == blank -%}
+    {%- assign no_padding = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- capture card_style -%}--tabs-card-bg: {{ block.settings.background_color }}; --tabs-card-text: {{ block.settings.text_color }};{% if no_padding %} --ni-card-padding-inline: 0;{% endif %}{%- endcapture -%}
+{%- capture spacing_style -%}--ni-bottom-mobile: {{ block.settings.bottom_mobile | append: 'px' }}; --ni-bottom-desktop: {{ block.settings.bottom_desktop | append: 'px' }};{%- endcapture -%}
+
+{%- if block.settings.collapse_content -%}
+  {%- comment -%}
+    Collapsible mode — reuse the theme's shared <accordion-tab> component (src/js/common/accordion.js,
+    bundled in base.js). Summary = header; the +/- indicator comes from .accordion__item__head's
+    ::before/::after (flips on [aria-expanded]). Body = [accordionBody].
+    Open state follows the merchant's "Open by default" setting, the same as blocks/_description.liquid.
+    Note: we deliberately do NOT add .accordion__item__body — its `p { color: var(--color-text) }`
+    would override the dark nutrition card's text colour.
+    The heading is optional and has no default: leave it blank and the accordion still renders,
+    with only the +/- toggle in the header row.
+  {%- endcomment -%}
+  <accordion-tab
+    class="nutritional-info-block nutritional-info-block--collapsible"
+    style="{{ spacing_style }}"
+    {{ block.shopify_attributes }}
+  >
+    <details
+      accordionTab
+      aria-expanded="{{ block.settings.open_by_default }}"
+      class="accordion__item nutritional-info-block__details d-block{% if block.settings.open_by_default %} active{% endif %}"
+      {% if block.settings.open_by_default %}open{% endif %}
+    >
+      {%- comment -%} inline-richtext heading may carry markup — strip it for the label {%- endcomment -%}
+      <summary aria-label="{{ block.settings.heading | strip_html }}">
+        <div class="accordion__item__head nutritional-info-block__header">
+          {% if block.settings.heading != blank %}
+            {%- comment -%}
+              Collapsible header follows the accordion pattern in blocks/_description.liquid —
+              body font at a fixed 16px so the heading reads as an accordion label, not a title.
+              The Size setting's .h1–.h6 utilities are !important and would beat .fnt-16, so they
+              are deliberately not applied in this mode.
+            {%- endcomment -%}
+            <{{ block.settings.heading_tag }} class="nutritional-info-block__title fnt-16 fnt-body text-color m-0">
+              {{- block.settings.heading -}}
+            </{{ block.settings.heading_tag }}>
+          {% endif %}
+        </div>
+      </summary>
+      <div accordionBody class="nutritional-info-block__collapsible{% if block.settings.open_by_default %} active{% endif %}">
+        {% if block.settings.paragraph != blank %}
+          <p class="nutritional-info-block__subheading fnt-body fnt-14 text-color mb-2">{{ block.settings.paragraph }}</p>
+        {% endif %}
+        <div class="nutritional-info-block__body nutritional-tabs__panel" style="{{ card_style }}">
+          {% render 'information-content', block: block %}
+        </div>
+      </div>
+    </details>
+  </accordion-tab>
+{%- else -%}
+  {%- comment -%} Static mode — content always visible, no collapse. A blank heading just omits
+    the header row and keeps the card. {%- endcomment -%}
+  <div class="nutritional-info-block" style="{{ spacing_style }}" {{ block.shopify_attributes }}>
+    {% if block.settings.heading != blank %}
+      <div class="nutritional-info-block__header">
+        <{{ block.settings.heading_tag }} class="nutritional-info-block__title fnt-heading text-color m-0 {{ block.settings.style }}">
+          {{- block.settings.heading -}}
+        </{{ block.settings.heading_tag }}>
+      </div>
+    {% endif %}
+    {% if block.settings.paragraph != blank %}
+      <p class="nutritional-info-block__subheading fnt-body fnt-14 text-color mb-2">{{ block.settings.paragraph }}</p>
+    {% endif %}
+    <div class="nutritional-info-block__body nutritional-tabs__panel" style="{{ card_style }}">
+      {% render 'information-content', block: block %}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Nutritional block",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "collapse_content",
+      "label": "Collapse content",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false,
+      "visible_if": "{{ block.settings.collapse_content }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Nutritional information"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "info": "Only applies when 'Collapse content' is disabled — the collapsible header uses a fixed accordion label size.",
+      "default": "h4",
+      "visible_if": "{{ block.settings.collapse_content == false }}",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "paragraph",
+      "label": "Paragraph",
+      "default": "Serving Size 300ml (1 Can) · 1 Serving Per Container"
+    },
+    {
+      "type": "text",
+      "id": "left_label",
+      "label": "Left column label",
+      "default": "Calories"
+    },
+    {
+      "type": "text",
+      "id": "right_label",
+      "label": "Right column label",
+      "default": "15 Kcal",
+      "info": "For mobile, if the left column text is too big then automatically right column label will shift down"
+    },
+    {
+      "type": "richtext",
+      "id": "information",
+      "label": "Information",
+      "info": "Separate label and value with a colon \" : \", use line breaks to add a new row. Use a hyphen to indent rows. Press Enter, place the text on a new line, and apply a larger heading style to increase its size. Bullet and numbered lists become indented rows, and numbered rows keep their number. Italic applies to the whole row. Bold and links are not shown. [Learn more](https://help.ascendthemes.com/article/119-nutrition-information)",
+      "default": "<p>Total Fat: 0g: 0%</p><p>Sodium: 30mg: 1%</p><p>Total Carbohydrate: 3g: 1%</p><p>- Dietary Fiber: 0g: 0%</p><p>- Total Sugars: 0g</p><p>Protein: 1g</p><p>Caffeine: 150mg</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "extra_information",
+      "label": "Extra information",
+      "default": "<p>* Not a significant source of saturated fat, trans fat, cholesterol, vitamin D, calcium, iron, or potassium.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom spacing(desktop)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom spacing(mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutritional block"
+    }
+  ]
+}
+{% endschema %}

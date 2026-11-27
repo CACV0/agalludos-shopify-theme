@@ -1,0 +1,307 @@
+{% comment %}
+  as_image: atleast as one image
+{% endcomment %}
+{% liquid
+  assign no_image = false
+  assign media_aspect_ratio = section.settings.image_aspect_ratio
+  if block.settings.image == blank and block.settings.product == blank
+    assign no_image = true
+  endif
+%}
+
+<div class="comparison__product-img-card {% unless section.settings.enable_highlight %} m-0 {% endunless %} {% unless no_image %} comparison-with-image {% endunless %} color-{{ section.settings.desktop_column_color_scheme }} mobile-color-{{ section.settings.color_scheme }}">
+  <div
+    class="comparison__badge"
+    style="--badge-icon-text-color: {{ section.settings.badge_text_icon_color }};color:var(--badge-icon-text-color);background-color:{{ section.settings.badge_background_color }};"
+  >
+    {% render 'icon' with section.settings.icon_style %}
+    {{- section.settings.badge_text -}}
+  </div>
+  {% if block.settings.product != blank %}
+    {% liquid
+      assign ratio = false
+      if media_aspect_ratio == 'adapt'
+        if block.settings.image != blank
+          assign ratio = block.settings.image.aspect_ratio
+        elsif block.settings.product.featured_media
+          assign ratio = block.settings.product.featured_media.aspect_ratio
+        else
+          assign ratio = 1
+        endif
+      endif
+    %}
+    {%- capture imageClass -%}
+      aspect-ratio-{{ section.settings.image_aspect_ratio }} object-fit-{{ section.settings.image_fit }} set-100-percentage-size-media 
+    {%- endcapture -%}
+
+    <div
+      class="comarison__img-container w-100"
+      style="--card-image-background:{{ section.settings.card_image_background }}"
+    >
+      <a
+        aria-label="{{ block.settings.product.title }}"
+        href="{{ block.settings.product.url }}"
+        class="comparison__img aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+        {% if ratio %}
+          style="--aspect-ratio:{{ ratio }}"
+        {% endif %}
+        image-container
+      >
+        <animation-reveal
+          aoi-delay="0.1"
+          aoi-amount="0"
+          aoi-duration="0.7"
+          aoi-type="zoom-out"
+        >
+          {% if block.settings.image != blank %}
+            {{
+              block.settings.image
+              | image_url: width: block.settings.image.width
+              | image_tag:
+                class: imageClass,
+                widths: '1024,800,600,400',
+                sizes: '(min-width: 1220px) 288px, (min-width: 1000px) 210px, (min-width: 780px) 200px, 90px',
+                alt: block.select.image.alt,
+                loading: loading,
+                fetchpriority: fetchpriority,
+                is: 'image-loading'
+            }}
+          {% elsif block.settings.product.featured_media %}
+            {{
+              block.settings.product.featured_media
+              | image_url: width: block.settings.product.featured_media.width
+              | image_tag:
+                widths: '1024,800,600,400',
+                sizes: '(min-width: 1220px) 288px, (min-width: 1000px) 210px, (min-width: 780px) 200px, 90px',
+                alt: block.settings.product.featured_media.alt,
+                class: imageClass,
+                loading: loading,
+                fetchpriority: fetchpriority,
+                is: 'image-loading'
+            }}
+          {% endif %}
+        </animation-reveal>
+        {% if block.settings.image != blank %}
+          {{
+            block.settings.image
+            | image_url: width: 20
+            | image_tag:
+              class: 'blur-image',
+              alt: block.settings.image.alt,
+              loading: loading,
+              fetchpriority: fetchpriority
+          }}
+        {% elsif block.settings.product.featured_media %}
+          {{
+            block.settings.product.featured_media
+            | image_url: width: 20
+            | image_tag: alt: block.settings.product.featured_media.alt, class: 'blur-image', loading: loading, fetchpriority: fetchpriority
+          }}
+        {% endif %}
+      </a>
+    </div>
+  {% elsif block.settings.image != blank %}
+    {%- capture imageClass -%}
+      aspect-ratio-{{ section.settings.image_aspect_ratio }} object-fit-{{ section.settings.image_fit }} set-100-percentage-size-media 
+      {%- endcapture -%}
+    <div
+      class="comarison__img-container w-100"
+      style="--card-image-background:{{ section.settings.card_image_background }}"
+    >
+      {% liquid
+        assign ratio = false
+        if media_aspect_ratio == 'adapt'
+          if block.settings.image
+            assign ratio = block.settings.image.aspect_ratio
+          else
+            assign ratio = 1
+          endif
+        endif
+      %}
+
+      <div
+        class="comparison__img aspect-ratio-{{ section.settings.image_aspect_ratio }}"
+        {% if ratio %}
+          style="--aspect-ratio:{{ ratio }}"
+        {% endif %}
+        image-container
+      >
+        <animation-reveal
+          aoi-delay="0.1"
+          aoi-amount="0"
+          aoi-duration="0.7"
+          aoi-type="zoom-out"
+        >
+          {{
+            block.settings.image
+            | image_url: width: block.settings.image.width
+            | image_tag:
+              class: imageClass,
+              widths: '1024,800,600,400',
+              sizes: '(min-width: 1220px) 288px, (min-width: 1000px) 210px, (min-width: 780px) 200px, 90px',
+              alt: block.select.image.alt,
+              loading: loading,
+              fetchpriority: fetchpriority,
+              is: 'image-loading'
+          }}
+        </animation-reveal>
+        {{
+          block.settings.image
+          | image_url: width: 20
+          | image_tag: alt: block.settings.image.alt, class: 'blur-image', loading: loading, fetchpriority: fetchpriority
+        }}
+      </div>
+    </div>
+  {% elsif as_image %}
+    {% liquid
+      if media_aspect_ratio == 'adapt'
+        for block in section.blocks
+          if block.settings.product != blank or block.settings.image != blank
+            if block.settings.image != blank
+              assign ratio = block.settings.image.aspect_ratio
+            elsif block.settings.product.featured_media
+              assign ratio = block.settings.product.featured_media.aspect_ratio
+            else
+              assign ratio = 1
+            endif
+            break
+          endif
+        endfor
+      endif
+    %}
+    <div
+      class="comarison__img-container no-product-image w-100"
+      style="--card-image-background:{{ section.settings.card_image_background }}"
+    >
+      <div
+        class="comparison__img aspect-ratio-{{ section.settings.image_aspect_ratio }} no-product-image"
+        {% if ratio %}
+          style="--aspect-ratio:{{ ratio }};aspect-ratio: {{ ratio }}"
+        {% endif %}
+      ></div>
+    </div>
+  {% endif %}
+
+  <div class="comparison__title-price text-{{ section.settings.column_text_alignment }} w-100">
+    {% if block.settings.product != blank %}
+      {% liquid
+        assign on_sale = false
+        assign has_no_varaint = block.settings.product.has_only_default_variant
+        if block.settings.product.compare_at_price > block.settings.product.price
+          assign on_sale = true
+        endif
+
+        assign hide_percentage_off = false
+      %}
+      {% if block.settings.heading != blank %}
+        {% if block.settings.product != blank %}
+          <a href="{{ block.settings.product.url }}" class="text-decor-none">
+        {% endif %}
+        <{{ block.settings.heading_tag }} class="fnt-20 fnt-body comparison__product-title {{ block.settings.style }}">
+          {{- block.settings.heading -}}
+        </{{ block.settings.heading_tag }}>
+        {% if block.settings.product != blank %}
+          </a>
+        {% endif %}
+      {% else %}
+        {% if block.settings.product != blank %}
+          <a href="{{ block.settings.product.url }}" class="text-decor-none">
+        {% endif %}
+        <{{ block.settings.heading_tag }} class="fnt-20 fnt-body comparison__product-title {{ block.settings.style }}">
+          {{- block.settings.product.title -}}
+        </{{ block.settings.heading_tag }}>
+        {% if block.settings.product != blank %}
+          </a>
+        {% endif %}
+      {% endif %}
+      {% render 'price', product: block.settings.product, on_sale: on_sale, hide_percentage_off: true %}
+    {% elsif block.settings.heading != blank %}
+      <{{ block.settings.heading_tag }} class="fnt-20 fnt-body comparison__product-title {{ block.settings.style }} {% if as_image == false %} mt-0 {% endif %}">
+        {{- block.settings.heading -}}
+      </{{ block.settings.heading_tag }}>
+    {% endif %}
+  </div>
+  {% if block.settings.product != blank
+    and section.settings.quick_view_position == 'top'
+    and section.settings.show_quick_buy
+  %}
+    <product-card
+      class="comparison-product-slider-buttons w-100 {% if section.settings.show_quick_buy_on_mobile == false %} tab-only {% endif %} {% if position == forloopIndex  %} highlight-active {% endif %}"
+      product-url="{{ block.settings.product.url }}"
+      product-handle="{{ block.settings.product.handle }}"
+      product-id="{{ block.settings.product.selected_or_first_available_variant.id }}"
+    >
+      {% liquid
+        assign quick_buy_button_type = settings.quick_buy_button
+        assign show_calltoaction_btn = show_calltoaction_btn | default: quick_buy_button_type, allow_false: true
+        assign show_quick_buy = section.settings.show_quick_buy
+        assign quick_buy_button = true
+        unless show_quick_buy and show_calltoaction_btn
+          assign quick_buy_button = false
+        endunless
+      %}
+      {% assign is_product_available = block.settings.product.selected_or_first_available_variant.available %}
+      {% assign has_no_varaint = block.settings.product.has_only_default_variant %}
+      {%- assign product_form_id = 'product_form_' | append: block.settings.product.id -%}
+      {% form 'product', block.settings.product, class: 'product-card-item__form', id: product_form_id %}
+        <input
+          name="id"
+          type="hidden"
+          value="{{ block.settings.product.first_available_variant.id }}"
+        >
+        <input
+          name="quantity"
+          type="hidden"
+          value="1"
+        >
+
+        <!-- form content -->
+        {% if quick_buy_button %}
+          {% if is_product_available %}
+            {% unless has_no_varaint %}
+              <button
+                aria-label="{{ 'products.product.button_choose_options' | t }}"
+                class="btn  btn--fill w-100 text-upper"
+                toggle-element="options-drawer"
+                type="submit"
+              >
+                <div aria-hidden="true" class="btn--preloader">
+                  <div aria-hidden="true" class="btn--preloader--circular">
+                    <div aria-hidden="true" class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div aria-hidden="true" class="btn--text">
+                  {{ 'products.product.button_choose_options' | t }}
+                </div>
+              </button>
+            {% else %}
+              <button
+                aria-label="{{ 'products.product.button_add_to_cart' | t }}"
+                class="btn btn--fill w-100 text-upper"
+                toggle-element="cart-drawer"
+                type="submit"
+              >
+                <div aria-hidden="true" class="btn--preloader">
+                  <div aria-hidden="true" class="btn--preloader--circular">
+                    <div aria-hidden="true" class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div aria-hidden="true" class="btn--text">
+                  {{ 'products.product.button_add_to_cart' | t }}
+                </div>
+              </button>
+            {% endunless %}
+          {%- else -%}
+            <button
+              aria-label="{{ 'products.product.button_out_of_stock' | t }}"
+              class="btn btn--fill w-100 text-upper disable"
+              type="button"
+            >
+              {{ 'products.product.button_out_of_stock' | t }}
+            </button>
+          {% endif %}
+        {% endif %}
+      {% endform %}
+    </product-card>
+  {% endif %}
+</div>

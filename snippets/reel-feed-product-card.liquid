@@ -1,0 +1,154 @@
+{% comment %}
+  Params Used:
+  product: @object - Gets you which product object
+{% endcomment %}
+
+{%- liquid
+  assign on_sale = false
+  if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+    assign on_sale = true
+  endif
+  assign has_no_variant = false
+  if product.variants_count == 1 or product.has_only_default_variant
+    assign has_no_variant = true
+  endif
+  assign first_option_value = product.options_with_values.first.values.first
+  if first_option_value.product_url != blank
+    assign has_no_variant = false
+  endif
+  assign product_first_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  if product_first_media.media_type == 'model'
+    assign product_first_media = product_first_media.preview_image
+  endif
+  assign image_ratio = product_first_media.aspect_ratio
+-%}
+
+{% capture image %}
+  {% comment %} Image {% endcomment %}
+    {%- if product_first_media -%}
+      {{
+        product_first_media
+        | image_url: width: product_first_media.width
+        | image_tag:
+          widths: '141, 57',
+          sizes: '(max-width: 767px) 57px',
+          alt: product_first_media.alt,
+          loading: 'lazy',
+          class: 'image-responsive object-fit-cover',
+          is: 'image-loading'
+      }}
+      {{
+        product_first_media
+        | image_url: width: 5
+        | image_tag:
+          class: 'blur-image',
+          alt: product_first_media.alt,
+          loading: 'lazy'
+      }}
+    {% else %}
+      <div class="product-cart-no-image-container color-{{ section.settings.color_scheme }}">
+        <p class="product-cart-no-image text-center text-color">
+           {{- product.title | truncate: 20 -}}
+        </p>
+      </div>
+    {%- endif -%}
+{% endcapture %}
+
+{% capture title %}
+  {{ product.title | truncatewords: 6 }}
+{% endcapture %}
+
+<product-card
+  product-handle="{{ product.selected_or_first_available_variant.url | split: '/products/' | last | split: '?' | first }}"
+  product-id="{{ product.selected_or_first_available_variant.id }}"
+>
+  {% form 'product', product, class: 'product-card-item__form' %}
+    <div class="d-flex ugc-reel__card__product--wrapper" bottom-sheet-clone-id="action-button">
+      <div class="position-relative ugc-reel__card__product--image" style="--aspect-ratio:{{ image_ratio }}" image-container>
+        <button
+          class="cursor-pointer button-rest-styles image--aspectSize h-100"
+          is="bottom-sheet-trigger"
+          type="button"
+          target-bottom-sheet="reel-product-variant"
+          action-type="show"
+        >
+          {% comment %}
+            <div class="loader-container" product-loader>
+              <div class="preloader-circle"></div>
+            </div>
+          {% endcomment %}
+          {{ image }}
+          {% comment %} </div> {% endcomment %}
+        </button>
+      </div>
+      <div class="ugc-reel__card__product--info d-flex d-flex-dir-c">
+        {% comment %} Title {% endcomment %}
+        <input
+          name="id"
+          type="hidden"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+        <input
+          name="quantity"
+          type="hidden"
+          value="1"
+        >
+        <button
+          class="cursor-pointer h4 button-rest-styles text-color"
+          is="bottom-sheet-trigger"
+          type="button"
+          target-bottom-sheet="reel-product-variant"
+          action-type="show"
+        >
+          {{ title }}
+        </button>
+        <!-- form content -->
+        <div class="d-flex justify-content-space-btw mt-12 fnt-18 text-color">
+          {% comment %} Price {% endcomment %}
+          {% render 'price', product: product, on_sale: on_sale, hide_percentage_off: true, use_variant: true %}
+          {% comment %} Product form {% endcomment %}
+        </div>
+      </div>
+      <div
+        class="ugc-reel__card__product--button {% if has_no_variant != true %} ugc-reel__card__product--button--has-variant{% endif %}"
+      >
+        {% unless has_no_variant %}
+          <button
+            class="btn btn--fill button-rest-styles cursor-pointer"
+            is="bottom-sheet-trigger"
+            type="button"
+            target-bottom-sheet="reel-product-variant"
+            action-type="show"
+          >
+            <div aria-hidden="true" class="btn--icon text-center d-flex align-item-center justify-content-center">
+              {% render 'icon' with 'plus', color_var: 'var(--button-icon-color, var(--color-icon))' %}
+            </div>
+            <div class="btn--content text-center">
+              <span quick-buy-style-button-label></span>
+            </div>
+          </button>
+        {% else %}
+          <button
+            aria-label="{{ 'products.product.button_add_to_cart' | t }}"
+            class="btn btn--fill text-upper"
+            toggle-element="cart-drawer"
+            {% unless product.available %}disabled{% endunless %}
+            type="submit"
+          >
+            <div aria-hidden="true" class="btn--preloader d-flex">
+              <div aria-hidden="true" class="btn--preloader--circular">
+                <div aria-hidden="true" class="checkmark draw"></div>
+              </div>
+            </div>
+            <div aria-hidden="true" class="btn--icon text-center d-flex align-item-center justify-content-center">
+              {% render 'icon' with 'plus', color_var: 'var(--button-icon-color, var(--color-icon))' %}
+            </div>
+            <div class="btn--content text-center">
+              <span quick-buy-style-button-label></span>
+            </div>
+          </button>
+        {% endunless %}
+      </div>
+    </div>
+  {% endform %}
+</product-card>

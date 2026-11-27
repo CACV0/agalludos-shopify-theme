@@ -1,0 +1,153 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header group",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "countdown_timer_rERADd": {
+          "type": "countdown_timer",
+          "disabled": true,
+          "settings": {
+            "countdown_text": "Super sale Up to 40%",
+            "start_year": 2024,
+            "start_month": "7",
+            "start_day": "27",
+            "start_hours": "16",
+            "start_minute": "0",
+            "hide_timer_on_ending": "set_timer_to_zero",
+            "time_zone": "shop_time_zone",
+            "timer_font_family": "timer_font_body",
+            "text": "#df3b3a",
+            "background": "#ede9a0",
+            "desktop_content_alignment": "center",
+            "countdown_timer_gap": 5
+          }
+        },
+        "announcement-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Envío GRATIS desde $150.000 COP 🚚",
+            "announcement_link": "#"
+          }
+        }
+      },
+      "block_order": [
+        "countdown_timer_rERADd",
+        "announcement-1"
+      ],
+      "settings": {
+        "enable_sticky": false,
+        "layout_width": "fixed",
+        "navigation": "slider",
+        "content_stack": "row",
+        "carousel_width": 100,
+        "scroll_speed": 30,
+        "slider_autoplay": false,
+        "autoplay_delay": 5,
+        "show_locale_selector": true,
+        "show_country_selector": true,
+        "show_country_flag": true,
+        "show_country_name": false,
+        "enable_sublinks": true,
+        "sublink": "social",
+        "custom_link_heading_1": "Find A Store",
+        "custom_link_url_1": "",
+        "custom_link_heading_2": "Need Help?",
+        "custom_link_url_2": "",
+        "custom_link_heading_3": "",
+        "custom_link_url_3": "",
+        "color_scheme": "scheme-1d240e0b-894c-4f01-9968-ecf5e8fdfc89"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega-menu": {
+          "type": "mega_menu_promotion",
+          "settings": {
+            "mega_menu_trigger": "Shop",
+            "promotion_stack": "row",
+            "image_ratio": "portrait",
+            "content_alignment": "left",
+            "promotion-1_button_text": "Check out all collections",
+            "promotion-1_link": "",
+            "promotion-2_button_text": "NEW ARRIVALS",
+            "promotion-2_link": "",
+            "promotion-3_button_text": "View all",
+            "promotion-3_link": "",
+            "link_target": "_blank"
+          }
+        },
+        "mega_menu_products_EnaXzP": {
+          "type": "mega_menu_products",
+          "settings": {
+            "mega_menu_trigger": "Must Try Brews",
+            "show_heading": false,
+            "product_heading": "",
+            "collection": "",
+            "products": [
+              "midnight",
+              "espresso-blend-brew-bags",
+              "vanilla-coffee-concentrate",
+              "sunrise"
+            ],
+            "heading": "CREW PICKS",
+            "show_view_all_button": true,
+            "view_all_link_style": "icon",
+            "view_all_link_position": "start",
+            "view_all_link_text": "View all",
+            "link_url": "",
+            "link_target": "_blank"
+          }
+        }
+      },
+      "block_order": [
+        "mega-menu",
+        "mega_menu_products_EnaXzP"
+      ],
+      "settings": {
+        "logo_position": "logo-left-menu-center",
+        "dropdown_trigger_type": "hover",
+        "enable_sticky": true,
+        "sticky_header_style": "on_scroll_up",
+        "bottom_box_shadow": true,
+        "header_logo": "shopify://shop_images/horizontal_azul_72fde154-c2e8-410a-b88e-6ecf02e18fa9.png",
+        "logo_width": 140,
+        "logo_mobile_width": 94,
+        "menu": "main-menu",
+        "show_search_icon": true,
+        "customer_account_menu": "customer-account-main-menu",
+        "highlight_heading": "Ver catálogo",
+        "highlight_link": "shopify://collections/all",
+        "use_outline_button_style": false,
+        "enable_transparent_header": false,
+        "show_on_only_homepage": true,
+        "transparent_header_text_color": "#ffffff",
+        "transparent_button_outline_color": "#000000",
+        "enable_overlay": false,
+        "overlay_color": "linear-gradient(180deg, rgba(255, 255, 255, 0) 56%, rgba(0, 0, 0, 1) 96%)",
+        "hamberger_menu": "main-menu",
+        "show_locale_selector": true,
+        "show_country_selector": true,
+        "show_country_flag": true,
+        "show_country_name": true,
+        "color_scheme": "scheme-2",
+        "color_scheme-menu": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

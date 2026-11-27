@@ -1,0 +1,91 @@
+{%- if settings.show_trust_badges -%}
+  <div
+    class="cart-trust-badges"
+    style="
+      --trust-badge-icon-width-desktop: {{ settings.trust_badge_icon_width_desktop | default: 30 }}px;
+      --trust-badge-icon-width-mobile: {{ settings.trust_badge_icon_width_mobile | default: 30 }}px;
+      --trust-badge-alignment: {{ settings.trust_badge_alignment | default: 'space-evenly' }};
+    "
+  >
+    {%- if settings.trust_badges_style == 'payment_icons' -%}
+      <div class="cart-trust-badges__payment-icons">
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'cart-trust-badges__payment-icon' }}
+        {%- endfor -%}
+      </div>
+      <div class="secured-lock-content">
+        {% render 'icon' icon: 'secured-lock' -%}
+        <span class="fnt-12 secured-lock-content__text ">
+          {{ 'products.payment_icons_info' | t }}
+        </span>
+      </div>
+    {%- else -%}
+      <div class="cart-trust-badges__custom">
+        {%- for i in (1..3) -%}
+          {%- assign show_badge = 'show_trust_badge_' | append: i -%}
+          {%- assign badge_text = 'trust_badge_text_' | append: i -%}
+          {%- assign badge_icon = 'trust_badge_icon_' | append: i -%}
+          {%- assign badge_custom_icon = 'trust_badge_custom_icon_' | append: i -%}
+          {%- if settings[show_badge] -%}
+            {%- liquid
+              assign icon_value = settings[badge_icon]
+              case icon_value
+                when 'truck'
+                  assign icon_name = 'icon-vehicle'
+                when 'globe'
+                  assign icon_name = 'icon-globe'
+                when 'box'
+                  assign icon_name = 'icon-box'
+                when 'heart'
+                  assign icon_name = 'icon-heart'
+                when 'gift'
+                  assign icon_name = 'icon-gift'
+                when 'smile'
+                  assign icon_name = 'icon-smile'
+                when 'back'
+                  assign icon_name = 'icon-back'
+                when 'star'
+                  assign icon_name = 'icon-star-sm'
+                when 'building'
+                  assign icon_name = 'building-icon'
+                when 'timer'
+                  assign icon_name = 'timer-strok'
+                when 'plane'
+                  assign icon_name = 'plane-icon'
+                when 'credit-card'
+                  assign icon_name = 'credit-card'
+                when 'lock'
+                  assign icon_name = 'lock-icon'
+                when 'shield-strok'
+                  assign icon_name = 'shield-strok'
+                when 'money'
+                  assign icon_name = 'money'
+              endcase
+            -%}
+            <div class="cart-trust-badges__item">
+              <div class="cart-trust-badges__icon">
+                {%- if settings[badge_custom_icon] != blank -%}
+                  {{
+                    settings[badge_custom_icon]
+                    | image_url: width: 60
+                    | image_tag:
+                      widths: '30,60',
+                      sizes: '30px',
+                      class: 'cart-trust-badges__custom-icon',
+                      alt: settings[badge_text],
+                      loading: 'lazy'
+                  }}
+                {%- else -%}
+                  {% render 'icon' with icon_name %}
+                {%- endif -%}
+              </div>
+              {%- if settings[badge_text] != blank -%}
+                <span class="cart-trust-badges__text fnt-14 fnt-body">{{ settings[badge_text] }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

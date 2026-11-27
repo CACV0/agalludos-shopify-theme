@@ -1,0 +1,167 @@
+{% comment %}
+  Media group — the grid / carousel layer of the Gallery Lookbook section.
+
+  Accepts Media blocks and owns the layout markup, so the section itself renders nothing but
+  {% content_for 'blocks' %}: no capture printed into several containers, and no CSS filtering to
+  keep the text blocks out of the grid. Same container pattern as _nutritional, which owns its
+  tabs markup and renders its own children.
+
+  Layout settings stay on the section — they describe the whole band, not this block — and are
+  read from here. Desktop and mobile can use different layouts; when they differ both trees are
+  rendered and only CSS (layout-desktop-* / layout-mobile-* below) decides which one is visible.
+{% endcomment %}
+
+{%- liquid
+  assign intersection = ''
+  if section.index > 2
+    assign intersection = 'intersection-element'
+  endif
+
+  assign desktop_layout = section.settings.layout_style
+  assign mobile_layout = section.settings.layout_style_mobile
+-%}
+
+{%- comment -%}
+  The media blocks are captured because a mixed desktop/mobile layout renders both trees and each
+  needs the same slides. Media-only, so nothing has to be filtered back out.
+{%- endcomment -%}
+{% capture gallery_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+<div
+  class="gallery-lookbook__media layout-desktop-{{ desktop_layout }} layout-mobile-{{ mobile_layout }}"
+  {{ block.shopify_attributes }}
+>
+{% if desktop_layout == 'grid' or mobile_layout == 'grid' %}
+  {%- comment -%} Grid layout — global grid-layout--N-desktop class sets columns {%- endcomment -%}
+  <div class="layout-grid">
+    {%- comment -%} Skip the container so the grid bleeds edge to edge when full width is on {%- endcomment -%}
+    {% unless section.settings.full_width %}
+      <div class="container">
+    {% endunless %}
+    <div
+      class="gallery-lookbook__blocks grid-layout grid-layout--{{ section.settings.number_of_columns }}-desktop {% if section.settings.image_aspect_ratio == 'adapt' %}gallery-lookbook__blocks--adapt{% endif %} {% if section.settings.column_spacing == '0' and section.settings.full_width == false %}no-spacing border-radius border-radius--block{% endif %}"
+      style="--gap: {{ section.settings.column_spacing | append: 'px' }}"
+    >
+      {{ gallery_blocks }}
+    </div>
+    {% unless section.settings.full_width %}
+      </div>
+    {% endunless %}
+  </div>
+{% endif %}
+
+{% if desktop_layout == 'carousel' or mobile_layout == 'carousel' %}
+  <div class="layout-carousel">
+  {%- comment -%} Carousel layout — swiper wrapper shows only the gallery__wrp (swiper-slide) blocks {%- endcomment -%}
+  {% unless section.settings.full_width %}
+    <div class="container">
+  {% endunless %}
+  <carousel-component
+    {{ intersection }}
+    class="swiper js-element"
+    slide-layout-type="carousel"
+    slide-pagination-type="progressbar"
+    slide-per-view="1.2"
+    slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+    slide-autoplay-delay="{{ section.settings.autoplay_delay }}"
+    slide-autoplay="{{ section.settings.slider_autoplay }}"
+    slide-speed="{{ section.settings.slide_duration }}"
+    slide-enable-after-interaction
+    {%- if section.settings.slider_autoplay and section.settings.autoplay_delay == 0 %}slide-loop{%- endif %}
+    slide-responsive-breakpoints='
+      {
+      "320":{
+        "slidesPerView": "1.4",
+        "spaceBetween":{{ section.settings.column_spacing }},
+        "speed": {{ section.settings.slide_duration | times: 1.5 }}{%- if section.settings.autoplay_delay == 0 and section.settings.slider_autoplay -%},
+         "autoplay": {"delay": 5} {%- endif -%} },
+      "640":{
+        "speed": {{ section.settings.slide_duration | times: 1.5 }},
+        "slidesPerView":"1.4",
+        "spaceBetween":{{ section.settings.column_spacing }}{%- if section.settings.autoplay_delay == 0 and section.settings.slider_autoplay -%},
+         "autoplay": {"delay": 5} {%- endif -%}},
+      "768":{
+        "slidesPerView":"2.3",
+        "spaceBetween":{{ section.settings.column_spacing }}{%- if section.settings.autoplay_delay == 0 and section.settings.slider_autoplay -%},
+         "autoplay": {"delay": 5} {%- endif -%}},
+        "1024":{"slidesPerView": {{ section.settings.number_of_columns }},
+          "spaceBetween":{{ section.settings.column_spacing }}{%- if section.settings.autoplay_delay == 0 and section.settings.slider_autoplay -%},
+          "autoplay": {"delay": 2} {%- endif -%} }}
+    '
+  >
+    <div
+      class="swiper-container {% if section.settings.column_spacing == '0' and section.settings.full_width == false %}no-spacing border-radius border-radius--block{% endif %}"
+      main-slider
+    >
+      <div
+        class="swiper-wrapper gallery-lookbook__swiper-wrapper"
+        style="{% if section.settings.slider_autoplay and section.settings.autoplay_delay == 0 %}transition-timing-function: linear !important; {% endif %}"
+      >
+        {{ gallery_blocks }}
+      </div>
+    </div>
+    {% if section.settings.full_width %}
+      <div class="container">
+    {% endif %}
+    {% unless section.settings.slider_autoplay %}
+      <div class="sliderControl">
+        <div class="sliderProgressBar" slide-progress></div>
+        <div class="d-flex sliderPagination">
+          <div
+            aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+            class=""
+            role="button"
+            slide-prev
+            tabindex="0"
+          >
+            <div class="sliderPagination__prev productSlider__prev">
+              {% render 'icon', icon: 'left' %}
+            </div>
+          </div>
+          <div
+            aria-label="{{ 'accessibility.next_slide_label' | t }}"
+            class=""
+            role="button"
+            slide-next
+            tabindex="0"
+          >
+            <div class="sliderPagination__next productSlider__next">
+              {% render 'icon', icon: 'right' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endunless %}
+    {% if section.settings.full_width %}
+      </div>
+    {% endif %}
+  </carousel-component>
+  {% unless section.settings.full_width %}
+    </div>
+  {% endunless %}
+  </div>
+{% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Media group",
+  "tag": null,
+  "blocks": [
+    { "type": "_media-lookbook" }
+  ],
+  "settings": [],
+  "presets": [
+    {
+      "name": "Media group",
+      "blocks": [
+        { "type": "_media-lookbook" },
+        { "type": "_media-lookbook" },
+        { "type": "_media-lookbook" }
+      ]
+    }
+  ]
+}
+{% endschema %}

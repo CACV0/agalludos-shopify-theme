@@ -1,0 +1,537 @@
+<link
+  href="{{ 'section-drawer-view-all-products.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+  rel="stylesheet"
+>
+<script src="{{ 'add-all-products-to-cart.js' | asset_url }}" defer></script>
+{% if block.settings.results_layout == 'drawer' %}
+  {% render 'quiz-results-drawer' %}
+{% else %}
+  {% render 'quiz-results-page', block: block %}
+{% endif %}
+{% schema %}
+{
+  "name": "Results",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "results_layout",
+      "label": "Results layout",
+      "options": [
+        {
+          "value": "page",
+          "label": "Page"
+        },
+        {
+          "value": "drawer",
+          "label": "Drawer"
+        }
+      ],
+      "default": "page"
+    },
+    {
+      "type": "select",
+      "id": "desktop_product_layout",
+      "label": "Products layout",
+      "visible_if": "{{ block.settings.results_layout == 'page' }}",
+      "options": [
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Description"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_add_all_products_to_cart",
+      "label": "Enable add all products to cart",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "visible_if": "{{ block.settings.enable_add_all_products_to_cart }}",
+      "default": "Add all to cart"
+    },
+    {
+      "type": "header",
+      "content": "Badges"
+    },
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "select",
+      "id": "icon_style_1",
+      "label": "Style",
+      "options": [
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "gift",
+          "label": "Gift"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "Building",
+          "value": "building"
+        },
+        {
+          "label": "Timer",
+          "value": "timer"
+        },
+        {
+          "label": "Plane",
+          "value": "plane"
+        },
+        {
+          "label": "credit",
+          "value": "credit-card"
+        },
+        {
+          "label": "lock",
+          "value": "lock"
+        },
+        {
+          "label": "shield",
+          "value": "shield-strok"
+        },
+        {
+          "label": "money",
+          "value": "money"
+        }
+      ],
+      "default": "box"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_1",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon_1",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "select",
+      "id": "icon_style_2",
+      "label": "Style",
+      "options": [
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "gift",
+          "label": "Gift"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "Building",
+          "value": "building"
+        },
+        {
+          "label": "Timer",
+          "value": "timer"
+        },
+        {
+          "label": "Plane",
+          "value": "plane"
+        },
+        {
+          "label": "credit",
+          "value": "credit-card"
+        },
+        {
+          "label": "lock",
+          "value": "lock"
+        },
+        {
+          "label": "shield",
+          "value": "shield-strok"
+        },
+        {
+          "label": "money",
+          "value": "money"
+        }
+      ],
+      "default": "box"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_2",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon_2",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "select",
+      "id": "icon_style_3",
+      "label": "Style",
+      "options": [
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "gift",
+          "label": "Gift"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "Building",
+          "value": "building"
+        },
+        {
+          "label": "Timer",
+          "value": "timer"
+        },
+        {
+          "label": "Plane",
+          "value": "plane"
+        },
+        {
+          "label": "credit",
+          "value": "credit-card"
+        },
+        {
+          "label": "lock",
+          "value": "lock"
+        },
+        {
+          "label": "shield",
+          "value": "shield-strok"
+        },
+        {
+          "label": "money",
+          "value": "money"
+        }
+      ],
+      "default": "box"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_3",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon_3",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4"
+    },
+    {
+      "type": "select",
+      "id": "icon_style_4",
+      "label": "Style",
+      "options": [
+        {
+          "label": "Globe",
+          "value": "globe"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "gift",
+          "label": "Gift"
+        },
+        {
+          "label": "Delivery box",
+          "value": "box"
+        },
+        {
+          "label": "Returns",
+          "value": "back"
+        },
+        {
+          "label": "Star",
+          "value": "star"
+        },
+        {
+          "label": "Smiley",
+          "value": "smile"
+        },
+        {
+          "label": "Heart",
+          "value": "heart"
+        },
+        {
+          "label": "Building",
+          "value": "building"
+        },
+        {
+          "label": "Timer",
+          "value": "timer"
+        },
+        {
+          "label": "Plane",
+          "value": "plane"
+        },
+        {
+          "label": "credit",
+          "value": "credit-card"
+        },
+        {
+          "label": "lock",
+          "value": "lock"
+        },
+        {
+          "label": "shield",
+          "value": "shield-strok"
+        },
+        {
+          "label": "money",
+          "value": "money"
+        }
+      ],
+      "default": "box"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_4",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon_4",
+      "label": "Custom icon",
+      "info": "Replaces the default icon style"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "No results"
+    },
+    {
+      "type": "text",
+      "id": "retry_button_text",
+      "label": "Retry button text",
+      "default": "Retry"
+    },
+    {
+      "type": "text",
+      "id": "heading_no_results",
+      "label": "Heading",
+      "default": "Based on your results, we suggest:"
+    },
+    {
+      "type": "select",
+      "id": "style_size",
+      "label": "Style size",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "content_no_results",
+      "label": "Text"
+    },
+    {
+      "type": "text_alignment",
+      "id": "no_results_content_alignment",
+      "label": "Content alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Product Recommendations"
+    },
+    {
+      "type": "text",
+      "id": "product_recommendations_heading",
+      "label": "Heading"
+      
+    },
+    {
+      "type": "text_alignment",
+      "id": "product_recommendations_content_alignment",
+      "label": "Content alignment",
+      "default": "center"
+      
+    },
+    {
+      "type": "product_list",
+      "id": "product_recommendations_products",
+      "label": "Products",
+      "limit": 10
+    },
+    {
+      "type": "collection",
+      "id": "product_recommendations_collections",
+      "label": "Collections"
+    }
+  ]
+}
+{% endschema %}

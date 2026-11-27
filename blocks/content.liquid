@@ -1,0 +1,95 @@
+<div
+  class="content text-{{ block.settings.content_alignment }} text-{{ block.settings.mobile_content_alignment}}-md"
+  style="
+    --content-sale-background-color:{{ block.settings.background_color_sale}}; --content-sale-color:{{ block.settings.text_color_sale}} ; --content-text-color:{{ block.settings.text_color_content }};
+    
+  "
+>
+  {% if block.settings.show_sale_badge %}
+    <span class="content__sale fnt-12 ">
+      {{ block.settings.black_friday_sale }}
+    </span>
+  {% endif %}
+  <div class="content__text fnt-12">
+    {% render 'copy-code',
+      content: block.settings.content,
+      icon_color: block.settings.text_color_content
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Content Block",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show badge",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "black_friday_sale",
+      "label": "Badge label",
+      "visible_if": "{{ block.settings.show_sale_badge }}",
+      "default": "Badge label"
+    },
+    {
+      "type": "color",
+      "id": "background_color_sale",
+      "label": "Background color",
+      "default": "#DF3B3A",
+      "visible_if": "{{ block.settings.show_sale_badge }}"
+    },
+    {
+      "type": "color",
+      "id": "text_color_sale",
+      "label": "Text color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.show_sale_badge }}"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p> Text </p>",
+      "info": "Wrap your text in {} to enable the copy button. Example: {FLAT20}"
+    },
+    {
+      "type": "color",
+      "id": "text_color_content",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Alignment(desktop)" 
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Alignment(mobile)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content Block"
+    }
+  ]
+}
+{% endschema %}

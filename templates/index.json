@@ -1,0 +1,1160 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_VQUrAd": {
+      "type": "slideshow",
+      "blocks": {
+        "image_slide_pDLX3a": {
+          "type": "_image-slide",
+          "name": "Image slide",
+          "disabled": true,
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/PURA_AGALLA_Salm_n_Web.webp",
+            "mobile_slide_image": "shopify://shop_images/PURA_AGALLA_WEB_Salm_n.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 480,
+            "desktop_content_alignment": "left",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "center",
+            "mobile_content_position": "bottom",
+            "hide_on_desktop": true,
+            "overlay_color": "#0000005c",
+            "color_scheme": "",
+            "color_scheme_mobile": ""
+          },
+          "blocks": {
+            "sub_heading_pcBijY": {
+              "type": "sub-heading",
+              "disabled": true,
+              "settings": {
+                "subheading": "La mejor selección para ti",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_zWWLP9": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "Del mar a tu mesa",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_JrYdNV": {
+              "type": "paragraph",
+              "settings": {
+                "slide_sub_text": "<p><em>Frescos y empacados al vacío.</em></p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_kfBqgj": {
+              "type": "button",
+              "settings": {
+                "button_label": "Ver productos",
+                "button_link": "shopify://collections/tesoros-del-mar",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_pcBijY",
+            "heading_zWWLP9",
+            "paragraph_JrYdNV",
+            "button_kfBqgj"
+          ]
+        },
+        "image_slide_YD8g9C": {
+          "type": "_image-slide",
+          "name": "Image slide",
+          "disabled": true,
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/PURA_AGALLA_Trucha_Web.webp",
+            "mobile_slide_image": "shopify://shop_images/PURA_AGALLA_Trucha.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 480,
+            "desktop_content_alignment": "left",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "center",
+            "mobile_content_position": "bottom",
+            "hide_on_desktop": true,
+            "overlay_color": "#0000005c",
+            "color_scheme": "",
+            "color_scheme_mobile": ""
+          },
+          "blocks": {
+            "sub_heading_NMahVj": {
+              "type": "sub-heading",
+              "disabled": true,
+              "settings": {
+                "subheading": "Contamos con la mejor selección",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_DLA6Fd": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "Joyas del río",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_LCW8EJ": {
+              "type": "paragraph",
+              "settings": {
+                "slide_sub_text": "<p><em>Bagre, mojarra, trucha; tradición pura.</em></p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_kaNQMG": {
+              "type": "button",
+              "settings": {
+                "button_label": "Ver productos",
+                "button_link": "shopify://collections/riquezas-del-rio",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_NMahVj",
+            "heading_DLA6Fd",
+            "paragraph_LCW8EJ",
+            "button_kaNQMG"
+          ]
+        },
+        "image_slide_BB9Bbr": {
+          "type": "_image-slide",
+          "settings": {
+            "image_video_width": "full",
+            "image_video_positin": "left",
+            "slide_image": "shopify://shop_images/hero-desktop-v3.webp",
+            "mobile_slide_image": "shopify://shop_images/hero-mobile-v3.webp",
+            "enable_image_link": false,
+            "slide_link": "",
+            "slide_link_target": "_top",
+            "content_width": 1000,
+            "desktop_content_alignment": "center",
+            "desktop_content_position": "center",
+            "mobile_content_alignment": "center",
+            "mobile_content_position": "center",
+            "hide_on_desktop": false,
+            "overlay_color": "#00000014",
+            "color_scheme": "scheme-1",
+            "color_scheme_mobile": "scheme-1"
+          },
+          "blocks": {
+            "sub_heading_9B8LyB": {
+              "type": "sub-heading",
+              "name": "Sub heading",
+              "disabled": true,
+              "settings": {
+                "subheading": "Pescados y mariscos frescos a domicilio en Bogotá",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "heading_DQabKe": {
+              "type": "heading",
+              "settings": {
+                "slide_header": "<strong>Comer rico ahora es más fácil y rápido</strong>",
+                "highlight_color": "#f52222",
+                "heading_tag": "h2",
+                "style": "h1",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "paragraph_aw6xUh": {
+              "type": "paragraph",
+              "name": "Paragraph",
+              "settings": {
+                "slide_sub_text": "<p>Pescados y mariscos listos para preparar</p>",
+                "enable_custom_color": false,
+                "text_color": "#000000",
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            },
+            "button_aM6AmY": {
+              "type": "button",
+              "settings": {
+                "button_label": "Ver productos",
+                "button_link": "shopify://collections/all",
+                "link_target": "_top",
+                "use_outline_button": false,
+                "bottom_desktop": 16,
+                "bottom_mobile": 16
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "sub_heading_9B8LyB",
+            "heading_DQabKe",
+            "paragraph_aw6xUh",
+            "button_aM6AmY"
+          ]
+        }
+      },
+      "block_order": [
+        "image_slide_pDLX3a",
+        "image_slide_YD8g9C",
+        "image_slide_BB9Bbr"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "section_width": false,
+        "media_size": "lg",
+        "mobile_media_size": "md",
+        "slider_autoplay": false,
+        "autoplay_delay": 4,
+        "desktop_navigation": "dash_arrows",
+        "padding_top": 40,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "border_color": "#000000",
+        "section_background_color": "#ffffff"
+      }
+    },
+    "rich_text_r8yRdV": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_xEtJUg": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Cortes y filetes individuales"
+          }
+        },
+        "heading_cNjCjT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Elige a tu gusto y cocina en minutos",
+            "heading_tag": "h2",
+            "style": "h3"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_xEtJUg",
+        "heading_cNjCjT"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "container_size": true,
+        "content_width": 560,
+        "content_alignment": "center",
+        "padding_top": 24,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "featured_collection_69fg9U": {
+      "type": "featured-collection",
+      "blocks": {
+        "featured_collection_xTYihM": {
+          "type": "featured_collection",
+          "settings": {
+            "tab_heading": "Collection",
+            "heading_tag": "h3",
+            "style": "h4",
+            "collection": "todos-los-productos",
+            "link_url": "",
+            "promo_card": false,
+            "promo_card_position": 1,
+            "image_fit": "cover",
+            "image_height": 50,
+            "promo_overlay_style": "gradient",
+            "promo_background_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%)",
+            "promo_background_solid": "rgba(0,0,0,0)",
+            "promo_heading": "Promotion heading",
+            "promo_heading_tag": "h3",
+            "promo_heading_style": "h4",
+            "promo_content": "<p>Promotion description</p>",
+            "promo_text_color": "#ffffff",
+            "promo_link": "",
+            "promo_link_tab": "_top",
+            "promo_content_alignment": "center",
+            "promo_content_position": "center",
+            "promo_content_alignment_mobile": "center",
+            "promo_content_position_mobile": "center"
+          }
+        },
+        "product_collection_PfHQQr": {
+          "type": "product_collection",
+          "disabled": true,
+          "settings": {
+            "tab_heading": "Collection",
+            "heading_tag": "h3",
+            "style": "h4",
+            "products": [],
+            "link_url": "",
+            "promo_card": false,
+            "promo_card_position": 1,
+            "image_fit": "cover",
+            "image_height": 50,
+            "promo_overlay_style": "gradient",
+            "promo_background_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%)",
+            "promo_background_solid": "rgba(0,0,0,0)",
+            "promo_heading": "Promotion heading",
+            "promo_heading_tag": "h3",
+            "promo_heading_style": "h4",
+            "promo_content": "<p>Promotion description</p>",
+            "promo_text_color": "#ffffff",
+            "promo_link": "",
+            "promo_link_tab": "_top",
+            "promo_content_alignment": "center",
+            "promo_content_position": "center",
+            "promo_content_alignment_mobile": "center",
+            "promo_content_position_mobile": "center"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_xTYihM",
+        "product_collection_PfHQQr"
+      ],
+      "name": "Featured collection",
+      "settings": {
+        "max_product_show": 15,
+        "layout_style": "carousel",
+        "layout_style_mobile": "carousel",
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "subheading": "",
+        "heading": "",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "",
+        "use_outline_button": true,
+        "show_view_all_button": true,
+        "view_all_link_style": "icon",
+        "view_all_link_text": "View all",
+        "link_target": "_top",
+        "view_all_link_position": "start",
+        "content_style": "stack",
+        "content_alignment": "left",
+        "enable_product_card_background": false,
+        "product_card_color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "rich_text_Kbb8VM": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_KHYBMQ": {
+          "type": "heading",
+          "settings": {
+            "heading": "",
+            "heading_tag": "h2",
+            "style": "h1"
+          }
+        },
+        "text_M7jdjr": {
+          "type": "text",
+          "settings": {
+            "content": ""
+          }
+        },
+        "button_QdckAi": {
+          "type": "button",
+          "settings": {
+            "button_text": "Ver todos los productos",
+            "link": "shopify://collections/all",
+            "link_target": "_top",
+            "use_outline_button": true
+          }
+        }
+      },
+      "block_order": [
+        "heading_KHYBMQ",
+        "text_M7jdjr",
+        "button_QdckAi"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "container_size": true,
+        "content_width": 500,
+        "content_alignment": "center",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "image_gallery_KmwKDm": {
+      "type": "image-gallery",
+      "blocks": {
+        "image_iw9XNb": {
+          "type": "image",
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_h8dJRJ": {
+          "type": "image",
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_fgx4Fx": {
+          "type": "image",
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_xVVxga": {
+          "type": "image",
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_KLDJKk": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_HHikbc": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        }
+      },
+      "block_order": [
+        "image_iw9XNb",
+        "image_h8dJRJ",
+        "image_fgx4Fx",
+        "image_xVVxga",
+        "image_KLDJKk",
+        "image_HHikbc"
+      ],
+      "disabled": true,
+      "name": "Image gallery",
+      "settings": {
+        "full_width": true,
+        "layout_style": "carousel",
+        "number_of_columns": "3",
+        "slider_autoplay": true,
+        "slide_duration": 2550,
+        "autoplay_delay": 0,
+        "heading_content_alignment": "left",
+        "subheading": "",
+        "heading": "",
+        "heading_tag": "h2",
+        "content": "",
+        "image_aspect_ratio": "square",
+        "content_alignment": "left",
+        "content_position": "top",
+        "column_spacing": "16",
+        "use_outline_button": false,
+        "padding_top": 12,
+        "padding_bottom": 48,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "look_book_Qyyywi": {
+      "type": "look-book",
+      "blocks": {
+        "look_jt9BjJ": {
+          "type": "look",
+          "settings": {
+            "image_background": "shopify://shop_images/look-book-persona-coral_5e816917-c9ea-4e3c-a226-f0bf76d11a6c.webp",
+            "overlay_color": "rgba(0,0,0,0)",
+            "collection": "",
+            "product_list": [
+              "combo-omega",
+              "combo-herencia",
+              "combo-air-fryer-essentials",
+              "combo-home-office-power-protein",
+              "combo-paella-arroces",
+              "combo-despensa-familiar"
+            ],
+            "products_to_show": 6,
+            "caption": "",
+            "heading_tag": "h4",
+            "style": "h3",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "look_jt9BjJ"
+      ],
+      "name": "Look book",
+      "settings": {
+        "full_width": false,
+        "layout": "grid",
+        "content_alignment": "center",
+        "subheading": "",
+        "heading": "Combos listos para disfrutar",
+        "heading_tag": "h3",
+        "style": "h3",
+        "content": "<p>Come bien sin improvisar</p>",
+        "image_ratio": "adapt",
+        "disable_foreground": true,
+        "enable_product_card_background": false,
+        "product_card_color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2",
+        "color_scheme_media": ""
+      }
+    },
+    "shoppable_feed_UKUAPa": {
+      "type": "shoppable-feed",
+      "blocks": {
+        "media_post_QjP3VP": {
+          "type": "media_post",
+          "settings": {
+            "feed_image": "shopify://shop_images/studio-calamar.webp",
+            "product_list": [
+              "aleta-calamar-blanco"
+            ]
+          }
+        },
+        "media_post_NA9XdH": {
+          "type": "media_post",
+          "settings": {
+            "feed_image": "shopify://shop_images/studio-at-n.webp",
+            "product_list": [
+              "atun-filete"
+            ]
+          }
+        },
+        "media_post_kryVGQ": {
+          "type": "media_post",
+          "settings": {
+            "feed_image": "shopify://shop_images/studio-mojarra-roja.webp",
+            "product_list": [
+              "mojarra"
+            ]
+          }
+        },
+        "media_post_KGReEj": {
+          "type": "media_post",
+          "settings": {
+            "feed_image": "shopify://shop_images/studio-trucha.webp",
+            "product_list": [
+              "trucha"
+            ]
+          }
+        },
+        "media_post_PKTHjR": {
+          "type": "media_post",
+          "settings": {
+            "feed_image": "shopify://shop_images/studio-r-balo.webp",
+            "product_list": [
+              "robalo-de-mar"
+            ]
+          }
+        }
+      },
+      "block_order": [
+        "media_post_QjP3VP",
+        "media_post_NA9XdH",
+        "media_post_kryVGQ",
+        "media_post_KGReEj",
+        "media_post_PKTHjR"
+      ],
+      "name": "Shoppable feed",
+      "settings": {
+        "full_width": true,
+        "columns_desktop": "4",
+        "content_alignment": "center",
+        "subheading": "",
+        "heading": "Nuestros favoritos",
+        "heading_tag": "h2",
+        "style": "h3",
+        "content": "",
+        "shape_type": "circle",
+        "handle_name": "Escoge, sorpréndete y síguenos en @agalludos",
+        "handle_url": "https://www.instagram.com/agalludos/",
+        "link_target": "_blank",
+        "media_aspect_ratio": "portrait-9-16",
+        "show_product": "quick_view",
+        "enable_centered_slides": true,
+        "only_first_video": true,
+        "play_media_on": "play_on_click",
+        "play_button_bg": "#000000",
+        "play_button_color": "#ffffff",
+        "feed_text_color": "#ffffff",
+        "feed_overlay_color": "linear-gradient(180deg, rgba(255, 255, 255, 0) 56%, rgba(0, 0, 0, 1) 96%)",
+        "padding_top": 40,
+        "padding_bottom": 80,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "image_with_text_overlay_L7qjaL": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading_YhTtQV": {
+          "type": "heading",
+          "settings": {
+            "heading": "Llena tu nevera sin salir de casa",
+            "heading_tag": "h2",
+            "style": "h1"
+          }
+        },
+        "button_94CU7W": {
+          "type": "button",
+          "settings": {
+            "button_text": "Ver catálogo",
+            "link": "shopify://collections/todos-los-productos",
+            "link_target": "_top"
+          }
+        }
+      },
+      "block_order": [
+        "heading_YhTtQV",
+        "button_94CU7W"
+      ],
+      "name": "Image with text overlay",
+      "settings": {
+        "full_width": false,
+        "image_aspect_ratio": "lg",
+        "mobile_image_aspect_ratio": "lg",
+        "image": "shopify://shop_images/pareja-coral.webp",
+        "mobile_image": "shopify://shop_images/pareja-coral-vertical-sin-texto.webp",
+        "content_width": 800,
+        "text_aligment": "center",
+        "desktop_content_position": "center",
+        "mobile_text_aligment": "center",
+        "mobile_content_position": "bottom",
+        "padding_top": 0,
+        "padding_bottom": 24,
+        "border_size": "hide",
+        "border_position": "both",
+        "overlay_color": "#0000000a",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "shoppable_image_6RdUNf": {
+      "type": "shoppable-image",
+      "blocks": {
+        "hotspot_7NGCfG": {
+          "type": "hotspot",
+          "settings": {
+            "product": "filete-salmon",
+            "x": 9,
+            "y": 67,
+            "x_mobile": 31,
+            "y_mobile": 19
+          }
+        },
+        "hotspot_9RCehM": {
+          "type": "hotspot",
+          "settings": {
+            "product": "atun-filete",
+            "x": 50,
+            "y": 50,
+            "x_mobile": 50,
+            "y_mobile": 50
+          }
+        },
+        "hotspot_XctDcT": {
+          "type": "hotspot",
+          "settings": {
+            "product": "anillos-de-calamar",
+            "x": 90,
+            "y": 68,
+            "x_mobile": 81,
+            "y_mobile": 84
+          }
+        },
+        "image_9MAqUz": {
+          "type": "image",
+          "settings": {
+            "shape": "full_width",
+            "image": "shopify://shop_images/grupo2-desktop.webp",
+            "show_product_button": true,
+            "show_hotspots": true,
+            "product_1": "trucha",
+            "x_product_1": 24,
+            "y_product_1": 38,
+            "product_2": "mojarra",
+            "x_product_2": 59,
+            "y_product_2": 50
+          }
+        }
+      },
+      "block_order": [
+        "hotspot_7NGCfG",
+        "hotspot_9RCehM",
+        "hotspot_XctDcT",
+        "image_9MAqUz"
+      ],
+      "name": "Shoppable image",
+      "settings": {
+        "main_image": "shopify://shop_images/grupo1-desktop.webp",
+        "main_image_mobile": "shopify://shop_images/grupo1-mobile.webp",
+        "image_aspect_ratio": "auto",
+        "image_position": "left",
+        "show_product_button": false,
+        "show_hotspots_in_first_hotspot": false,
+        "hotspot_target": "quick_view",
+        "padding_top": 0,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": ""
+      }
+    },
+    "rich_text_fDVNpQ": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_bqqCtr": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Nuestra promesa:"
+          }
+        },
+        "heading_Fa6zVd": {
+          "type": "heading",
+          "settings": {
+            "heading": "Sin intermediarios, sin excusas",
+            "heading_tag": "h2",
+            "style": "h3"
+          }
+        },
+        "text_PngewK": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "content": "<p>Sin intermediarios, sin excusas. Del mar a tu puerta con la calidad que tú y los tuyos merecen.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_bqqCtr",
+        "heading_Fa6zVd",
+        "text_PngewK"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "container_size": true,
+        "content_width": 960,
+        "content_alignment": "center",
+        "padding_top": 40,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "icon_list_HwtAQq": {
+      "type": "icon-list",
+      "blocks": {
+        "logo_RbAKea": {
+          "type": "logo",
+          "settings": {
+            "icon": "shopify://shop_images/icono-carrito.png",
+            "icon_width": 130,
+            "title": "Domicilio en Bogotá",
+            "block_heading_tag": "h3",
+            "icon_label_size": "h6",
+            "content": "",
+            "icon_link": ""
+          }
+        },
+        "logo_LHjMqj": {
+          "type": "logo",
+          "settings": {
+            "icon": "shopify://shop_images/icono-copo.png",
+            "icon_width": 130,
+            "title": "Cadena de frío",
+            "block_heading_tag": "h3",
+            "icon_label_size": "h6",
+            "content": "",
+            "icon_link": ""
+          }
+        },
+        "logo_YCXJi8": {
+          "type": "logo",
+          "settings": {
+            "icon": "shopify://shop_images/icono-bandera.png",
+            "icon_width": 130,
+            "title": "Una marca colombiana",
+            "block_heading_tag": "h3",
+            "icon_label_size": "h6",
+            "content": "",
+            "icon_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_RbAKea",
+        "logo_LHjMqj",
+        "logo_YCXJi8"
+      ],
+      "name": "Logo list",
+      "settings": {
+        "heading_content_alignment": "center",
+        "subheading": "",
+        "heading": "",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "",
+        "stack_in_mobile": false,
+        "number_of_columns_on_mobile": "1",
+        "auto_rotate_mobile_only": false,
+        "autoplay_delay": 3,
+        "padding_top": 0,
+        "padding_bottom": 40,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "",
+        "background_color": "#ffffff"
+      }
+    },
+    "testimonials_CAhw8B": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_Dfek8A": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "Héctor Alaix",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Nuestro favorito es el salmón; nos llegaron buenas porciones y muy fresco.",
+            "testimonial_Image": "shopify://shop_images/Hector_Usuario.jpg",
+            "product": "combo-omega",
+            "show_product_image": false
+          }
+        },
+        "testimonial_4fMLgH": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "Yelin Lamboglia",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Es un producto espectacular, fácil de preparar, buenas porciones y rico. Muy recomendado.",
+            "testimonial_Image": "shopify://shop_images/Yelin_Usuaria.jpg",
+            "product": "hamburguesas-salmon",
+            "show_product_image": false
+          }
+        },
+        "testimonial_4zCcmK": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "David Florez",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Los camarones, el téntaculo y la aleta de calamar están en su punto y llegan frescos. Recomendados.",
+            "testimonial_Image": "shopify://shop_images/David_Usuario.jpg",
+            "product": "camaron-jumbo-crudo",
+            "show_product_image": false
+          }
+        },
+        "testimonial_Dr9BgP": {
+          "type": "testimonial",
+          "settings": {
+            "show_rating": true,
+            "rating": 5,
+            "author": "María Angelica Pugliese",
+            "heading_tag": "h3",
+            "style": "h3",
+            "title": "",
+            "content": "Orgullosamente cartagenera, vivieno más de 10 años en Bogotá y el róbalo, pargo y sierra que he pedido, 10/10.",
+            "testimonial_Image": "shopify://shop_images/Cliente_Feliz_Pugliese.jpg",
+            "product": "pargo",
+            "show_product_image": false
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_Dfek8A",
+        "testimonial_4fMLgH",
+        "testimonial_4zCcmK",
+        "testimonial_Dr9BgP"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "image_aspect_ratio": "square",
+        "subheading": "",
+        "heading": "Ellos ya lo probaron... y volvieron",
+        "heading_tag": "h2",
+        "style": "h4",
+        "content": "",
+        "content_alignment": "left",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "image_gallery_mDMwMN": {
+      "type": "image-gallery",
+      "blocks": {
+        "image_PV9BKN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Picuda_Entera.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/picuda",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_gFVAiQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Salsa_Teriyaki.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/salsa-teriyaki",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_EKYn7w": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Tentaculo_Calamar.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h1",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/tentaculos-de-calamar",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_GqbtJ3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Algas_Nori.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/algas-nori",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_kfrDRb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Lenguado_Entero.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/lenguado",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_HLHnzX": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Posta_Sierra.webp",
+            "subheading": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "style": "h1",
+            "description": "",
+            "button_label": "",
+            "button_link": "shopify://products/sierra",
+            "button_target": "_blank",
+            "text_color": "#ffffff",
+            "overlay_color": "rgba(0,0,0,0)"
+          }
+        }
+      },
+      "block_order": [
+        "image_PV9BKN",
+        "image_gFVAiQ",
+        "image_EKYn7w",
+        "image_GqbtJ3",
+        "image_kfrDRb",
+        "image_HLHnzX"
+      ],
+      "name": "Image gallery",
+      "settings": {
+        "full_width": true,
+        "layout_style": "carousel",
+        "number_of_columns": "3",
+        "slider_autoplay": true,
+        "slide_duration": 3000,
+        "autoplay_delay": 0,
+        "heading_content_alignment": "left",
+        "subheading": "",
+        "heading": "",
+        "heading_tag": "h2",
+        "content": "",
+        "image_aspect_ratio": "square",
+        "content_alignment": "left",
+        "content_position": "top",
+        "column_spacing": "16",
+        "use_outline_button": false,
+        "padding_top": 0,
+        "padding_bottom": 40,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "slideshow_VQUrAd",
+    "rich_text_r8yRdV",
+    "featured_collection_69fg9U",
+    "rich_text_Kbb8VM",
+    "image_gallery_KmwKDm",
+    "look_book_Qyyywi",
+    "shoppable_feed_UKUAPa",
+    "image_with_text_overlay_L7qjaL",
+    "shoppable_image_6RdUNf",
+    "rich_text_fDVNpQ",
+    "icon_list_HwtAQq",
+    "testimonials_CAhw8B",
+    "image_gallery_mDMwMN"
+  ]
+}

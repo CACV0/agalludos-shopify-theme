@@ -1,0 +1,873 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "_title",
+          "name": "Title",
+          "settings": {
+            "block_bottom_spacing": 16,
+            "heading_tag": "h1"
+          },
+          "blocks": {}
+        },
+        "rating_M7JqLg": {
+          "type": "_rating",
+          "name": "Rating",
+          "settings": {
+            "show_if_no_reviews": true,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_price",
+          "name": "Price",
+          "settings": {
+            "show_taxes_notice": false,
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "badges_rADyhJ": {
+          "type": "_badges",
+          "name": "Badges",
+          "settings": {
+            "badge_stack_style": "vertical",
+            "enable_stack": false,
+            "enable_badge_1": true,
+            "icon_style_1": "tags",
+            "color_scheme_badge_1": "scheme-1",
+            "heading_1": "Empacado al vacío",
+            "content_1": "<p>Sellamos cada producto al vacío para preservar su frescura, textura y nutrientes hasta tu mesa.</p>",
+            "page_1": "",
+            "enable_badge_2": true,
+            "icon_style_2": "vehicle",
+            "color_scheme_badge_2": "scheme-1",
+            "heading_2": "Cadena de frío garantizada",
+            "content_2": "<p>Tu pedido viaja refrigerado desde nuestra planta hasta tu puerta en Bogotá.</p>",
+            "page_2": "",
+            "enable_badge_3": true,
+            "icon_style_3": "card",
+            "color_scheme_badge_3": "scheme-1",
+            "heading_3": "Pago fácil y seguro",
+            "content_3": "<p>Aceptamos tarjetas, PSE y otros medios. Tu transacción está protegida en todo momento.</p>",
+            "page_3": "",
+            "enable_badge_4": false,
+            "icon_style_4": "star",
+            "color_scheme_badge_4": "",
+            "heading_4": "Heading",
+            "content_4": "",
+            "page_4": "",
+            "enable_badge_5": false,
+            "icon_style_5": "star",
+            "color_scheme_badge_5": "",
+            "heading_5": "Heading",
+            "content_5": "",
+            "page_5": "",
+            "enable_badge_6": false,
+            "icon_style_6": "star",
+            "color_scheme_badge_6": "",
+            "heading_6": "Heading",
+            "content_6": "",
+            "page_6": "",
+            "block_bottom_spacing": 12
+          },
+          "blocks": {}
+        },
+        "variant_picker_Vyc9xd": {
+          "type": "_variant-picker",
+          "name": "Variant picker",
+          "settings": {
+            "varaint_selector_type": "pills",
+            "show_swatches": true,
+            "variant_swatches_style": "pills",
+            "swatch_size_desktop": 50,
+            "swatch_size_mobile": 50,
+            "block_bottom_spacing": 5,
+            "guide_heading": "",
+            "guide_option": "",
+            "guide_content": ""
+          },
+          "blocks": {}
+        },
+        "quantity_selector_pJkyyG": {
+          "type": "_quantity-selector",
+          "name": "Quantity selector",
+          "settings": {
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "inventory_heyY46": {
+          "type": "_inventory-status",
+          "settings": {
+            "show_status": "always",
+            "inventory_threshold": 30,
+            "inventory_base_quantity": 60,
+            "show_inventory_quantity": true,
+            "show_inventory_progress": true,
+            "inventory_background_color": "rgba(0,0,0,0)",
+            "inventory_instock_color": "#2e982c",
+            "inventory_lowstock_color": "#ff0000",
+            "inventory_outofstock_color": "#787878",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "buy-buttons": {
+          "type": "_buy-button",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": false,
+            "use_outline_button": true,
+            "show_payment_icon": true,
+            "desktop_image_width": 40,
+            "mobile_image_width": 40,
+            "block_bottom_spacing": 30
+          },
+          "blocks": {}
+        },
+        "count_down_sales_banner_gr4ick": {
+          "type": "_count-down-sales-banner",
+          "name": "Count down sales banner",
+          "settings": {
+            "background_color": "#1a1e22",
+            "bottom_desktop": 16,
+            "bottom_mobile": 16
+          },
+          "blocks": {
+            "group_d4p49X": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": false,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 5,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "content_hENnX4": {
+                  "type": "content",
+                  "settings": {
+                    "show_sale_badge": true,
+                    "black_friday_sale": "5% Off · Código AMISTAD",
+                    "background_color_sale": "#111315",
+                    "text_color_sale": "#fffaf0",
+                    "content": "",
+                    "text_color_content": "#fffaf0",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                },
+                "timer_UwRnBY": {
+                  "type": "timer",
+                  "settings": {
+                    "custom_time": "",
+                    "start_year": 2026,
+                    "start_month": "9",
+                    "start_day": "30",
+                    "start_hours": "23",
+                    "start_minute": "59",
+                    "hide_timer_on_ending": "hide_on_completion",
+                    "time_zone": "shop_time_zone",
+                    "text": "#fffaf0",
+                    "background": "#2b3237",
+                    "timer_style": "h4",
+                    "content_alignment": "left",
+                    "mobile_content_alignment": "left"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "content_hENnX4",
+                "timer_UwRnBY"
+              ]
+            }
+          },
+          "block_order": [
+            "group_d4p49X"
+          ]
+        },
+        "offer_KzcdnD": {
+          "type": "_offer",
+          "name": "Offer",
+          "settings": {
+            "alignment": "left",
+            "icon_position": "column",
+            "bottom_desktop": 30,
+            "bottom_mobile": 30
+          },
+          "blocks": {
+            "group_RPQqA9": {
+              "type": "group",
+              "settings": {
+                "direction": "row",
+                "vertical_mobile": true,
+                "alignment": "space-btw",
+                "gap_desktop": 5,
+                "gap_mobile": 5,
+                "bottom_spacing_desktop": 5,
+                "bottom_spacing_mobile": 5
+              },
+              "blocks": {
+                "offer_block_aLN9Dk": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "10% Off en tu compra",
+                    "text": "<p>Por compras superiores a <strong>$220.000 </strong>recibes <strong>10% OFF </strong>aplicado automáticamente.</p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 0,
+                    "icon_enable": true,
+                    "icon_style": "money",
+                    "icon_width": 24,
+                    "icon_color": "#000000",
+                    "text_color": "#1a1a1a",
+                    "background_color": "#e8f4f4",
+                    "Link_text_color": "#1a1a1a"
+                  },
+                  "blocks": {}
+                },
+                "offer_block_VnxgN8": {
+                  "type": "offer-block",
+                  "settings": {
+                    "heading": "Promoción especial",
+                    "text": "<p>Agrega 6 productos y paga solo 5. <a href=\"https://www.agalludos.com/collections/seleccion-premium-pescados-mariscos\" target=\"_blank\" title=\"Promoción Especial | Pura Agalla\">Ver produtos.</a></p>",
+                    "truncate_words_desktop": 15,
+                    "truncate_words_mobile": 10,
+                    "icon_enable": true,
+                    "icon_style": "gift",
+                    "icon_width": 20,
+                    "icon_color": "#000000",
+                    "text_color": "#1a1a1a",
+                    "background_color": "#e8f4f4",
+                    "Link_text_color": "#1a1a1a"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "offer_block_aLN9Dk",
+                "offer_block_VnxgN8"
+              ]
+            }
+          },
+          "block_order": [
+            "group_RPQqA9"
+          ]
+        },
+        "nutriscore_ey7yKp": {
+          "type": "_nutriscore",
+          "name": "Nutriscore",
+          "settings": {
+            "heading": "Intensidad de sabor",
+            "heading_tag": "h3",
+            "tooltip": "",
+            "highlight_value": 2,
+            "custom_highlight_item": "",
+            "value_1": "Suave",
+            "value_1_color": "#fffaf0",
+            "value_2": "Medio",
+            "value_2_color": "#69c5d4",
+            "value_3": "Intenso",
+            "value_3_color": "#a8dae9",
+            "value_4": "",
+            "value_4_color": "#2b3237",
+            "value_5": "",
+            "value_5_color": "#111315",
+            "segment_height": 10,
+            "background_color": "#1a1e22",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        },
+        "description_aMeBfi": {
+          "type": "_description",
+          "settings": {
+            "collapse_content": false,
+            "open_by_default": false,
+            "heading": "",
+            "heading_tag": "h4",
+            "truncate_description": "280",
+            "hide_truncate_in_desktop": false,
+            "block_bottom_spacing": 12
+          },
+          "blocks": {}
+        },
+        "ugc_reel_3b9jw3": {
+          "type": "_ugc-reel",
+          "name": "UGC Reel",
+          "disabled": true,
+          "settings": {
+            "ugc_heading": "THIS IS YOUR SIGN TO TRY THIS",
+            "heading_tag": "h3",
+            "style": "h3",
+            "layout_style": "portrait",
+            "show_highlight_border": false,
+            "play_first_video": true,
+            "auto_scroll": false,
+            "show_quick_buy": true,
+            "quick_buy_style": "card",
+            "button_label": "Quick buy",
+            "thumbnail_position": "left",
+            "varaint_selector_type": "dropdown",
+            "show_swatches": true,
+            "variant_swatches_style": "pills",
+            "button_label_color": "#ce2525",
+            "button_icon": "#ffffff",
+            "button_background": "#ffffff",
+            "product_text_color": "#ffffff",
+            "background": "#ffffff",
+            "overlay_color": "linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.46) 84%)",
+            "play_button_bg": "#a53e0d",
+            "play_button_color": "#ffffff",
+            "block_bottom_spacing": 30,
+            "block_bottom_spacing_mobile": 30
+          },
+          "blocks": {
+            "reel_x44CBz": {
+              "type": "_reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_rEUm4J": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_NXmkjR": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            },
+            "reel_FC9EDU": {
+              "type": "_reel",
+              "name": "Reel",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "reel_x44CBz",
+            "reel_rEUm4J",
+            "reel_NXmkjR",
+            "reel_FC9EDU"
+          ]
+        },
+        "complementary-products": {
+          "type": "_complementary-products",
+          "settings": {
+            "heading": "Los Agalludos también llevan",
+            "heading_tag": "h4",
+            "block_bottom_spacing": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "rating_M7JqLg",
+        "price",
+        "badges_rADyhJ",
+        "variant_picker_Vyc9xd",
+        "quantity_selector_pJkyyG",
+        "inventory_heyY46",
+        "buy-buttons",
+        "count_down_sales_banner_gr4ick",
+        "offer_KzcdnD",
+        "nutriscore_ey7yKp",
+        "description_aMeBfi",
+        "ugc_reel_3b9jw3",
+        "complementary-products"
+      ],
+      "settings": {
+        "hide_badges": false,
+        "media_autoplay": false,
+        "slider_hide_arrows": false,
+        "enable_media_zoom": true,
+        "image_fit_zoom": "cover",
+        "desktop_media_full_width": false,
+        "display_options_layout": "thumbnail-left",
+        "desktop_enable_parallax": true,
+        "desktop_media_gap": 5,
+        "desktop_media_position": "left",
+        "desktop_media_size": "large",
+        "image_aspect_ratio_desktop": "square",
+        "image_fit_desktop": "contain",
+        "mobile_media_full_width": true,
+        "mobile_media_layout": "simple",
+        "mobile_pagination_style": "dots_overlapping",
+        "mobile_enable_parallax": true,
+        "mobile_media_gap": 0,
+        "image_aspect_ratio_mobile": "square",
+        "image_fit_mobile": "cover",
+        "enable_swipe_on_mobile": true,
+        "thumbnail_ratio": "adapt",
+        "thumbnail_fit": "cover",
+        "show_info": false,
+        "media_text": "<p>Model is 5'9 in size S</p>",
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "desktop_position": "left_top",
+        "mobile_position": "left_top",
+        "enable_sticky_add_to_cart": true,
+        "sticky_add_to_cart_style": "bar",
+        "show_only_for_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "scrolling_content_9mD4xE": {
+      "type": "scrolling-content",
+      "blocks": {
+        "content_A7F3cz": {
+          "type": "content",
+          "settings": {
+            "text": "Domicilio gratis por compras iguales o mayores a 150.000",
+            "link": "shopify://collections/todos-los-productos",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_ARTy94": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        },
+        "content_EXhHF8": {
+          "type": "content",
+          "settings": {
+            "text": "LLeva 6 paga 5 en productos seleccionados",
+            "link": "shopify://collections/seleccion-premium-pescados-mariscos",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_TAaAcT": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        },
+        "content_U6igcN": {
+          "type": "content",
+          "disabled": true,
+          "settings": {
+            "text": "",
+            "link": "",
+            "link_target": "_blank",
+            "use_custom_color": false,
+            "color_custom": "#000000"
+          }
+        },
+        "image_JRTkca": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image_aspect_ratio": "square",
+            "image_fit": "contain",
+            "image_corner_radius": 0,
+            "icon_width": 50,
+            "icon_width_mobile": 50,
+            "link": "",
+            "link_target": "_blank"
+          }
+        }
+      },
+      "block_order": [
+        "content_A7F3cz",
+        "image_ARTy94",
+        "content_EXhHF8",
+        "image_TAaAcT",
+        "content_U6igcN",
+        "image_JRTkca"
+      ],
+      "name": "Scrolling content",
+      "settings": {
+        "full_width": true,
+        "marquee_text_size": 24,
+        "mobile_text_size": 24,
+        "marquee_speed": 18,
+        "padding_top": 12,
+        "padding_bottom": 12,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-4"
+      }
+    },
+    "multicolumn_zhXzDw": {
+      "type": "multicolumn",
+      "blocks": {
+        "card_biFKC8": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "Paso uno",
+            "heading": "Elige con agallas",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Escoge tu corte, tu presentación y la cantidad. Nosotros nos encargamos del resto.</p>"
+          }
+        },
+        "card_MQPxYX": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "Paso dos",
+            "heading": "Lo empacamos en frío",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Cada pedido sale sellado al vacío y en cadena de frío. Del mar y el río directo a nuestra bodega.</p>"
+          }
+        },
+        "card_NTXchz": {
+          "type": "card",
+          "settings": {
+            "media_autoplay": false,
+            "title": "Paso tres",
+            "heading": "Llega fresco a tu puerta",
+            "heading_tag": "h3",
+            "style": "h4",
+            "card_content": "<p>Domicilio en Bogotá con temperatura controlada. Fresco como si lo hubieras pescado tú.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_biFKC8",
+        "card_MQPxYX",
+        "card_NTXchz"
+      ],
+      "name": "Multi-column",
+      "settings": {
+        "layout_style": "grid",
+        "mobile_layout_style": "carousel",
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "heading_content_alignment": "center",
+        "subheading": "",
+        "heading": "¿Cómo llega tu pedido?",
+        "heading_tag": "h2",
+        "style": "h2",
+        "content": "",
+        "content_alignment": "left",
+        "caption_align": "center",
+        "image_aspect_ratio": "adapt",
+        "play_button_bg": "#000000",
+        "play_button_color": "#ffffff",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "rich_text_h6N94G": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_haidxp": {
+          "type": "heading",
+          "settings": {
+            "heading": "ONLY THE GOOD STUFF. ORGANIC BEANS, FINELY GROUND FOR A RICHER SIP.✨ BREWED SLOW, SO EVERY SIP HITS SMOOTH AND STRONG ✨",
+            "heading_tag": "h2",
+            "style": "h1"
+          }
+        },
+        "text_CYDqBq": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "content": "<p>Only the good stuff. Organic beans, finely ground for a richer sip.<br/>✨<strong>Brewed slow, so every sip hits smooth and strong</strong>✨</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_haidxp",
+        "text_CYDqBq"
+      ],
+      "disabled": true,
+      "settings": {
+        "container_size": true,
+        "content_width": 860,
+        "content_alignment": "center",
+        "padding_top": 32,
+        "padding_bottom": 32,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "feature_list_D8TtPb": {
+      "type": "feature-list",
+      "blocks": {
+        "feature_Hw7cVM": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/calidad-exportaci-n-variedad-de-productos.webp",
+            "heading": "Calidad exportación",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": ""
+          }
+        },
+        "feature_CfbFfM": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/sellado-al-vac-o-diferentes-productos.webp",
+            "heading": "Sellado al vacío",
+            "heading_tag": "h3",
+            "style": "h5",
+            "content": ""
+          }
+        },
+        "feature_tQJLyk": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/cadena-de-fr-o-productos-sobre-hielo.webp",
+            "heading": "Cadena de frío garantizada",
+            "heading_tag": "h3",
+            "style": "h4",
+            "content": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature_Hw7cVM",
+        "feature_CfbFfM",
+        "feature_tQJLyk"
+      ],
+      "settings": {
+        "full_width": false,
+        "icon_style": "counter",
+        "icon_width": 32,
+        "icon_width_mobile": 32,
+        "icon_bg_color": "#ffffff",
+        "icon_line_color": "#000000",
+        "slider_autoplay": true,
+        "autoplay_delay": 3,
+        "change_slide_on": "click",
+        "heading": "¿Qué encuentras?",
+        "heading_tag": "h2",
+        "style": "h2",
+        "text_aligment": "left",
+        "content_desktop_style": "two_column",
+        "content_mobile_style": "collapsable",
+        "button_text": "",
+        "link": "",
+        "link_target": "_blank",
+        "button_aligment": "left",
+        "padding_top": 60,
+        "padding_bottom": 80,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "comparison_xLEK6E": {
+      "type": "comparison",
+      "blocks": {
+        "table_heading_r4FDBn": {
+          "type": "table_heading",
+          "settings": {
+            "heading_1": "Frescura y cadena de frío",
+            "heading_2": "Domicilio a tu puerta",
+            "heading_3": "Variedad de presentaciones",
+            "heading_4": "Producto fresco, no congelado",
+            "heading_5": "",
+            "heading_6": "",
+            "heading_7": "",
+            "heading_8": "",
+            "heading_9": "",
+            "heading_10": "",
+            "heading_tag": "h3"
+          }
+        },
+        "table_value_MVJwDb": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "value_1": "Yes",
+            "icon_1": "none",
+            "value_2": "Yes",
+            "icon_2": "none",
+            "value_3": "Yes",
+            "icon_3": "none",
+            "value_4": "Yes",
+            "icon_4": "none",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        },
+        "table_value_xEtBer": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "Pura Agalla",
+            "heading_tag": "h3",
+            "value_1": "Sí",
+            "icon_1": "tick",
+            "value_2": "Sí",
+            "icon_2": "tick",
+            "value_3": "Sí",
+            "icon_3": "tick",
+            "value_4": "Sí",
+            "icon_4": "tick",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        },
+        "table_value_CXWknC": {
+          "type": "table_value",
+          "settings": {
+            "product": "",
+            "heading": "Otras opciones",
+            "heading_tag": "h3",
+            "value_1": "No siempre",
+            "icon_1": "cross",
+            "value_2": "No",
+            "icon_2": "cross",
+            "value_3": "No",
+            "icon_3": "cross",
+            "value_4": "No siempre",
+            "icon_4": "cross",
+            "value_5": "Value 5",
+            "icon_5": "none",
+            "value_6": "Value 6",
+            "icon_6": "none",
+            "value_7": "Value 7",
+            "icon_7": "none",
+            "value_8": "Value 8",
+            "icon_8": "none",
+            "value_9": "Value 9",
+            "icon_9": "none",
+            "value_10": "Value 10",
+            "icon_10": "none"
+          }
+        }
+      },
+      "block_order": [
+        "table_heading_r4FDBn",
+        "table_value_MVJwDb",
+        "table_value_xEtBer",
+        "table_value_CXWknC"
+      ],
+      "name": "Comparison",
+      "settings": {
+        "subheading": "",
+        "heading": "Lo hacemos diferente",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "<p>Lo mejor del río y el mar directo a tu cocina.</p>",
+        "show_quick_buy": false,
+        "quick_view_position": "bottom",
+        "show_quick_buy_on_mobile": true,
+        "image_aspect_ratio": "adapt",
+        "image_fit": "contain",
+        "card_image_background": "#ffffff",
+        "number_of_column": "2",
+        "column_text_alignment": "center",
+        "desktop_column_color_scheme": "scheme-2",
+        "desktop_heading_color": "#000000",
+        "mobile_heading_color": "#000000",
+        "desktop_background_color": "#ffffff",
+        "desktop_divider_color": "#000000",
+        "mobile_tabel_color_scheme": "scheme-2",
+        "enable_highlight": true,
+        "badge_position": "first",
+        "badge_text": "",
+        "icon_style": "comparison-star",
+        "badge_text_icon_color": "#ffffff",
+        "badge_background_color": "#000000",
+        "highlighted_color_scheme": "scheme-5",
+        "divider_color": "#ffffff",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product-recommendation": {
+      "type": "product-recommendation",
+      "settings": {
+        "heading": "También te puede gustar",
+        "heading_tag": "h2",
+        "products_to_show": 4,
+        "display_options": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "enable_product_card_background": false,
+        "product_card_color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "main-product",
+    "scrolling_content_9mD4xE",
+    "multicolumn_zhXzDw",
+    "rich_text_h6N94G",
+    "feature_list_D8TtPb",
+    "comparison_xLEK6E",
+    "product-recommendation"
+  ]
+}

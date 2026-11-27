@@ -1,0 +1,50 @@
+<drawer-component
+  aria-hidden="true"
+  class="d-block drawer color-{{ settings.drawer_color_scheme }}"
+  drawer-type="quiz-support-guide-drawer"
+>
+  <div
+    class="drawer__container"
+  >
+    <div
+      class="drawer__overlay"
+      drawer-overlay
+    ></div>
+    <div class="drawer__wrapper quiz-support-guide-drawer drawer__wrapper--animation-position-center">
+      {% comment %} Drawer Header Area {% endcomment %}
+      {% comment %}
+        <div
+          class="drawer__header border-0 justify-content-end"
+        >
+          <button
+            aria-label="{{ 'accessibility.close_drawer' | t }}"
+            class="drawer__close__btn"
+            close-drawer
+          >
+            {%- render 'icon' with 'closeErrorCircle' -%}
+          </button>
+        </div>
+      {% endcomment %}
+
+      {% comment %} Drawer Content/Body area {% endcomment %}
+      <div
+        class="drawer__body "
+        drawer-content
+      >
+        <div class="drawer__header border-0 justify-content-space-btw p-0">
+      <div header-drawer-body class="">
+      </div>
+        <button
+                        aria-label="{{ 'accessibility.close_drawer' | t }}"
+                        class="drawer__close__btn"
+                        close-drawer
+                      >
+                        {%- render 'icon' with 'drawerclose-icon' -%}
+                      </button>
+                      </div>
+      <div drawer-scrollable-content>
+      </div>
+      </div>
+    </div>
+  </div>
+</drawer-component>

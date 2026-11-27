@@ -1,0 +1,185 @@
+
+
+{% if block.settings.input == 'name' %}
+  <animation-reveal aoi-type="fade-up" aoi-delay="0.5">
+    <div class="form-group">
+      <label class="field__label" for="ContactForm-name">{{ block.settings.heading }}</label>
+      <div class="form-control">
+        <input
+          autocomplete="name"
+          class="field__input"
+          id="ContactForm-name"
+          name="contact[{{ 'contact.form.name' | t }}]"
+          placeholder="{{ block.settings.placeholder_text }}"
+          type="text"
+          value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+        >
+      </div>
+    </div>
+  </animation-reveal>
+{% elsif block.settings.input == 'email' %}
+  <animation-reveal aoi-type="fade-up" aoi-delay="0.10">
+    <div class="form-group">
+      <label class="field__label" for="ContactForm-email">
+        {{ block.settings.heading }}
+        <span aria-hidden="true">*</span>
+      </label>
+      <div class="form-control">
+        <input
+          autocomplete="email"
+          type="email"
+          id="ContactForm-email"
+          class="field__input"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true" aria-describedby="ContactForm-email-error"
+          {% endif %}
+          placeholder="{{ block.settings.placeholder_text  }}"
+        >
+        {%- if form.errors contains 'email' -%}
+          <div class="contact-us__field-error" id="ContactForm-email-error">
+            <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+            <div class="contact-us__field-error-message">
+              <span class="error-text field-error-text">
+                {{ form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email -}}
+              </span>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </animation-reveal>
+{% elsif block.settings.input == 'message' %}
+  <animation-reveal aoi-type="fade-up" aoi-delay="0.15">
+    <div class="form-group">
+      <label for="ContactForm-body">{{ block.settings.heading }} </label>
+      <div class="form-control">
+        <textarea
+          class="text-area field__input"
+          id="ContactForm-body"
+          name="contact[{{ 'contact.form.comment' | t }}]"
+          placeholder="{{ block.settings.placeholder_text }}"
+          rows="10"
+        >
+                      {{- form.body -}}
+                    </textarea>
+      </div>
+    </div>
+  </animation-reveal>
+
+{% elsif block.settings.input == 'text-field' %}
+  {% if block.settings.use_text %}
+    <animation-reveal aoi-type="fade-up" aoi-delay="0.15">
+      <div class="form-group">
+        <label for="custom-field-{{ block.settings.heading }}">
+          {{- block.settings.heading }}
+          {% if block.settings.required %}
+            <span aria-hidden="true">*</span>
+          {% endif %}
+        </label>
+        <div class="form-control">
+          <textarea
+            class="text-area field__input"
+            id="custom-field-{{ block.settings.heading }}"
+            name="contact[{{ block.settings.heading }}]"
+            placeholder="{{ block.settings.placeholder_text }}"
+            rows="10"
+            {% if block.settings.required %}
+              required
+            {% endif -%}
+          ></textarea>
+        </div>
+      </div>
+    </animation-reveal>
+
+  {% else %}
+    <animation-reveal aoi-type="fade-up" aoi-delay="0.20">
+      <div class="form-group">
+        <label for="Form-text-field">
+          {{ block.settings.heading }}
+          {% if block.settings.required %}
+            <span aria-hidden="true">*</span>
+          {% endif %}
+        </label>
+        <div class="form-control">
+          <input
+            class="field__input"
+            id="Form-text-field"
+            name="contact[{{ block.settings.heading }}]"
+            type="text"
+            placeholder="{{ block.settings.placeholder_text }}"
+            {% if block.settings.required %}
+              required
+            {% endif %}
+          >
+        </div>
+      </div>
+    </animation-reveal>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "input",
+  "settings": [
+    {
+      "type": "select",
+      "id": "input",
+      "label": "Input Type",
+      "options": [
+        {
+          "value": "name",
+          "label": "Name"
+        },
+        {
+          "value": "email",
+          "label": "Email"
+        },
+        {
+          "value": "message",
+          "label": "Message"
+        },
+        {
+          "value": "text-field",
+          "label": "Custom input"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Label"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "Required",
+      "default": false,
+      "visible_if": "{{ block.settings.input == 'text-field' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_text",
+      "label": "Use long text",
+      "default": false,
+      "visible_if": "{{ block.settings.input == 'text-field' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Input"
+    }
+  ]
+}
+{% endschema %}

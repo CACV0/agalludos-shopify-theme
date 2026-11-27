@@ -1,0 +1,41 @@
+{% assign product = closest.product %}
+{%- if product != blank -%}
+  <div style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}" {{ block.shopify_attributes }}>
+    {%- form 'product', product -%}
+      <input
+        name="id"
+        type="hidden"
+        value="{{ product.selected_or_first_available_variant.id }}"
+      >
+      {{ form | payment_terms }}
+    {%- endform -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Payment installments",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "To display payment installments, your store needs to support shop pay installments. [Learn more](https://help.shopify.com/en/manual/payments/shop-pay-installments)"
+    },
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Payment installments",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

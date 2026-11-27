@@ -1,0 +1,194 @@
+{{ 'announcement-popup.css' | asset_url | stylesheet_tag }}
+<script defer src="{{ 'announcement-popup.js' | asset_url }}"></script>
+{% liquid
+  case section.settings.popup_icon_style
+    when 'percentage-icon'
+      assign icon = 'percentage-icon'
+    when 'notification-icon'
+      assign icon = 'notification-icon'
+    when 'bolt-icon'
+      assign icon = 'bolt-icon'
+    when 'dollar-icon'
+      assign icon = 'dollar-icon'
+    when 'gift-icon'
+      assign icon = 'gift-icon'
+  endcase
+%}
+<div
+  class="announcement-popup__wrapper announcement-popup__wrapper--{{ section.settings.popup_placement }}"
+  style="
+    --button-background-color: {{ section.settings.popup_button_background_color }};
+    --button-label-color: {{ section.settings.popup_button_label_color }};
+    --color-icon: {{ section.settings.popup_icon_color }};
+    --button-radius: {{ section.settings.popup_button_corner_radius }}px;
+    --desktop-vertical-position: {{ section.settings.popup_position_desktop }}px;
+    --mobile-vertical-position: {{ section.settings.popup_position_mobile }}px;
+  "
+>
+  <div
+    class="announcement-popup__buttons-container announcement-popup__buttons-container--{{ section.settings.popup_placement }}"
+  >
+    <button
+      class="announcement-popup__button_wrapper announcement-popup__button_open {% if section.settings.popup_button_label != blank %}announcement-popup__button_wrapper--with-label{% endif %}"
+      aria-label="{% if section.settings.popup_button_label != blank %}{{ section.settings.popup_button_label }} - {% endif %}{{ 'accessibility.announcement.label' | t }}"
+      drawer-to-open="announcement-popup"
+      is="open-drawer"
+    >
+      {% if section.settings.show_announcement_counter %}
+        <span
+          class="announcement-popup__counter"
+          style="
+            --counter-color: {{ section.settings.counter_color }};
+            --counter-background: {{ section.settings.counter_background }};
+          "
+        >
+          {{ section.blocks.size }}
+        </span>
+      {% endif %}
+      {% if section.settings.popup_button_image != blank %}
+        <span class="announcement-popup__button_custom--icon" style="color: {{ section.settings.popup_icon_color }};">
+          {{
+            section.settings.popup_button_image
+            | image_url: width: section.settings.popup_button_image.width
+            | image_tag:
+              widths: '28,54,72,90',
+              loading: 'eager',
+              fetchpriority: 'high',
+              sizes: '28px',
+              class: 'announcement-popup__button_custom--icon-image',
+              alt: section.settings.popup_button_image.alt
+          }}
+        </span>
+      {%- else -%}
+        {% render 'icon' with icon,
+          circleColor: 'var(--color-icon)',
+          pathColor: 'var(--color-icon)',
+          color: 'var(--color-icon)'
+        -%}
+      {%- endif %}
+      {% if section.settings.popup_button_label != blank %}
+        <span class="announcement-popup__button_text">{{ section.settings.popup_button_label }}</span>
+      {% endif %}
+    </button>
+    <button
+      class="announcement-popup__button_wrapper announcement-popup__button_close"
+      aria-label="Announcement popup button"
+      style="
+        --button-background-color: {{ section.settings.popup_button_background_color }};
+        --button-label-color: {{ section.settings.popup_button_label_color }};
+        --color-icon: {{ section.settings.popup_icon_color }};
+      "
+      close-drawer
+    >
+      {%- render 'icon' with 'close-icon',
+        circleColor: 'var(--color-icon)',
+        pathColor: 'var(--color-icon)',
+        color: 'var(--color-icon)'
+      -%}
+    </button>
+  </div>
+</div>
+<announcement-popup
+  drawer-type="announcement-popup"
+  class="announcement-popup__container announcement-popup__container--{{ section.settings.popup_placement }}"
+  style="
+    --desktop-vertical-position: {{ section.settings.popup_position_desktop }}px;
+    --mobile-vertical-position: {{ section.settings.popup_position_mobile }}px;
+  "
+>
+  <div class="announcement-popup__overlay" drawer-overlay></div>
+  <div
+    class="announcement-popup__inner announcement-popup__inner--{{ section.settings.popup_placement }}"
+  >
+    <div class="announcement-popup__content">
+      {% if section.settings.popup_heading != blank or section.settings.popup_subheading != blank %}
+        <div
+          class="announcement-popup__content--header "
+          style="--header-background: {{ section.settings.popup_heading_background }};  --text-color: {{ section.settings.popup_heading_color }};"
+        >
+          <div class="announcement-popup__close-icon d-flex align-item-center justify-content-end mb-2">
+            <button
+              class="drawer__close__btn"
+              aria-label="{{ 'accessibility.close_drawer' | t }} {{ 'accessibility.announcement.label' | t }}"
+              close-drawer
+            >
+              {% render 'icon' with 'message-close' %}
+            </button>
+          </div>
+          <div class="announcement-popup__content--header-content text-{{ section.settings.popup_text_alignment }}">
+            {% if section.settings.popup_subheading != blank %}
+              <p class="announcement-popup__subheading fnt-14 {% if section.settings.popup_heading == blank %} m-0 {% endif %}">
+                {{ section.settings.popup_subheading }}
+              </p>
+            {% endif %}
+            {% if section.settings.popup_heading != blank %}
+              <p class="announcement-popup__heading fnt-18 m-0 fnt-heading-weight">
+                {{ section.settings.popup_heading }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      {% if section.blocks.size >= 1 %}
+        <div
+          class="announcement-popup__content--body"
+          style="--body-background: {{ section.settings.popup_body_background_color }};"
+        >
+          {% for block in section.blocks %}
+            {% liquid
+              assign image_radius = '50%'
+              if block.settings.announcement_image_shape == 'square'
+                assign image_radius = block.settings.announcement_image_radius | append: 'px'
+              endif
+            %}
+            {% if block.settings.announcement_link != blank %}
+              <a
+                class="offer-content__wrapper offer_link color-{{ block.settings.announcement_color_scheme }}"
+                href="{{ block.settings.announcement_link }}"
+                target="{{ block.settings.announcement_link_target }}"
+              >
+            {% else %}
+              <div class="offer-content__wrapper color-{{ block.settings.announcement_color_scheme }}">
+            {% endif %}
+            {% if block.settings.announcement_image != blank %}
+              <div
+                class="offer-content__image position-relative"
+                style="--image-radius:{{ image_radius }}"
+                image-container
+              >
+                {{
+                  block.settings.announcement_image
+                  | image_url: width: block.settings.announcement_image.width
+                  | image_tag:
+                    widths: '58,116,172',
+                    loading: 'lazy',
+                    fetchpriority: 'auto',
+                    sizes: '58px',
+                    is: 'image-loading',
+                    alt: block.settings.announcement_image.alt
+                }}
+                {{
+                  block.settings.announcement_image
+                  | image_url: width: 40
+                  | image_tag: alt: block.settings.announcement_image.alt, class: 'blur-image', loading: 'lazy', fetchpriority: 'auto'
+                }}
+              </div>
+            {% endif %}
+            <div class="offer-content__text">
+              {% if block.settings.announcement_text != blank %}
+                <p class="offer-content__text--description fnt-14 m-0">
+                  {{ block.settings.announcement_text }}
+                </p>
+              {% endif %}
+            </div>
+            {% if block.settings.announcement_link != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</announcement-popup>

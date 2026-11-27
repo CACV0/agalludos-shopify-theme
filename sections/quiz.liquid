@@ -1,0 +1,826 @@
+{{ 'section-quiz.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom_mobile | append: 'px' }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign loading = 'eager'
+  assign fetchpriority = 'auto'
+  if section.index == 1
+    assign fetchpriority = 'high'
+  elsif section.index > 2
+    assign intersection = 'intersection-element'
+  endif
+
+  assign page_width = settings.page_width
+  assign widths = '500, 780, 1060, 1280'
+  assign bg_foregound_color = false
+  if section.settings.color_scheme.settings.background == section.settings.section_background_color
+    assign bg_foregound_color = true
+  endif
+  assign noFullWidth = true
+  if section.settings.full_width
+    assign noFullWidth = false
+  endif
+-%}
+
+{%- capture sizes -%}
+  {%- unless section.settings.full_width -%}
+    (min-width: {{ page_width }}px) {{ page_width | minus: 100 | divided_by: 2 }}px,
+    (min-width: 768px) calc(50vw - 50px), calc(100vw - 200px)
+    {%- else -%}
+    (min-width: 768px) calc(50vw - 50px), calc(100vw - 200px)
+  {%- endunless -%}
+{%- endcapture -%}
+
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'top' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-top"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+<div
+  aria-label="{{ 'section.quiz.title' | t }}"
+  class="quiz section-{{ section.id }}-padding"
+  style="background-color: {{ section.settings.section_background_color }}"
+  role="region"
+>
+  {% unless section.settings.full_width %}
+    <div class="container">
+  {% endunless %}
+  <div
+    class="quiz__section{% unless section.settings.full_width %} border-radius border-radius--block {% endunless %} color-{{ section.settings.color_scheme }}"
+    style="--option-background-color: {{ section.settings.option_background }};--option-text-color: {{ section.settings.option_color }};--option-background-hover-color:{{ section.settings.option_background_hover }};--option-hover-text-color: {{ section.settings.option_color_hover }}"
+  >
+    {% liquid
+      if section.settings.image != blank and section.settings.show_image
+        if section.settings.media_size_mobile == 'adapt'
+          assign mobile_ratio = section.settings.image.aspect_ratio
+        endif
+        if section.settings.media_size == 'adapt'
+          assign ratio = section.settings.image.aspect_ratio
+        endif
+      endif
+    %}
+
+    {% liquid
+      if section.settings.image_mobile != blank and section.settings.show_image
+        if section.settings.media_size_mobile == 'adapt'
+          assign mobile_ratio = section.settings.image_mobile.aspect_ratio
+        endif
+      endif
+    %}
+
+    <quiz-form
+      class="
+        position-relative  {% if section.settings.image_width == 'full' or section.settings.show_image == false %} d-flex  align-item-{{ section.settings.desktop_content_position }} align-item-{{ section.settings.mobile_content_position }}-md justify-content-{{ section.settings.content_alignment }} justify-content-{{ section.settings.mobile_content_alignment }}-md {% else %} d-block{% endif %}
+        {% if section.settings.image_width == 'full' or section.settings.show_image == false %}  block-media-size--{{ section.settings.media_size }} {% if section.settings.media_size_mobile == 'adapt' %} block-media-size-mobile--auto  {%  else %}block-media-size-mobile--{{ section.settings.media_size_mobile }} {% endif %}{% endif %}
+        {% if section.settings.image_width == 'full' or section.settings.show_image == false and section.settings.media_size_mobile != 'adapt' %} quiz__mobileAspectRatio{% endif %}
+      "
+      {% if section.settings.button_label == blank or section.settings.show_welcome_content == false -%}
+        init-quiz
+      {%- endif %}
+      style=" {%- if section.settings.media_size == 'adapt' -%}--aspect-ratio: {{ ratio }};{%- endif -%}{%- if section.settings.media_size_mobile == 'adapt' -%}--mobile-aspect-ratio: {{ mobile_ratio }};{%- endif -%}{%- if section.settings.color_scheme.settings.background_gradient != blank -%}--bgq-color: var(--gradient-background);{%- else -%}--bgq-color: var(--color-background);{%- endif -%}"
+    >
+      {%- if section.settings.show_welcome_content and section.settings.button_label != blank -%}
+        <div
+          class="quiz__landing {% if section.settings.show_image and section.settings.image_width != 'full' %} d-flex align-item-center justify-content-space-btw {% else %} content-over-media {% endif %} color-{{ section.settings.color_scheme }}  text-{{ section.settings.content_alignment }} text-{{ section.settings.mobile_content_alignment }}-md  {% if section.settings.image_width == 'half' and section.settings.image_position == 'left' %} d-flex-md-row-reverse{% endif %}"
+          quiz-start
+        >
+          <div
+            class="quiz__noFullWidth {% if section.settings.show_image and section.settings.image != blank and section.settings.image_width != 'full' %}w-50{% else %} quiz__fullWidthContent {% endif %}"
+          >
+            <div class="h-100 d-flex align-item-{{ section.settings.desktop_content_position }} align-item-{{ section.settings.mobile_content_position }}-md">
+              <div class="quiz__fullWidthContent-inner">
+                {% if section.settings.subheading != blank %}
+                  <animation-reveal
+                    class="d-block"
+                    aoi-type="fade-up"
+                    aoi-duration="0.5"
+                    aoi-amount="0.2"
+                  >
+                    <p class="quiz__subheading mb-16">{{ section.settings.subheading }}</p>
+                  </animation-reveal>
+                {% endif %}
+                {% if section.settings.heading != blank %}
+                  <animation-reveal
+                    class="d-block"
+                    aoi-type="fade-up"
+                    aoi-duration="0.5"
+                    aoi-amount="0"
+                  >
+                    <{{ section.settings.heading_tag }} class="{{ section.settings.style }} mb-16">
+                      {{- section.settings.heading -}}
+                    </{{ section.settings.heading_tag }}>
+                  </animation-reveal>
+                {% endif %}
+                {% if section.settings.content != blank %}
+                  <animation-reveal
+                    class="d-block"
+                    aoi-type="fade-up"
+                    aoi-duration="0.5"
+                    aoi-amount="0.3"
+                  >
+                    <div class="quiz__description fnt-16 mb-16 RTE-content">{{ section.settings.content }}</div>
+                  </animation-reveal>
+                {% endif %}
+                {% if section.settings.button_label != blank %}
+                  <animation-reveal
+                    class="d-block"
+                    aoi-type="fade-up"
+                    aoi-duration="0.5"
+                    aoi-amount="0"
+                  >
+                    <div class="btn--wrp">
+                      <button
+                        class="quiz__blockButton mt-16 btn{% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %}"
+                        type="button"
+                      >
+                        {{ section.settings.button_label }}
+                      </button>
+                    </div>
+                  </animation-reveal>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% if section.settings.image != blank and section.settings.show_image %}
+            <div
+              class="
+                quiz__imageWrp {% if section.settings.image_width != 'full' %}w-50 position-relative {% else %} quiz__fullWidthImage {% endif %} block-media-size--{{ section.settings.media_size }} block-media-size-mobile--{{ section.settings.media_size_mobile }}
+                {% if section.settings.image_mobile != blank %} tab-only {% elsif section.settings.media_size_mobile == 'adapt'%} block-media-size-mobile--auto block-media-size--adapt {% elsif section.settings.media_size_mobile != 'adapt'%} quiz__mobileAspectRatio {% endif %}{% if  noFullWidth and bg_foregound_color or section.settings.color_scheme.settings.background == "rgba(0,0,0,0)" %} {% if section.settings.color_scheme.settings.background_gradient == blank %} border-radius border-radius--block {% endif %}{% endif %}
+              "
+              style=" {%- if section.settings.media_size == 'adapt' -%}--aspect-ratio: {{ ratio }};{%- endif -%}{%- if section.settings.media_size_mobile == 'adapt' -%}--mobile-aspect-ratio: {{ mobile_ratio }};{%- endif -%}"
+              image-container
+            >
+              <animation-reveal
+                aoi-type="zoom-out"
+                aoi-duration="0.7"
+                aoi-amount="0.1"
+              >
+                {%- capture imagealt -%}
+                {{ section.settings.image.alt | default: 'image' }}
+              {%- endcapture -%}
+                {{
+                  section.settings.image
+                  | image_url: width: section.settings.image.width
+                  | image_tag:
+                    loading: loading,
+                    fetchpriority: fetchpriority,
+                    sizes: sizes,
+                    widths: widths,
+                    class: 'set-100-percentage-size-media image-responsive',
+                    alt: imagealt,
+                    is: 'image-loading'
+                }}
+              </animation-reveal>
+              {{
+                section.settings.image
+                | image_url: width: 40
+                | image_tag:
+                  alt: section.settings.image.alt,
+                  class: 'blur-image',
+                  loading: loading,
+                  fetchpriority: fetchpriority
+              }}
+            </div>
+          {% endif %}
+          {% if section.settings.image_mobile != blank and section.settings.show_image %}
+            <div
+              class="quiz__imageWrp {% if section.settings.image_width != 'full' %} position-relative {% else %} quiz__fullWidthImage {% endif %} w-100 mobile-sm-only block-media-size-mobile--{{ section.settings.media_size_mobile }}{% if noFullWidth and bg_foregound_color or section.settings.color_scheme.settings.background == "rgba(0,0,0,0)" %} border-radius border-radius--block{% endif %}"
+              {%- if section.settings.media_size_mobile == 'adapt' and section.settings.image_width == 'half' -%}
+                style="aspect-ratio: {{ mobile_ratio }}"
+              {%- endif -%}
+              image-container
+            >
+              <animation-reveal
+                aoi-type="zoom-out"
+                aoi-duration="0.7"
+                aoi-amount="0.1"
+              >
+                {%- capture imagealt -%}
+                {{ section.settings.image_mobile.alt | default: 'image' }}
+              {%- endcapture -%}
+                {{
+                  section.settings.image_mobile
+                  | image_url: width: section.settings.image_mobile.width
+                  | image_tag:
+                    loading: loading,
+                    fetchpriority: fetchpriority,
+                    sizes: sizes,
+                    widths: widths,
+                    class: 'set-100-percentage-size-media image-responsive',
+                    alt: imagealt,
+                    is: 'image-loading'
+                }}
+              </animation-reveal>
+              {{
+                section.settings.image_mobile
+                | image_url: width: 40
+                | image_tag:
+                  alt: section.settings.image_mobile.alt,
+                  class: 'blur-image',
+                  loading: loading,
+                  fetchpriority: fetchpriority
+              }}
+            </div>
+          {% endif %}
+        </div>
+      {%- endif -%}
+      <form
+        class="quiz__form quiz__noFullWidth w-100"
+        action="{{ section.settings.collection.url | default: routes.all_products_collection_url }}"
+        method="get"
+      >
+        <quiz-carousel-component
+          {{ intersection }}
+          dynamic-navigation-color
+          class="mobile-content-over-media position-relative w-100 container"
+          slide-layout-type="carousel"
+          slide-pagination-type="progressbar"
+          slide-per-view="1"
+          slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+          slide-responsive-breakpoints='{"320":{"slidesPerView":"1"},"768":{"slidesPerView":"1"}}'
+          slide-speed="{{ settings.slide_duration }}"
+          animate-on-slide-change
+          slide-disable-touch-move
+          slide-keyboard-disabled
+          slide-auto-height
+          {% if section.index == 1 %}
+            animate-on-load
+          {% endif %}
+          style="--pagination-width: {{ section.blocks.size }};"
+          aria-label="Slider"
+        >
+          <div class="sliderControl quiz__sliderControl-fractional" style="--blocks-count: {{ section.blocks.size }}">
+            <div class="sliderProgressBar__wrapper d-flex align-item-center gap-8">
+              <div class="sliderProgressBar__current fnt-bold fnt-40" slide-progress-current></div>
+              /
+              <div class="sliderProgressBar__total fnt-bold fnt-20" slide-progress-total></div>
+            </div>
+            <div
+              class="sliderProgressBar {% if section.blocks.size > 1 %} sliderProgressBar--border {% endif %}"
+              slide-progress
+            >
+              <div class="sliderProgressBar__bar"></div>
+            </div>
+          </div>
+          <div
+            class="swiper swiper-container {% if section.settings.layout_style == 'row' %} quiz__swiper-container-row {% endif %}"
+            main-slider
+          >
+            <animation-reveal aoi-type="fade-up" aoi-amount="0.2" class="swiper-wrapper">
+              {% content_for 'blocks' %}
+            </animation-reveal>
+          </div>
+
+          <div class="d-flex quiz__footer justify-content-space-btw align-item-center">
+            <button class="link visually-hidden" slide-next skip-button>
+              <span> {{ 'section.quiz.button.skip-quiz' | t }}</span>
+            </button>
+            <div class="quiz__blockButtonWrp d-flex justify-content-end align-item-center gap-16">
+              <button
+                class="quiz__blockButton btn  btn--border btn--sm "
+                type="button"
+
+                slide-prev
+              >
+                {{ 'section.quiz.button.previous-slide' | t }}
+              </button>
+
+              <button
+                class="quiz__blockButton btn{% if section.settings.use_outline_button %} btn--border {% else %} btn--fill {% endif %} btn--sm"
+                type="button"
+                quiz-next-button
+                disabled
+              >
+                <div class="btn--preloader">
+                  <div class="btn--preloader--circular">
+                    <div class="checkmark draw"></div>
+                  </div>
+                </div>
+                <div class="btn--text d-none" quiz-submit-button-text>
+                  {{ 'section.quiz.button.results' | t }}
+                </div>
+                <div class="btn--text" quiz-next-button-text>
+                  {{ 'section.quiz.button.next-slide' | t }}
+                </div>
+              </button>
+            </div>
+          </div>
+        </quiz-carousel-component>
+      </form>
+      {% content_for 'block', type: '_results', id: 'results' %}
+    </quiz-form>
+  </div>
+  {% unless section.settings.full_width %}
+    </div>
+  {% endunless %}
+</div>
+{% unless section.settings.border_size == 'hide' %}
+  {% if section.settings.border_position == 'both' or section.settings.border_position == 'bottom' %}
+    {% unless section.settings.border_size == 'full_width' %}
+      <div class="container">
+    {% endunless %}
+    <div class="spacer-wrapper color-{{ section.settings.color_scheme }}">
+      <div
+        class="spacer border-bottom"
+      ></div>
+    </div>
+    {% unless section.settings.border_size == 'full_width' %}
+      </div>
+    {% endunless %}
+  {% endif %}
+{% endunless %}
+
+{% render 'quiz-support-guide-drawer' %}
+{% schema %}
+{
+  "name": "Quiz",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "[Learn more](https://support.shoptrade.co/article/49-quiz) about setting up quiz section"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Desktop layout",
+      "info": "Style is set to vertical by default on mobile layout ",
+      "options": [
+        {
+          "label": "Horizontal stack",
+          "value": "row"
+        },
+        {
+          "label": "Vertical stack",
+          "value": "column"
+        }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Desktop layout height",
+      "visible_if": "{{ section.settings.show_welcome_content }}",
+      "options": [
+        {
+          "label": "Adapt",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "sm"
+        },
+        {
+          "label": "Medium",
+          "value": "md"
+        },
+        {
+          "label": "Large",
+          "value": "lg"
+        },
+        {
+          "label": "Fill screen",
+          "value": "fill-screen"
+        }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "select",
+      "id": "media_size_mobile",
+      "label": "Mobile layout height",
+      "options": [
+        {
+          "label": "Adapt",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "sm"
+        },
+        {
+          "label": "Medium",
+          "value": "md"
+        },
+        {
+          "label": "Large",
+          "value": "lg"
+        },
+        {
+          "label": "Fill screen",
+          "value": "fill-screen"
+        }
+      ],
+      "default": "md",
+      "visible_if": "{{ section.settings.show_welcome_content  }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_welcome_content",
+      "label": "Show welcome content",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section content",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Quiz section",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h3",
+      "visible_if": "{{ section.settings.show_welcome_content }}",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+     {
+      "type": "select",
+      "id": "style",
+      "label": "Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Take our quick quiz to uncover your style and receive personalized recommendations tailored just for you!</p>",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Start quiz button label",
+      "default": "Start Quiz",
+      "info": "If you keep the label empty, the content will hide, and the quiz will start automatically.",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_outline_button",
+      "label": "Use outline button style",
+      "default": false,
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show image",
+      "visible_if": "{{ section.settings.show_welcome_content }}",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.show_image }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.show_image }}"
+    },
+
+    {
+      "type": "select",
+      "id": "image_width",
+      "label": "Image width",
+      "default": "full",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.show_image }}",
+      "options": [
+        {
+          "label": "Full",
+          "value": "full"
+        },
+        {
+          "label": "Half",
+          "value": "half"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.show_image and section.settings.image_width == 'half'}}",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Desktop",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "center",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Content position",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.image_width == 'full' or section.settings.show_image == false }}",
+      "options": [
+        {
+          "label": "Top",
+          "value": "start"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Bottom",
+          "value": "end"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mobile_content_alignment",
+      "label": "Content alignment",
+      "default": "left",
+      "visible_if": "{{ section.settings.show_welcome_content }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "Content position",
+      "visible_if": "{{ section.settings.show_welcome_content and section.settings.image_width == 'full' or section.settings.show_image == false }}",
+      "options": [
+        {
+          "label": "Top",
+          "value": "start"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Bottom",
+          "value": "end"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_card_background",
+      "label": "Override product card colors",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "product_card_color_scheme",
+      "label": "Product card color scheme",
+      "default": "scheme-1",
+      "info": "Applies the selected scheme's background, text and offer text color to the product cards.",
+      "visible_if": "{{ section.settings.enable_product_card_background }}"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top (desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom (desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "border_size",
+      "label": "Border",
+      "options": [
+        {
+          "label": "Hide",
+          "value": "hide"
+        },
+        {
+          "label": "Full width",
+          "value": "full_width"
+        },
+        {
+          "label": "Fixed width",
+          "value": "fixed_width"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "select",
+      "id": "border_position",
+      "label": "Border position",
+      "options": [
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-3",
+      "label": "Color scheme"
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "default": "#ffffff",
+      "label": "Background color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_quiz-image-card"
+    },
+    {
+      "type": "_quiz-list-card"
+    },
+    {
+      "type": "_results"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quiz",
+      "category": "Products",
+      "blocks": [
+        {
+          "type": "_quiz-image-card"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["*"]
+  }
+}
+{% endschema %}

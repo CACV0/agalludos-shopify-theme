@@ -1,0 +1,66 @@
+{% comment %} Product Title {% endcomment %}
+{% assign product = closest.product %}
+<{{ block.settings.heading_tag }}
+  aria-label="{{ product.title | default: 'Product Title' }}"
+  class="h2 main-product__heading fnt-heading clr-black"
+  style="padding-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+  {{ block.shopify_attributes }}
+>
+  {{ product.title | default: 'Product Title' }}
+</{{ block.settings.heading_tag }}>
+
+{% schema %}
+{
+  "name": "Title",
+  "settings": [
+    {
+      "type": "range",
+      "id": "block_bottom_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h1",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Title",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

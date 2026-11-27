@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "collection_list_eGpE7U": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_list_item_fzXKDi": {
+          "type": "collection_list_item",
+          "settings": {
+            "collection": "combos",
+            "text_color": "#000000",
+            "overlay_color": "#0000005B"
+          }
+        },
+        "collection_list_item_dA4E4a": {
+          "type": "collection_list_item",
+          "settings": {
+            "collection": "tesoros-del-mar",
+            "text_color": "#000000",
+            "overlay_color": "#0000005B"
+          }
+        },
+        "collection_list_item_bRJ43d": {
+          "type": "collection_list_item",
+          "settings": {
+            "collection": "riquezas-del-rio",
+            "text_color": "#000000",
+            "overlay_color": "#0000005B"
+          }
+        },
+        "collection_list_item_PmPGXy": {
+          "type": "collection_list_item",
+          "settings": {
+            "collection": "seleccion-premium-pescados-mariscos",
+            "text_color": "#000000",
+            "overlay_color": "#0000005B"
+          }
+        }
+      },
+      "block_order": [
+        "collection_list_item_fzXKDi",
+        "collection_list_item_dA4E4a",
+        "collection_list_item_bRJ43d",
+        "collection_list_item_PmPGXy"
+      ],
+      "name": "Collection list",
+      "settings": {
+        "layout_style": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "1",
+        "subheading": "",
+        "heading": "Te pueden encantar",
+        "heading_tag": "h2",
+        "style": "h3",
+        "content": "",
+        "show_view_all_button": true,
+        "view_all_link_style": "text",
+        "view_all_link_text": "View all",
+        "link_url": "",
+        "link_target": "_top",
+        "view_all_link_position": "start",
+        "content_style": "stack",
+        "content_alignment": "left",
+        "image_aspect_ratio_collection": "portrait",
+        "content_setting": "stack_content",
+        "hide_stack_content_bg": true,
+        "block_content_alignment": "center",
+        "content_position": "center",
+        "heading_style": "h6",
+        "block_heading_tag": "h3",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "collection_list_eGpE7U"
+  ]
+}

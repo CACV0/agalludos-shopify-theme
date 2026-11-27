@@ -1,0 +1,102 @@
+<div class="col-50 position-relative" image-container >
+  <animation-reveal
+    class="h-100 overflow-hidden"
+    aoi-type="zoom-out"
+    aoi-duration="0.5"
+    aoi-amount="0"
+  >
+    {% if block.settings.api_key != blank %}
+      <script
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ block.settings.api_key }}"
+      ></script>
+      <script defer src="{{ 'contact-us.js' | asset_url }}"></script>
+      <div class="contact-us__map">
+        <map-component
+          lng="{{ block.settings.lng | escape }}"
+          lat="{{ block.settings.lat | escape }}"
+          {% if block.settings.shop_name %}
+            shop-name="{{ shop.name }}"
+          {% endif %}
+        >
+          <div class="" id="map"></div>
+        </map-component>
+        {%- unless block.settings.address == blank -%}
+          <div class="location-windo">
+            {%- render 'icon' with 'map-marker' -%}
+            <p class="fnt-18 text-color m-0">{{ block.settings.address }}</p>
+          </div>
+        {%- endunless -%}
+      </div>
+    {% else %}
+      {% if block.settings.map_image != blank %}
+        {%- capture sizes -%}
+                    (min-width:{{ settings.page_width | append: 'px' }}) calc({{ settings.page_width | append: 'px' }} / 2 - 30px),calc(100vw - 30px)
+                  {%- endcapture -%}
+        <div class="map-image">
+          {{
+            block.settings.map_image
+            | image_url: width: block.settings.map_image.width
+            | image_tag: widths: '800,600,400', sizes: sizes,
+            class: 'original-image',
+            is: 'image-loading'
+          }}
+        </div>
+      {% else %}
+        <div class="map-image">
+          {{ 'hero-apparel-3' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    {% endif %}
+  </animation-reveal>
+  {% if block.settings.map_image != blank %}
+    {{ block.settings.map_image | image_url: width: 40 | image_tag: class: 'blur-image' }}
+  {% endif %}
+</div>
+{% schema %}
+{
+  "name": "Map",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "lat",
+      "label": "Latitude"
+    },
+    {
+      "type": "text",
+      "id": "lng",
+      "label": "Longitude"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Address",
+      "default": "24/B, Down Street, Atlanta, Denver Street United States - 33508"
+    },
+    {
+      "type": "text",
+      "id": "api_key",
+      "label": "t:settings_schema.global.map.settings.google_map_api_key.label",
+      "info": "Follow this [link](https://developers.google.com/maps/documentation/javascript/get-api-key) to learn more about generating Google maps api key"
+    },
+    {
+      "type": "checkbox",
+      "id": "shop_name",
+      "label": "Show shop name on map",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "map_image",
+      "label": "Image",
+      "info": "1200 x 1200px .jpg recommended"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Map"
+    }
+  ]
+}
+{% endschema %}

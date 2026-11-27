@@ -1,0 +1,380 @@
+{% comment %}
+  Hamburger Mega Menu — Unified snippet
+  Handles: mega_menu_promotion, mega_menu_products, mega_menu_collections
+
+  Variables:
+    - link:       the parent linklist item (with .links for children)
+    - block: the matched section block
+    - menu_type:  'promotion' | 'products' | 'collections'
+{% endcomment %}
+
+{%- case menu_type -%}
+
+{%- when 'promotion' -%}
+    {%- comment -%} Promotion — accordion children + horizontal promo cards {%- endcomment -%}
+    <ul class="hamberger-accordion--childElement hamburger-mega-menu hamburger-mega-menu__promotions" role="list">
+      {%- for childlink in link.links -%}
+        <li role="listitem">
+          {%- if childlink.links == blank -%}
+            <a
+              href="{{ childlink.url }}"
+              class="{% if childlink.current %} active{% endif %} hamberger-accordion__link fnt-16 m-0"
+              {% if childlink.current %}aria-current="page"{% endif %}
+            >
+              {{ childlink.title | escape }}
+            </a>
+          {% else %}
+          <accordion-tab>
+            <details accordiontab class="accordion__item d-block" role="group">
+              <summary class="accordion__item__head">
+                <span class="hamberger-accordion__link-black m-0 fnt-body-weight-bold fnt-heading">
+                  {{- childlink.title | escape -}}
+                </span>
+                <div class="caret-icon innerAccordion--icon d-flex align-item-center">
+                  {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-icon)' %}
+                </div>
+              </summary>
+              <div accordionBody class="promo-details__body">
+                <ul class="hamberger-accordion--childElement promo-details__list" role="list">
+                  {%- for grandchildlink in childlink.links -%}
+                    <li role="listitem">
+                      <a
+                        href="{{ grandchildlink.url }}"
+                        class="{% if grandchildlink.current %} active{% endif %} hamberger-accordion__link"
+                        {% if grandchildlink.current %}aria-current="page"{% endif %}
+                      >
+                        {{ grandchildlink.title | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </details>
+            </accordion-tab>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- assign has_promotions = false -%}
+    {%- if block.settings['promotion-1_image'] != blank or block.settings['promotion-2_image'] != blank or block.settings['promotion-3_image'] != blank -%}
+      {%- assign has_promotions = true -%}
+    {%- endif -%}
+
+    {%- if has_promotions -%}
+    <div class="hamburger-mega-menu hamburger-mega-menu__promotions--wrapper border-top">
+      <div class="hamburger-mega-menu__promotions--grid grid-layout grid-layout--2-desktop" style="--gap: 10px">
+        {%- for i in (1..3) -%}
+          {%- assign promotion_image = 'promotion-' | append: i | append: '_image' -%}
+          {%- assign button_text = 'promotion-' | append: i | append: '_button_text' -%}
+          {%- assign promotion_link = 'promotion-' | append: i | append: '_link' -%}
+
+          {%- if block.settings[promotion_image] != blank -%}
+            <div class="d-flex d-flex-dir-c hamburger-mega-menu__promotions--item">
+            <div class="position-relative w-100 overflow-hidden hamburger-mega-menu__promotions--item-image aspect-ratio-{{ block.settings.image_ratio }}" image-container
+              {% if block.settings.image_ratio == 'adapt' %}
+                style="--aspect-ratio: {{ block.settings[promotion_image].aspect_ratio }}"
+              {% endif %}
+            >
+                {%- if block.settings[promotion_link] != blank -%}
+                  <a href="{{ block.settings[promotion_link] }}" class="position-absolute">
+                {%- endif -%}
+                {{
+                  block.settings[promotion_image]
+                  | image_url: width: block.settings[promotion_image].width
+                  | image_tag:
+                    widths: '600,300',
+                    sizes: '200px',
+                    alt: block.settings[promotion_image].alt,
+                    loading: 'lazy',
+                    is: 'image-loading',
+                    class: 'image-responsive border-radius--block set-100-percentage-size-media'
+                }}
+                {{
+                  block.settings[promotion_image]
+                  | image_url: width: 40
+                  | image_tag:
+                    class: 'blur-image',
+                    alt: block.settings[promotion_image].alt,
+                    loading: 'eager'
+                }}
+                {%- if block.settings[promotion_link] != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+              <div class="hamburger-mega-menu__promotions--item-body text-center">
+                {%- if block.settings[button_text] != blank -%}
+                    <a class="d-flex align-item-start hamburger-mega-menu__promotions--item-link fnt-16 justify-content-{{ block.settings.content_alignment }} text-{{ block.settings.content_alignment }}" href="{{ block.settings[promotion_link] }}" target="{{ block.settings.link_target }}">
+                    {{ block.settings[button_text] }}
+                    <span class="arrow-icon d-flex align-item-center mt-4">{%- render 'icon' with 'view-all-small' -%}</span>
+                    </a>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+
+  {%- when 'products' -%}
+    {%- comment -%} Products — child link list + product grid {%- endcomment -%}
+    <div class="hamburger-mega-menu hamburger-mega-menu__products">
+      {%- if block.settings.show_heading -%}
+        <p class="hamburger-mega-menu__products--heading fnt-body-weight-bold h4 m-0">
+          {% if block.settings.product_heading != blank %}
+            {{ block.settings.product_heading | escape }}
+          {% else %}
+            {{ block.settings.mega_menu_trigger }}
+          {% endif %}
+        </p>
+      {%- endif -%}
+
+      <ul class="hamburger-mega-menu__products--links p-0 m-0" role="list">
+        {%- for childlink in link.links -%}
+          <li role="listitem">
+            {%- if childlink.links == blank -%}
+              <a
+                href="{{ childlink.url }}"
+                class="{% if childlink.current %} active{% endif %} hamburger-mega-menu__products--link fnt-16 d-block text-decoration-none"
+                {% if childlink.current %}aria-current="page"{% endif %}
+              >
+                {{ childlink.title | escape }}
+              </a>
+            {%- else -%}
+            <accordion-tab>
+              <details accordiontab class="accordion__item d-block" role="group">
+                <summary class="accordion__item__head">
+                  <span class="hamberger-accordion__link-black m-0 fnt-body-weight-bold fnt-heading">
+                    {{- childlink.title | escape -}}
+                  </span>
+                  <div class="caret-icon innerAccordion--icon d-flex align-item-center">
+                    {% render 'icon' with 'arrow-icon', class: 'dropdown-arrow', color: 'var(--color-icon)' %}
+                  </div>
+                </summary>
+                <div accordionBody class="promo-details__body">
+                  <ul class="hamberger-accordion--childElement promo-details__list" role="list">
+                    {%- for grandchildlink in childlink.links -%}
+                      <li role="listitem">
+                        <a
+                          href="{{ grandchildlink.url }}"
+                          class="{% if grandchildlink.current %} active{% endif %} hamberger-accordion__link"
+                          {% if grandchildlink.current %}aria-current="page"{% endif %}
+                        >
+                          {{ grandchildlink.title | escape }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </details>
+              </accordion-tab>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- assign products_to_show = blank -%}
+      {%- if block.settings.products != blank -%}
+        {%- assign products_to_show = block.settings.products -%}
+      {%- elsif block.settings.collection != blank -%}
+        {%- assign products_to_show = block.settings.collection.products -%}
+      {%- endif -%}
+
+      {%- if block.settings.heading != blank or products_to_show != blank -%}
+        <div class="hamburger-mega-menu__products--featured border-top">
+          <div class="hamburger-mega-menu__products--featured--heading d-flex align-item-center justify-content-space-btw">
+          {%- if block.settings.heading != blank -%}
+            <p class="hamburger-mega-menu__products--featured--heading-wrapper h4 m-0 fnt-body-weight-bold">
+              {{ block.settings.heading | escape }}
+            </p>
+          {%- endif -%}
+          {% if block.settings.show_view_all_button and block.settings.link_url != blank %}
+            <div class="hamburger-mega-menu__products--featured--{{ block.settings.view_all_link_style }} text-center">
+              {%- assign default_view_all = 'general.search.view_all_label' | t -%}
+              <a
+                aria-label="{{ default_view_all | escape }}"
+                class="link text-upper section-viewall-text"
+                href="{{ block.settings.link_url }}"
+                target="{{ section.settings.link_target | default: '_top'}}"
+              >
+                {% if block.settings.view_all_link_style == 'text' %}
+                  <span class="fnt-14">{{ block.settings.view_all_link_text }}</span>
+                {% else %}
+                  {%- render 'icon' with 'view-all' -%}
+                {% endif %}
+              </a>
+            </div>
+          {% endif %}
+          </div>
+          
+
+          <div class="hamburger-mega-menu__products--grid grid-layout grid-layout--2-desktop" style="--gap: 10px">
+            {%- for product in products_to_show limit: 4 -%}
+              <div class="hamburger-mega-menu__products--card">
+                {%- if product.featured_image != blank -%}
+                  <div class="position-relative overflow-hidden hamburger-mega-menu__products--card-image border-radius--block">
+                      {%- render 'card-product-link'
+                      , product: product
+                      , product_image_loading: 'lazy'
+                      , product_image_fetchpriority: 'low'
+                      , index: forloop.index0
+                      -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+
+  {%- when 'collections' -%}
+    {%- comment -%} Collections — heading + tab-based or flat 2-column collection image grid {%- endcomment -%}
+    <div class="hamburger-mega-menu hamburger-mega-menu__collections">
+        <div class="hamburger-mega-menu__collections--heading-wrapper d-flex align-item-center justify-content-space-btw mb-2">
+            <p class="hamburger-mega-menu__collections--heading h4 m-0 fnt-body-weight-bold">
+              {% if block.settings.heading != blank %}
+                {{ block.settings.heading | escape }}
+              {% else %}
+                {{ block.settings.mega_menu_trigger }}
+              {% endif %}
+            </p>
+          {%- if block.settings.show_link and block.settings.link != blank and block.settings.link_text != blank -%}
+            <div class="hamburger-mega-menu__collections--view-all">
+              <a href="{{ block.settings.link }}" class="link text-upper" target="{{ block.settings.link_target }}">
+                <span class="fnt-14">{{ block.settings.link_text }}</span>
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+
+      {%- assign aspect_ratio_class = 'aspect-ratio-' | append: block.settings.image_ratio -%}
+
+      {%- if block.settings.submenu_level == 'level-2-3' -%}
+        {%- comment -%} Level 2 & 3: same capture pattern as desktop mega-menu-collections {%- endcomment -%}
+        {%- liquid
+          assign slides = ''
+          assign firstL3Slide = false
+          assign slideCount = 0
+          assign slidesToShow = 2
+        -%}
+        <div details-dropdown>
+          <mega-menu-tabs 
+            tab-slider
+            class="hamburger-mega-menu__collections--tabs d-flex" role="tablist">
+            {%- for childlink in link.links -%}
+              {%- assign index = forloop.index -%}
+              {%- capture L3Slides -%}
+                {%- for grandchildlink in childlink.links -%}
+                  {%- assign collection_image = grandchildlink.object.metafields.flawless_theme.megamenu_image | default: grandchildlink.object.featured_image -%}
+                  {%- liquid
+                    assign ratio = 1
+                    if block.settings.image_ratio == 'adapt' and collection_image
+                      assign ratio = collection_image.aspect_ratio
+                    endif
+                  -%}
+                  {%- if grandchildlink.type == 'collection_link' and collection_image != blank -%}
+                    {%- if slideCount == 0 -%}{%- assign firstL3Slide = true -%}{%- endif -%}
+                    {%- if firstL3Slide -%}{%- assign slideCount = slideCount | plus: 1 -%}{%- endif -%}
+                    <div class="slide-tab-panel{% if firstL3Slide %} active{% endif %}" data-parent-link="{{ childlink.title }}-{{ index }}">
+                      <div class="hamburger-mega-menu__collections--card">
+                        <a href="{{ grandchildlink.url }}" class="d-block text-decoration-none hamburger-mega-menu__collections--link{% if grandchildlink.current %} active{% endif %}">
+                          <div class="position-relative overflow-hidden hamburger-mega-menu__collections--card-image border-radius--block {{ aspect_ratio_class }}" image-container
+                            {% if block.settings.image_ratio == 'adapt' %}style="--aspect-ratio:{{ ratio }}"{% endif %}
+                          >
+                            {{
+                              collection_image
+                              | image_url: width: collection_image.width
+                              | image_tag:
+                                widths: '600,300',
+                                sizes: 'calc(50vw - 40px)',
+                                alt: collection_image.alt,
+                                loading: 'lazy',
+                                is: 'image-loading',
+                                class: aspect_ratio_class
+                            }}
+                            {{
+                              collection_image
+                              | image_url: width: 40
+                              | image_tag:
+                                class: 'blur-image',
+                                loading: 'eager',
+                                alt: collection_image.alt
+                            }}
+                          </div>
+                          <div class="hamburger-mega-menu__collections--card-title text-{{ block.settings.content_alignment }}">
+                            {{ grandchildlink.title | escape }}
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- if L3Slides != blank -%}
+                <mega-menu-tab
+                  class="border-0 cursor-pointer text-color fnt-body-weight-bold position-relative hamburger-mega-menu__collections--tab {% if firstL3Slide %}active{% endif %}"
+                  role="tab"
+                  data-parent-link="{{ childlink.title }}-{{ index }}"
+                >
+                  {{- childlink.title | escape -}}
+                </mega-menu-tab>
+                {%- assign slides = slides | append: L3Slides -%}
+                {%- assign firstL3Slide = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </mega-menu-tabs>
+
+          <div class="hamburger-mega-menu__collections--grid grid-layout grid-layout--2-desktop" style="--gap: 10px" collection-slides>{{ slides }}</div>
+        </div>
+
+      {%- else -%}
+        {%- comment -%} Level 2 only: flat 2-column grid of child collection cards {%- endcomment -%}
+        <div class="hamburger-mega-menu__collections--grid grid-layout grid-layout--2-desktop" style="--gap: 10px">
+          {%- for childlink in link.links -%}
+            {%- assign collection_image = childlink.object.metafields.flawless_theme.megamenu_image | default: childlink.object.featured_image -%}
+            {%- if childlink.type == 'collection_link' and collection_image != blank -%}
+              <div class="hamburger-mega-menu__collections--card">
+                <a href="{{ childlink.url }}" class="d-block text-decoration-none hamburger-mega-menu__collections--link{% if childlink.current %} active{% endif %}">
+                  <div class="position-relative overflow-hidden hamburger-mega-menu__collections--card-image border-radius--block aspect-ratio-{{ block.settings.image_ratio }}" image-container
+                    {% if block.settings.image_ratio == 'adapt' %}
+                      style="--aspect-ratio: {{ collection_image.aspect_ratio }}"
+                    {% endif %}
+                  >
+                    {{
+                      collection_image
+                      | image_url: width: collection_image.width
+                      | image_tag:
+                        widths: '600,300',
+                        sizes: 'calc(50vw - 40px)',
+                        alt: collection_image.alt,
+                        loading: 'lazy',
+                        is: 'image-loading',
+                        class: aspect_ratio_class
+                    }}
+                    {{
+                      collection_image
+                      | image_url: width: 40
+                      | image_tag:
+                        class: 'blur-image',
+                        loading: 'eager',
+                        alt: collection_image.alt
+                    }}
+                  </div>
+                  <div class="hamburger-mega-menu__collections--card-title text-{{ block.settings.content_alignment }}">
+                    {{ childlink.title | escape }}
+                  </div>
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+
+    </div>
+
+{%- endcase -%}

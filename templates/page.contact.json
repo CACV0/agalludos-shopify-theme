@@ -1,0 +1,191 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": 600,
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "color_scheme": ""
+      }
+    },
+    "image_with_text_overlay_hRMexR": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading_tYx3jX": {
+          "type": "heading",
+          "disabled": true,
+          "settings": {
+            "heading": "GOT QUESTIONS? WE’VE GOT ANSWERS.",
+            "heading_tag": "h2",
+            "style": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_tYx3jX"
+      ],
+      "name": "Image with text overlay",
+      "settings": {
+        "full_width": true,
+        "image_aspect_ratio": "lg",
+        "mobile_image_aspect_ratio": "lg",
+        "image": "shopify://shop_images/Banner_Web_Agalla_V1_7aec1ce6-0475-40ce-8e17-0ed90244bc37.jpg",
+        "mobile_image": "shopify://shop_images/Logo_Ponte_Trucha_Turquesa.jpg",
+        "content_width": 560,
+        "text_aligment": "center",
+        "desktop_content_position": "bottom",
+        "mobile_text_aligment": "center",
+        "mobile_content_position": "bottom",
+        "padding_top": 0,
+        "padding_bottom": 36,
+        "border_size": "hide",
+        "border_position": "both",
+        "overlay_color": "rgba(0,0,0,0)",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "blocks": {
+        "map": {
+          "type": "_map",
+          "disabled": true,
+          "settings": {
+            "lat": "12.9716",
+            "lng": "77.5946",
+            "address": "Enter your Address details",
+            "api_key": "",
+            "shop_name": true
+          },
+          "blocks": {}
+        },
+        "form": {
+          "type": "_form",
+          "settings": {},
+          "blocks": {
+            "input_field_AXKUmp": {
+              "type": "_input-field",
+              "name": "Input",
+              "settings": {
+                "input": "name",
+                "heading": "Nombre",
+                "placeholder_text": "",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_cXaY7F": {
+              "type": "_input-field",
+              "name": "Input",
+              "settings": {
+                "input": "name",
+                "heading": "Teléfono",
+                "placeholder_text": "",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_ryDEzp": {
+              "type": "_input-field",
+              "name": "Input",
+              "settings": {
+                "input": "email",
+                "heading": "Correo electrónico",
+                "placeholder_text": "",
+                "required": false,
+                "use_text": false
+              },
+              "blocks": {}
+            },
+            "input_field_4VLNHd": {
+              "type": "_input-field",
+              "name": "Input",
+              "settings": {
+                "input": "text-field",
+                "heading": "Comentario",
+                "placeholder_text": "",
+                "required": false,
+                "use_text": true
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "input_field_AXKUmp",
+            "input_field_cXaY7F",
+            "input_field_ryDEzp",
+            "input_field_4VLNHd"
+          ]
+        }
+      },
+      "block_order": [
+        "map",
+        "form"
+      ],
+      "settings": {
+        "heading": "CONTÁCTANOS",
+        "heading_tag": "h2",
+        "style": "h1",
+        "content": "<p><em>¿Tienes preguntas sobre nuestros productos, pedidos o quieres ser parte de nuestra red de aliados? Estamos aquí para ayudarte.</em></p>",
+        "content_alignment": "center",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "media_and_text_pPdfER": {
+      "type": "media-and-text",
+      "blocks": {
+        "image_34LD6C": {
+          "type": "image",
+          "disabled": true,
+          "settings": {}
+        },
+        "video_LpUQ6N": {
+          "type": "video",
+          "disabled": true,
+          "settings": {
+            "media_autoplay": false,
+            "enable_mobile_video": false,
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        }
+      },
+      "block_order": [
+        "image_34LD6C",
+        "video_LpUQ6N"
+      ],
+      "name": "Media and text",
+      "settings": {
+        "full_width": true,
+        "media_width": 50,
+        "media_size": "lg",
+        "padding_top": 36,
+        "padding_bottom": 0,
+        "border_size": "hide",
+        "border_position": "both",
+        "color_scheme": "",
+        "background_color": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_overlay_hRMexR",
+    "form",
+    "media_and_text_pPdfER"
+  ]
+}

@@ -1,0 +1,117 @@
+{% comment %}
+  Renders product variant options
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+
+
+  Usage:
+  {% render 'product-variant-options',
+    product: product,
+    option: option,
+    block: block
+  %}
+{% endcomment %}
+{%- liquid
+  assign form_id = 'product-form-' | append: section.id
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign swatch_focal_point = null
+    if value.swatch.image
+      assign image_url = value.swatch.image | image_url: width: 50
+      assign swatch_value = 'url(' | append: image_url | append: ')'
+      assign swatch_focal_point = value.swatch.image.presentation.focal_point
+    elsif value.swatch.color
+      assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+    else
+      assign swatch_value = null
+    endif
+  -%}
+
+  {%- capture input_id -%}
+    {{ section.id }}-{{ product.id }}-{{ option.position }}-{{ forloop.index0 }}{% if id_suffix %}-{{ id_suffix }}{% endif %}
+  {%- endcapture -%}
+  {% liquid
+    assign option_name = option.name | append: '-' | append: option.position
+    if id_suffix
+      assign option_name = option_name | append: '-' | append: id_suffix
+    endif
+    assign checked = false
+    if value.selected == true
+      assign checked = true
+    endif
+  %}
+
+  {% if variant_selector_type == 'swatch' %}
+    {% render 'swatch-input',
+      id: input_id,
+      form_id: form_id,
+      name: option_name,
+      value: value,
+      swatch: value.swatch,
+      product_form_id: product_form_id,
+      checked: checked,
+      option_disabled: value.available,
+      shape: settings.swatch_style,
+      help_text: help_text
+    %}
+  {%- elsif variant_selector_type == 'pills' -%}
+    <input
+      type="radio"
+      id="{{ input_id }}"
+      form="{{ form_id }}"
+      name="{{ option_name }}"
+      value="{{ value | escape }}"
+      data-option-value-id="{{ value.id }}"
+      {% if value.variant.id %}
+        data-variant-id="{{ value.variant.id }}"
+      {% endif %}
+      data-connected-product-url="{{ value.product_url }}"
+      {% if value.selected %}
+        checked
+      {% endif %}
+      {% unless value.available %}
+        class="disabled"
+      {% endunless %}
+    >
+    <label
+      class="fnt-16 text-center text-capitalize"
+      for="{{ input_id }}"
+    >
+      {{- value -}}
+    </label>
+  {%- elsif variant_selector_type == 'dropdown' or variant_selector_type == 'swatch_dropdown' -%}
+    <option
+      value="{{ value | escape }}"
+      {% if value.selected == true %}
+        selected="selected"
+      {% endif %}
+      data-option-value-id="{{ value.id }}"
+      {% if swatch_value and variant_selector_type == 'swatch_dropdown' %}
+        data-option-swatch-value="{{ swatch_value }}"
+        {% if swatch_focal_point %}
+          data-option-swatch-focal-point="{{ swatch_focal_point }}"
+        {% endif %}
+      {% endif %}
+
+      {% if value.variant.id %}
+        data-variant-id="{{ value.variant.id }}"
+      {% endif %}
+      data-connected-product-url="{{ value.product_url }}"
+    >
+      {% if value.available == false -%}
+        {%- if value.variant -%}
+          {{- 'products.product.value_sold_out' | t: option_value: value -}}
+        {%- else -%}
+          {{- 'products.product.value_unavailable' | t: option_value: value -}}
+        {%- endif -%}
+      {%- else -%}
+        {{- value -}}
+      {%- endif %}
+    </option>
+  {%- endif -%}
+{%- endfor -%}

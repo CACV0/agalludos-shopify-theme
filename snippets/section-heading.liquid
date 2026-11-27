@@ -1,0 +1,121 @@
+{% comment %}
+  Renders Section heading
+
+  Accepts:
+  - section: {Object} section object in which it render
+  - View all: {string:href} Url for view all link
+  -  accessibiity_label: accessibility label text
+
+  Usage:
+  {% render 'section-heading', section: section, viewall_url: '/link' %}
+{% endcomment %}
+
+{% liquid
+  assign heading = section.settings.heading
+  assign subheading = section.settings.subheading
+  assign content = section.settings.content
+  assign content_style = section.settings.content_style | default: 'stack'
+  if section.settings.view_all_link_position == 'end' and section.settings.content_alignment != 'right'
+    assign content_style = 'inline'
+  endif
+  assign show_view_all_button = section.settings.show_view_all_button
+  assign show_header_section = false
+  if heading != blank or subheading != blank or content != blank or show_view_all_button
+    assign show_header_section = true
+  endif
+  assign heading_tag = section.settings.heading_tag | default:"h2"
+
+  assign current_row = 1
+  assign heading_row = 0
+  assign subheading_row = 0
+  assign content_row = 0
+
+  if subheading != blank
+    assign subheading_row = current_row
+    assign current_row = current_row | plus: 1
+  endif
+
+  if heading != blank
+    assign heading_row = current_row
+    assign current_row = current_row | plus: 1
+  endif
+
+  if content != blank
+    assign content_row = current_row
+    assign current_row = current_row | plus: 1
+  endif
+
+  assign view_all_row = heading_row
+  if view_all_row == 0
+    if content_row != 0
+      assign view_all_row = content_row
+    elsif subheading_row != 0
+      assign view_all_row = subheading_row
+    else
+      assign view_all_row = 1
+    endif
+  endif
+%}{% if show_header_section %}
+  <div class="section-header section-header--wrapper text-{{ section.settings.content_alignment }} section-header--{{ content_style }} section-header--link-{{ section.settings.view_all_link_position }}">
+    {% if subheading != blank %}
+      <animation-reveal
+        aoi-type="fade-up"
+        aoi-amount="0.2"
+        aoi-delay="0.1"
+        class="section-header__subheading d-flex justify-content-{{ section.settings.content_alignment }}"
+        style="--grid-row: {{ subheading_row }};"
+      >
+        <p class="mb-2 section-subheading">{{ subheading }}</p>
+      </animation-reveal>
+    {% endif %}
+    {% if heading != blank %}
+      <div class="section-header__heading section-heading text-{{ section.settings.content_alignment }} justify-content-{{ section.settings.content_alignment }}" style="--grid-row: {{ heading_row }};">
+        <animation-reveal
+          aoi-type="fade-up"
+          aoi-amount="0.2"
+          aoi-delay="0.1"
+        >
+          <{{heading_tag}} class="m-0 {{ section.settings.style }}">{{ heading }}</{{heading_tag}}>
+        </animation-reveal>
+      </div>
+    {% endif %}
+    {% if content != blank %}
+      <animation-reveal
+        aoi-type="fade-up"
+        aoi-amount="0.2"
+        aoi-delay="0.1"
+        class="section-header__subContent d-flex justify-content-{{ section.settings.content_alignment }}"
+        style="--grid-row: {{ content_row }};"
+      >
+        <div class="section__subContent m-0">
+          <div class="RTE-content">
+            {{ content }}
+          </div>
+        </div>
+      </animation-reveal>
+    {% endif %}
+    {% if show_view_all_button and viewall_url != blank %}
+      <animation-reveal
+        aoi-type="fade-up"
+        aoi-amount="0.2"
+        aoi-delay="0.1"
+        class="section-header__viewAll {% if section.settings.view_all_link_position == 'start' %}d-flex justify-content-{{ section.settings.content_alignment }}{% endif %}"
+        style="--grid-row: {{ view_all_row }};"
+      >
+        <a
+          viewall-link
+          aria-label="{{ accessibiity_label | default: "view all" }}"
+          class="link text-upper section-viewall-text no-transition d-inline-block"
+          href="{{ viewall_url }}"
+          target="{{ section.settings.link_target }}"
+        >
+          {% if section.settings.view_all_link_style == 'text' %}
+            <span>{{ section.settings.view_all_link_text }}</span>
+          {% else %}
+            {%- render 'icon' with 'view-all' -%}
+          {% endif %}
+        </a>
+      </animation-reveal>
+    {% endif %}
+  </div>
+{% endif %}

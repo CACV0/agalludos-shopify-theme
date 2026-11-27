@@ -1,0 +1,235 @@
+{% comment %}
+  Renders the contents of one Information block.
+  Parameters:
+    - block: the _information block.
+
+  Each <p>...</p> becomes a row. <h1>..<h6> lines become a large "display" row.
+  Row formats (colon-separated):
+    - "Name"                   → just a label
+    - "Name: Value"            → label + right-aligned value
+    - "Name: Amount: Value"    → bold name + inline regular amount + right-aligned value
+  Lines starting with "-" are visually indented.
+  In display rows the trailing word of the value (e.g. "KCAL") renders smaller.
+{% endcomment %}
+
+{%- liquid
+  assign raw_info = block.settings.information
+
+  # The editor stamps a dir attribute on block tags (<p dir="ltr">) when text is pasted or
+  # re-ordered, which stops the literal tag replacements below from matching and silently
+  # drops the row. Neutralise it before any tag mapping.
+  assign rows_string = raw_info | replace: ' dir="ltr"', '' | replace: ' dir="rtl"', ''
+
+  # Italic from the toolbar. Both tags become the SAME marker because it only needs to
+  # record THAT a row is emphasised: the editor wraps the whole line — colons and all — in
+  # one <em>, so keeping the tag inline would open it in the row's name span and close it
+  # in the value span, and the browser drops that unbalanced markup. The marker is read
+  # (and removed) per row below, and the emphasis is applied as a class on the row.
+  assign rows_string = rows_string | replace: '<em>', '|||I|||' | replace: '</em>', '|||I|||'
+  assign rows_string = rows_string | replace: '<i>', '|||I|||' | replace: '</i>', '|||I|||'
+
+  # Normalise <h*> heading tags and <p> tags into row markers we can split on.
+  assign rows_string = rows_string | replace: '<p>', '<row>' | replace: '</p>', '</row>'
+  assign rows_string = rows_string | replace: '<h1>', '<row-heading>' | replace: '</h1>', '</row-heading>'
+  assign rows_string = rows_string | replace: '<h2>', '<row-heading>' | replace: '</h2>', '</row-heading>'
+  assign rows_string = rows_string | replace: '<h3>', '<row-heading>' | replace: '</h3>', '</row-heading>'
+  assign rows_string = rows_string | replace: '<h4>', '<row-heading>' | replace: '</h4>', '</row-heading>'
+  assign rows_string = rows_string | replace: '<h5>', '<row-heading>' | replace: '</h5>', '</row-heading>'
+  assign rows_string = rows_string | replace: '<h6>', '<row-heading>' | replace: '</h6>', '</row-heading>'
+  # Bullet / numbered lists. Every <li> becomes its own row, indented like a hyphen row.
+  # Without this the list has no |||DATA|||/|||HEAD||| marker at all and the whole list is
+  # dropped. The <ul>/<ol> markers ride along in the stream so the loop can tell a bullet
+  # item from a numbered one (which keeps its number).
+  assign rows_string = rows_string | replace: '<ul>', '|||LIST-UL|||' | replace: '</ul>', '|||LIST-END|||'
+  assign rows_string = rows_string | replace: '<ol>', '|||LIST-OL|||' | replace: '</ol>', '|||LIST-END|||'
+  assign rows_string = rows_string | replace: '<li>', '|||ITEM|||' | replace: '</li>', '|||END|||'
+
+  # Marker token so we can preserve heading/data row distinction across a single split.
+  assign rows_string = rows_string | replace: '<row>', '|||DATA|||' | replace: '</row>', '|||END|||'
+  assign rows_string = rows_string | replace: '<row-heading>', '|||HEAD|||' | replace: '</row-heading>', '|||END|||'
+-%}
+
+<div class="nutritional-card">
+  {% comment %}
+    Header row — labels above the data table. Skipped entirely when both are blank: the header
+    carries the rule that separates it from the rows, so an empty one still drew a line with
+    nothing above it.
+  {% endcomment %}
+  {% if block.settings.left_label != blank or block.settings.right_label != blank %}
+    <div class="nutritional-card__header d-flex">
+      {% if block.settings.left_label != blank %}
+        <h3 class="nutritional-card__header-left fnt-heading mb-0">{{ block.settings.left_label }}</h3>
+      {% endif %}
+      {% if block.settings.right_label != blank %}
+        <p class="nutritional-card__header-right fnt-body fnt-16 mb-0">{{ block.settings.right_label }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% comment %} Data rows — parsed from rich-text input {% endcomment %}
+  <div class="nutritional-card__rows d-flex d-flex-dir-c">
+    {%- assign chunks = rows_string | split: '|||END|||' -%}
+    {%- assign list_type = '' -%}
+    {%- assign list_index = 0 -%}
+    {%- for chunk in chunks -%}
+      {%- assign is_heading = false -%}
+      {%- assign is_list_item = false -%}
+      {%- assign body = '' -%}
+
+      {%- comment -%}
+        List state first — an opening marker shares a chunk with its first item, and the
+        closing marker lands in the chunk that follows the last one.
+        The close is read BEFORE the opens: back-to-back lists (</ul><ol>) put both markers
+        in one chunk, and the close belongs to the list that just ended, not the new one.
+        Reading it last would clear the list we just opened and drop the numbering.
+      {%- endcomment -%}
+      {%- if chunk contains '|||LIST-END|||' -%}
+        {%- assign list_type = '' -%}
+      {%- endif -%}
+      {%- if chunk contains '|||LIST-UL|||' -%}
+        {%- assign list_type = 'ul' -%}
+      {%- endif -%}
+      {%- if chunk contains '|||LIST-OL|||' -%}
+        {%- assign list_type = 'ol' -%}
+        {%- assign list_index = 0 -%}
+      {%- endif -%}
+
+      {%- if chunk contains '|||ITEM|||' -%}
+        {%- assign is_list_item = true -%}
+        {%- assign body = chunk | split: '|||ITEM|||' | last -%}
+      {%- elsif chunk contains '|||HEAD|||' -%}
+        {%- assign is_heading = true -%}
+        {%- assign body = chunk | split: '|||HEAD|||' | last -%}
+      {%- elsif chunk contains '|||DATA|||' -%}
+        {%- assign body = chunk | split: '|||DATA|||' | last -%}
+      {%- endif -%}
+
+      {%- assign clean = body | strip_html | strip -%}
+
+      {%- comment -%}
+        Scrub any structural marker left inside the row text. The editor nests a paragraph
+        inside a list item (<li><p>…</p></li>) when a line is typed then bulleted, which
+        leaves a |||DATA||| in front of the label and prints it verbatim on the storefront.
+        Markers are meaningful only between chunks, never inside one.
+      {%- endcomment -%}
+      {%- assign clean = clean
+        | replace: '|||DATA|||', ''
+        | replace: '|||HEAD|||', ''
+        | replace: '|||ITEM|||', ''
+        | replace: '|||LIST-UL|||', ''
+        | replace: '|||LIST-OL|||', ''
+        | replace: '|||LIST-END|||', ''
+        | strip
+      -%}
+
+      {%- comment -%}
+        Read the italic marker and strip it straight away — the hyphen test, the colon
+        split and the display-row measuring below all need marker-free text.
+      {%- endcomment -%}
+      {%- assign row_is_italic = false -%}
+      {%- if clean contains '|||I|||' -%}
+        {%- assign row_is_italic = true -%}
+        {%- assign clean = clean | replace: '|||I|||', '' | strip -%}
+      {%- endif -%}
+
+      {%- if clean != blank -%}
+        {%- assign is_indent = false -%}
+        {%- assign first_char = clean | slice: 0, 1 -%}
+        {%- if first_char == '-' -%}
+          {%- assign is_indent = true -%}
+          {%- assign clean = clean | remove_first: '-' | strip -%}
+        {%- endif -%}
+
+        {%- comment -%}
+          List items read as sub-rows, the same as a hyphen-prefixed line. A numbered item
+          gets its marker from the number prepended below; a bulleted one has no text of its
+          own to show, so it is flagged for the bullet drawn in CSS — the same disc the
+          paragraph block's lists render through .RTE-content.
+        {%- endcomment -%}
+        {%- assign row_is_bullet = false -%}
+        {%- if is_list_item -%}
+          {%- assign is_indent = true -%}
+          {%- if list_type == 'ol' -%}
+            {%- assign list_index = list_index | plus: 1 -%}
+          {%- else -%}
+            {%- assign row_is_bullet = true -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%}
+          Split on colons:
+            1 part  → name only
+            2 parts → name + right-aligned value
+            3 parts → bold name + inline amount + right-aligned value
+        {%- endcomment -%}
+        {%- assign row_parts = clean | split: ':' -%}
+        {%- assign row_name = row_parts[0] | strip -%}
+        {%- assign row_amount = '' -%}
+        {%- assign row_value = '' -%}
+
+        {%- comment -%} Numbered-list rows keep their number in front of the label {%- endcomment -%}
+        {%- if is_list_item and list_type == 'ol' -%}
+          {%- assign row_name = list_index | append: '. ' | append: row_name -%}
+        {%- endif -%}
+
+        {%- if row_parts.size >= 3 -%}
+          {%- assign row_amount = row_parts[1] | strip -%}
+          {%- comment -%} Re-join any extra colons back into the value (e.g. "1:1 ratio") {%- endcomment -%}
+          {%- assign tail_parts = '' -%}
+          {%- for part in row_parts offset: 2 -%}
+            {%- if forloop.first -%}
+              {%- assign tail_parts = part -%}
+            {%- else -%}
+              {%- assign tail_parts = tail_parts | append: ':' | append: part -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign row_value = tail_parts | strip -%}
+        {%- elsif row_parts.size == 2 -%}
+          {%- assign row_value = row_parts[1] | strip -%}
+        {%- endif -%}
+
+        {%- comment -%}
+          Display row — split the value on the LAST space so the trailing
+          unit (e.g. "KCAL") renders smaller alongside the big number.
+        {%- endcomment -%}
+        {%- assign display_value_main = row_value -%}
+        {%- assign display_value_unit = '' -%}
+        {%- if is_heading and row_value != blank and row_value contains ' ' -%}
+          {%- assign value_tokens = row_value | split: ' ' -%}
+          {%- assign last_token = value_tokens | last -%}
+          {%- assign main_len = row_value | size | minus: last_token.size | minus: 1 -%}
+          {%- assign display_value_main = row_value | slice: 0, main_len | strip -%}
+          {%- assign display_value_unit = last_token -%}
+        {%- endif -%}
+
+        <div
+          class="nutritional-card__row d-flex{% if is_indent %} nutritional-card__row--indent{% endif %}{% if row_is_bullet %} nutritional-card__row--bullet{% endif %}{% if is_heading %} nutritional-card__row--display{% endif %}{% if row_is_italic %} nutritional-card__row--italic{% endif %}"
+        >
+          <span class="nutritional-card__row-label fnt-body d-inline-flex flex-wrap">
+            <span class="nutritional-card__row-name">{{ row_name }}</span>
+            {%- if row_amount != blank -%}
+              <span class="nutritional-card__row-amount">{{ row_amount }}</span>
+            {%- endif -%}
+          </span>
+          {%- if row_value != blank -%}
+            <span class="nutritional-card__row-value fnt-body">
+              {%- if is_heading and display_value_unit != blank -%}
+                <span class="nutritional-card__row-value-main fnt-heading">{{ display_value_main }}</span>
+                <span class="nutritional-card__row-value-unit fnt-body">{{ display_value_unit }}</span>
+              {%- else -%}
+                {{ row_value }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {% comment %} Footer — extra information / disclaimer {% endcomment %}
+  {% if block.settings.extra_information != blank %}
+    <div class="nutritional-card__footer RTE-content fnt-body fnt-12">
+      {{ block.settings.extra_information }}
+    </div>
+  {% endif %}
+</div>

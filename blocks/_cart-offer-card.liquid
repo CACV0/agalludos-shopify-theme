@@ -1,0 +1,165 @@
+<div
+  class="cart-offer-card"
+  {% unless block.settings.show_in_empty_cart %}hide-cart-offer{% endunless %}
+  {% if cart.item_count == 0 and block.settings.show_in_empty_cart == false %}hidden{% endif %}
+  style="
+    --padding-top-desktop: {{ block.settings.padding_top_desktop }}px;
+    --padding-bottom-desktop: {{ block.settings.padding_bottom_desktop }}px;
+    --padding-top-mobile: {{ block.settings.padding_top_mobile }}px;
+    --padding-bottom-mobile: {{ block.settings.padding_bottom_mobile }}px;
+  "
+>
+  <div
+    class="cart-offer-card__container {% if block.settings.enble_full_width %} cart-offer-card__container--full-width {%- endif %}"
+    animation-fade-effect
+  >
+    <cart-carousel-component
+      dynamic-navigation-color
+      dynamic-pagination
+      class="swiper js-element"
+      slide-layout-type="carousel"
+      slide-autoplay-delay="{{ block.settings.autoplay_delay }}"
+      slide-autoplay="{{ block.settings.auto_rotate }}"
+      slide-pagination-type="bullets"
+      slide-grab-cursor="{{ settings.enable_grab_cursor }}"
+      slide-per-view="1"
+      slide-enable-after-interaction
+      animate-on-slide-change
+      slide-animation="fade"
+    >
+      <div class="swiper-container" main-slider>
+        <div class="swiper-wrapper">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+      <div class="cart-offer-card__swiper-pagination" slider-controller>
+        <div
+          class="sliderControl"
+          role="group"
+          aria-label="Slider Controls"
+        >
+          <div class="sliderProgressBar">
+            <div class="swiper-pagination" slide-progress aria-label="Slider Pagination"></div>
+          </div>
+        </div>
+      </div>
+    </cart-carousel-component>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Offer card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_in_empty_cart",
+      "label": "Show offers in empty cart",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enble_full_width",
+      "label": "Enable full width",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Enable auto rotate",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Change slides every",
+      "min": 1,
+      "max": 5,
+      "unit": "s",
+      "step": 1,
+      "default": 3,
+      "visible_if": "{{ block.settings.auto_rotate }}"
+    },
+    {
+      "type": "header",
+      "content": "Sapcing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Top(desktop)",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom(desktop)",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Top(mobile)",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom(mobile)",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_cart-offer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer card",
+      "settings": {
+        "enble_full_width": true,
+        "auto_rotate": true,
+        "padding_top_desktop": 0,
+        "padding_top_mobile": 0
+      },
+      "blocks": [
+        {
+          "type": "_cart-offer",
+          "settings": {
+            "offer_background_color": "#FCF9F1",
+            "offer_heading_color": "#252525",
+            "offer_subheading_color": "#434343"
+          }
+        },
+        {
+          "type": "_cart-offer",
+          "settings": {
+            "offer_heading": "Today’s special offer",
+            "offer_subheading": "Save 15% on your entire order",
+            "offer_background_color": "#F5FCF1",
+            "offer_heading_color": "#252525",
+            "offer_subheading_color": "#434343"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

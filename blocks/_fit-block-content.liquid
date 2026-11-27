@@ -1,0 +1,37 @@
+<li class="fit-block-content text-{{ block.settings.text_alignment }}">
+  <div class="fit-block-content-segment-line"></div>
+
+  <div class="fit-block-content-segment-circle">
+    <div class="fit-circle">
+      <span class="fit-circle__inner"></span>
+    </div>
+  </div>
+
+  <div class="fit-block-content-text">
+    {{ block.settings.segment_text }}
+  </div>
+</li>
+
+{% schema %}
+{
+  "name": "Block content",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "segment_text",
+      "label": "Segment Label"
+    },{
+    "type": "text_alignment",
+    "id": "text_alignment",
+    "label": "Content alignment",
+    "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Block content"
+    }
+  ]
+}
+{% endschema %}

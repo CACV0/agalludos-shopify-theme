@@ -1,0 +1,156 @@
+.collection-tabs {
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+.collection-tabs--card .collection-tabs__wrapper .pagination-button {
+  top: 45px;
+}
+.collection-tabs__wrapper {
+  position: relative;
+  background: var(--color-background) var(--gradient-background) no-repeat 100% 100%;
+}
+.collection-tabs__wrapper .swiper-container {
+  overflow: hidden;
+  padding-inline: 2px;
+}
+.collection-tabs__wrapper .swiper-slide {
+  width: auto;
+  height: auto;
+}
+.collection-tabs__wrapper:not(.carousel-active) .pagination-button {
+  display: none;
+}
+.collection-tabs__wrapper .pagination-button {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.collection-tabs__wrapper .pagination-button:has(.sliderPagination__next) {
+  right: 15px;
+  left: unset;
+}
+@media screen and (max-width: 991px) {
+  .collection-tabs__wrapper .pagination-button {
+    display: none;
+  }
+}
+.collection-tabs__wrapper .pagination-button .arrow-container {
+  width: 28px;
+  height: 28px;
+}
+.collection-tabs__wrapper .pagination-button .arrow-container svg {
+  width: 6px;
+  height: 10px;
+}
+.collection-tabs__wrapper:hover .pagination-button {
+  opacity: 1;
+  visibility: visible;
+}
+.collection-tabs__wrapper .sliderPagination__prev,
+.collection-tabs__wrapper .sliderPagination__next {
+  margin: 0;
+}
+.collection-tabs__link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: border-color 0.2s ease;
+}
+.collection-tabs__link--card {
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+  width: 82px;
+}
+.collection-tabs__link--card .collection-tabs__image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 82px;
+  border-radius: var(--corner-radius);
+  overflow: hidden;
+  border: 1px solid rgba(var(--color-border)/0.2);
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, border-width 0.15s ease;
+}
+.collection-tabs__link--card .collection-tabs__image-wrapper img {
+  border-radius: var(--corner-radius);
+}
+.collection-tabs__link--card--active .collection-tabs__image-wrapper {
+  border-color: rgba(var(--color-border-rgba));
+}
+.collection-tabs__link--card--active .collection-tabs__image {
+  padding: 3px;
+}
+.collection-tabs__link--image_text {
+  flex-direction: row;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid rgba(var(--color-border)/0.2);
+  border-radius: var(--corner-radius);
+  transition: border-color 0.2s ease;
+}
+.collection-tabs__link--image_text .collection-tabs__image-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--corner-radius);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+@media screen and (max-width: 767px) {
+  .collection-tabs__link--image_text .collection-tabs__image-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+}
+.collection-tabs__link--image_text .collection-tabs__image-wrapper img {
+  border-radius: var(--corner-radius);
+}
+.collection-tabs__link--image_text--active {
+  border-color: rgba(var(--color-border-rgba));
+}
+.collection-tabs__link--text {
+  flex-direction: row;
+  padding: 10px 16px;
+  border: 1px solid rgba(var(--color-border)/0.2);
+  border-radius: var(--corner-radius);
+  transition: border-color 0.2s ease;
+}
+@media screen and (max-width: 767px) {
+  .collection-tabs__link--text {
+    padding: 8px 12px;
+  }
+}
+.collection-tabs__link--text--active {
+  border-color: rgba(var(--color-border-rgba));
+  padding: 10px 16px;
+}
+@media screen and (max-width: 767px) {
+  .collection-tabs__link--text--active {
+    padding: 8px 12px;
+  }
+}
+.collection-tabs__link--highlighted .collection-tabs__title {
+  color: var(--collection-tabs-highlight-color);
+}
+.collection-tabs__title {
+  word-break: break-word;
+}
+.collection-tabs__image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+}
+.collection-tabs__image-placeholder svg {
+  width: 60%;
+  height: 60%;
+}

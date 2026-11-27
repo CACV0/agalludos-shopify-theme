@@ -1,0 +1,113 @@
+{% comment %}
+  Nutritional block — right/bottom column.
+  Shared <tabs-toggle> (base.js) toggles the [tab-body] whose id matches the clicked
+  [tab-head]'s data-id. Panels render via content_for so the editor can still manage them.
+{% endcomment %}
+
+<div
+  class="nutritional-information__card-wrap d-flex d-flex-dir-c justify-content-center"
+  {{ block.shopify_attributes }}
+>
+  {%- comment -%} Grid, not flex — the panels share one cell so switching crossfades without reflow {%- endcomment -%}
+  <tabs-toggle
+    class="nutritional-tabs"
+    style="
+      --tabs-card-bg: {{ block.settings.background_color }};
+      --tabs-card-text: {{ block.settings.text_color }};
+      --tabs-bg: {{ block.settings.tab_background_color }};
+      --tabs-text: {{ block.settings.tab_text_color }};
+      --tabs-active-bg: {{ block.settings.tab_active_background_color }};
+      --tabs-active-text: {{ block.settings.tab_active_text_color }};
+    "
+  >
+    {%- comment -%}
+      Tab bar. The heads are interleaved with their panels (see _information.liquid), so
+      <tabs-scroller> moves them into [tabs-scroll-track] on connect.
+    {%- endcomment -%}
+    <tabs-scroller class="nutritional-tabs__bar d-flex align-item-center column-gap-8">
+      <button
+        type="button"
+        class="nutritional-tabs__arrow sliderPagination__prev button-rest-styles"
+        aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+        tabs-scroll-prev
+      >
+        {% render 'icon', icon: 'left' %}
+      </button>
+
+      <div class="nutritional-tabs__track d-flex" tabs-scroll-track></div>
+
+      <button
+        type="button"
+        class="nutritional-tabs__arrow sliderPagination__next button-rest-styles"
+        aria-label="{{ 'accessibility.next_slide_label' | t }}"
+        tabs-scroll-next
+      >
+        {% render 'icon', icon: 'right' %}
+      </button>
+    </tabs-scroller>
+
+    {%- comment -%} Panels — stacked below the bar by CSS {%- endcomment -%}
+    {% content_for 'blocks' %}
+  </tabs-toggle>
+</div>
+
+{% schema %}
+{
+  "name": "Nutritional Block",
+  "tag": null,
+  "blocks": [
+    { "type": "_information" }
+  ],
+  "settings": [
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#1A1209"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#F5F0E8"
+    },
+    {
+      "type": "header",
+      "content": "Tab settings"
+    },
+    {
+      "type": "color",
+      "id": "tab_background_color",
+      "label": "Background color",
+      "default": "#F5F0E8"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Text color",
+      "default": "#1A1209"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_background_color",
+      "label": "Active background color",
+      "default": "#1A1209"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_text_color",
+      "label": "Active text color",
+      "default": "#F5F0E8"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutritional Block",
+      "blocks": [
+        { "type": "_information" }
+      ]
+    }
+  ]
+}
+{% endschema %}

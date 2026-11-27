@@ -1,0 +1,149 @@
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+<div class="line-item-property" line-item-property>
+  {% if block.settings.property_type == 'text' %}
+    <label for="custom_property_{{ block.id }}">
+      {{ block.settings.label }}
+    </label>
+
+    {% if block.settings.allow_long_text %}
+      <div class="line-item-text-area">
+        <textarea
+          id="custom_property_{{ block.id }}"
+          class="line-item-text-area-input line-item-input js-word-limit"
+          form="{{ product_form_id }}"
+          name="properties[{{ block.settings.label }}]"
+          placeholder="{{ block.settings.label_placeholder }}"
+          {% if block.settings.max_characters != blank and block.settings.max_characters > 0 %}
+            maxlength="{{ block.settings.max_characters }}"
+          {% endif %}
+          {% if block.settings.required %}
+            required
+          {% endif %}
+        ></textarea>
+      </div>
+    {% else %}
+      <div class="line-item-text">
+        <input
+          id="custom_property_{{ block.id }}"
+          class="line-item-input js-word-limit"
+          type="text"
+          form="{{ product_form_id }}"
+          name="properties[{{ block.settings.label }}]"
+          placeholder="{{ block.settings.label_placeholder }}"
+          {% if block.settings.max_characters != blank and block.settings.max_characters > 0 %}
+            maxlength="{{ block.settings.max_characters }}"
+          {% endif %}
+          {% if block.settings.required %}
+            required
+          {% endif %}
+        >
+      </div>
+    {% endif %}
+
+  {% elsif block.settings.property_type == 'checkbox' %}
+    <div class="line-item-checkbox form-group">
+      <input
+        id="custom_property_{{ block.id }}"
+        type="checkbox"
+        class="line-item-checkbox-input visually-hidden js-filter-check "
+        form="{{ product_form_id }}"
+        name="properties[{{ block.settings.label }}]"
+        value="Yes"
+        {% if block.settings.required %}
+          required
+        {% endif %}
+      >
+      <label
+        class="d-flex align-item-center"
+        for="custom_property_{{ block.id }}"
+      >
+        <div class="d-flex align-item-center icon-checkbox-wrapper">
+          <div class="icon-checkbox">
+            <div class="icon-checkbox-inner">
+              {% render 'icon' with 'checkbox-tick' %}
+            </div>
+          </div>
+        </div>
+
+        <span class="line-item-checkbox-label">
+          {{ block.settings.label }}
+        </span>
+      </label>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Line item property",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Line item properties are used to collect customization information for an item added to the cart."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Your label"
+    },
+    {
+      "type": "select",
+      "id": "property_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "checkbox",
+          "label": "Checkbox"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "label_placeholder",
+      "label": "Placeholder",
+      "default": "Enter your text here",
+      "visible_if": "{{ block.settings.property_type == 'text' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "Required",
+      "default": false,
+      "info": "for text property, the customer must write a text;for checkbox, the customer must check it to add to cart"
+    },
+    {
+      "type": "header",
+      "content": "Text",
+      "visible_if": "{{ block.settings.property_type == 'text' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_long_text",
+      "label": "Allow long text",
+      "default": false,
+      "visible_if": "{{ block.settings.property_type == 'text' }}"
+    },
+    {
+      "type": "number",
+      "id": "max_characters",
+      "label": "Maximum number of characters",
+      "visible_if": "{{ block.settings.property_type == 'text' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Line item property",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
